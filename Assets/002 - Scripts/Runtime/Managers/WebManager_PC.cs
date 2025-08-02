@@ -74,6 +74,17 @@ public partial class WebManager
     IEnumerator GetPlayerExtendedPublicData_Coroutine(long playerid, PlayerNamePlate playerNamePlateInstance = null)
     {
         Debug.Log($"GET PLAYER EXTENDED PUBLIC DATA {playerNamePlateInstance != null} {playerid}");
+        playerNamePlateInstance.playerDataCell = CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(playerid, 0);
+
+
+        foreach (Photon.Realtime.Player p in PhotonNetwork.CurrentRoom.Players.Values)
+        {
+            if (long.Parse(p.NickName) == playerNamePlateInstance.playerDataCell.steamId)
+                playerNamePlateInstance.playerDataCell.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == p).Key;
+        }
+
+
+
         // DISCLAIMER
         // PlayerDatabaseAdaptor has authority on the data put into the PlayerListItem. Check var pda.playerBasicOnlineStats
 
@@ -107,7 +118,7 @@ public partial class WebManager
 
             //    try
             //    {
-            //        playerNamePlateInstance.playerDataCell = CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(playerid, 0);
+            //        
 
             //        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
             //        {

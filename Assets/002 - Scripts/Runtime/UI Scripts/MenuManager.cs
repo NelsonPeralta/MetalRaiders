@@ -78,26 +78,55 @@ public class MenuManager : MonoBehaviour
     {
         ResetLoadingMenu();
 
-        Debug.Log($"Opem {menu.menuName}");
-        // Close all menus first
-        for (int i = 0; i < menus.Length; i++)
+        if (GameManager.instance.connection == NetworkType.Internet)
         {
-            if (menus[i].open)
+            if (CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.player_id == -999 &&
+                (menu.menuName.Equals("armory") || menu.menuName.Equals("service_record")))
+                OpenErrorMenu("Could not fetch your data.");
+            else
             {
-                Debug.Log($"Closing {menus[i].menuName}");
-                CloseMenu(menus[i]);
+                // Close all menus first
+                for (int i = 0; i < menus.Length; i++)
+                {
+                    if (menus[i].open)
+                    {
+                        Debug.Log($"Closing {menus[i].menuName}");
+                        CloseMenu(menus[i]);
+                    }
+                }
+                menu.Open(); // Then open the one we need
             }
         }
-        menu.Open(); // Then open the one we need
+        else
+        {
+            // Close all menus first
+            for (int i = 0; i < menus.Length; i++)
+            {
+                if (menus[i].open)
+                {
+                    Debug.Log($"Closing {menus[i].menuName}");
+                    CloseMenu(menus[i]);
+                }
+            }
+            menu.Open(); // Then open the one we need
+        }
     }
 
     public void OpenPopUpMenu(Menu menu) // Open a menu GO using the Menu script itself, used for connecting with buttons
     {
         print($"OpenPopUpMenu {menu.menuName}");
-        for (int i = 0; i < menus.Length; i++)
+
+        if (GameManager.instance.connection == NetworkType.Internet)
         {
-            if (menus[i] == menu)
-                menus[i].Open();
+            if (CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.player_id == -999 &&
+                 (menu.menuName.Equals("armory") || menu.menuName.Equals("service_record")))
+                OpenErrorMenu("Could not fetch your data.");
+            else
+                menu.Open(); // Then open the one we need
+        }
+        else
+        {
+            menu.Open(); // Then open the one we need
         }
     }
 

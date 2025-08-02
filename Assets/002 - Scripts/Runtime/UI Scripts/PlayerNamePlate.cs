@@ -11,10 +11,10 @@ public class PlayerNamePlate : MonoBehaviour
         get { return _playerData; }
         set
         {
-            Debug.Log($"ScriptObjPlayerData {_playerData}");
+            Debug.Log($"ScriptObjPlayerData {value != null}");
             _playerData = value;
 
-            playerText.text = _playerData.playerExtendedPublicData.username;
+            playerText.text = _playerData.steamName;
             levelText.text = _playerData.playerExtendedPublicData.level.ToString();
             UpdateColorPalette();
 
@@ -38,7 +38,7 @@ public class PlayerNamePlate : MonoBehaviour
 
 
 
-            GetComponentInChildren<KickPlayerBtn>().SetPlayerDataCell(value);
+            GetComponentInChildren<KickPlayerBtn>(includeInactive: true).SetPlayerDataCell(value);
         }
     }
 
@@ -113,7 +113,7 @@ public class PlayerNamePlate : MonoBehaviour
 
     public void UpdateColorPalette()
     {
-        Debug.Log($"UpdateColorPalette of: {_playerData.playerExtendedPublicData.username}. TeamMode: {GameManager.instance.teamMode}");
+        Debug.Log($"UpdateColorPalette of: {_playerData.steamName}. TeamMode: {GameManager.instance.teamMode}");
 
         if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
         {
@@ -153,7 +153,8 @@ public class PlayerNamePlate : MonoBehaviour
         {
             GameManager.PlayClickSound();
 
-            if (_playerData)
+            print($"PlayerNamePLate {_playerData.playerExtendedPublicData.player_id} {_playerData.playerExtendedPublicData.player_id != -999}");
+            if (_playerData.playerExtendedPublicData.player_id > 0)
             {
                 MenuManager.Instance.OpenMenu("service_record", false);
                 ServiceRecordMenu s = MenuManager.Instance.GetMenu("service_record").GetComponent<ServiceRecordMenu>();

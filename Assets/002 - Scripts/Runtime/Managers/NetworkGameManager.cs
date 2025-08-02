@@ -37,9 +37,6 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         //    Destroy(gameObject);
 
         DontDestroyOnLoad(gameObject);
-
-        NetworkGameManager.instance.SendLocalPlayerDataToMasterClient();
-
     }
 
 
@@ -97,12 +94,6 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             ps.Add("tpmode", GameManager.instance.thirdPersonMode.ToString());
             ps.Add("oobjmode", GameManager.instance.oneObjMode.ToString());
             ps.Add("flymode", GameManager.instance.flyingCameraMode.ToString());
-            //ps.Add("teamdict", string.Join(Environment.NewLine, GameManager.instance.teamDict));
-            //ps.Add("teamdict", JsonConvert.SerializeObject(GameManager.instance.teamDict));
-            ps.Add("nbLocalPlayersDict", JsonConvert.SerializeObject(CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT));
-
-
-            //Debug.Log($"SendGameParams {GameManager.instance.teamDict}");
 
             _pv.RPC("SendGameParams", RpcTarget.AllViaServer, ps, false);
         }
@@ -120,14 +111,6 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
                 try { GameManager.instance.thirdPersonMode = (GameManager.ThirdPersonMode)System.Enum.Parse(typeof(GameManager.ThirdPersonMode), p["tpmode"]); } catch (System.Exception e) { Debug.Log(e); }
                 try { GameManager.instance.oneObjMode = (GameManager.OneObjMode)System.Enum.Parse(typeof(GameManager.OneObjMode), p["oobjmode"]); } catch (System.Exception e) { Debug.Log(e); }
                 try { GameManager.instance.flyingCameraMode = (GameManager.FlyingCamera)System.Enum.Parse(typeof(GameManager.FlyingCamera), p["flymode"]); } catch (System.Exception e) { Debug.Log(e); }
-
-
-                try
-                {
-                    CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT = JsonConvert.DeserializeObject<Dictionary<string, int>>(p["nbLocalPlayersDict"]);
-                    Debug.Log(CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT);
-                }
-                catch { }
             }
 
             if (p.ContainsKey("reevaluateteams"))
@@ -183,53 +166,6 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
 
 
-    [PunRPC]
-    public void SendLocalPlayerDataToMasterClient(Dictionary<string, int> d = null, bool caller = true)
-    {
-        if (caller && !PhotonNetwork.IsMasterClient)
-        {
-            Debug.Log("SendLocalPlayerData");
-            Dictionary<string, int> _d = new Dictionary<string, int>();
-
-            _d.Add(PhotonNetwork.NickName, GameManager.instance.nbLocalPlayersPreset);
-            _pv.RPC("SendLocalPlayerDataToMasterClient", RpcTarget.MasterClient, _d, false);
-        }
-        else if (!caller && PhotonNetwork.IsMasterClient)
-        {
-            Debug.Log("Received SendLocalPlayerData");
-            Debug.Log(d.Keys.First());
-            Debug.Log(d[d.Keys.First()]);
-
-            if (CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT.ContainsKey(d.Keys.First()))
-                CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT[d.Keys.First()] = d[d.Keys.First()];
-            else
-                CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT.Add(d.Keys.First(), d[d.Keys.First()]);
-
-            //CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT = CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT; // Triggers Error here. Not enough time given for DB to send data and populate DataCell
-
-            Debug.Log(CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT);
-
-            SendLocalPlayerDataToEveryone();
-            //SendGameParams();
-        }
-    }
-
-    [PunRPC]
-    public void SendLocalPlayerDataToEveryone(Dictionary<string, int> d = null, bool caller = true)
-    {
-        if (caller && PhotonNetwork.IsMasterClient)
-        {
-            Debug.Log("SendLocalPlayerData TO EVERYONE");
-
-            _pv.RPC("SendLocalPlayerDataToEveryone", RpcTarget.AllViaServer, CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT, false);
-        }
-        else if (!caller && !PhotonNetwork.IsMasterClient)
-        {
-            Debug.Log("SendLocalPlayerData FROM MASTER CLIENT");
-
-            CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT = d;
-        }
-    }
 
     [PunRPC]
     public void EndGame(bool caller = true)

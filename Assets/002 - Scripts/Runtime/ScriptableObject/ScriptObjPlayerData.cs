@@ -24,7 +24,7 @@ public class ScriptObjPlayerData : ScriptableObject
     bool _achUnl = false;
 
     public long steamId { get { return _steamId; } set { _steamId = value; } }
-    public string steamName { get { return _steamName; } set{ _steamName = value; } }
+    public string steamName { get { return _steamName; } set { _steamName = value; } }
     public int photonRoomIndex { set { _photonRoomIndex = value; } get { return _photonRoomIndex; } }
     public PlayerDatabaseAdaptor.PlayerExtendedPublicData playerExtendedPublicData
     {
@@ -53,7 +53,7 @@ public class ScriptObjPlayerData : ScriptableObject
 
     public string cardsFound { get { return _cardsFound; } }
 
-    public bool occupied { get { return _occupied; } set { _occupied = value; } }
+    public bool occupied { get { return _occupied; } set { Debug.Log($"occupied {value}"); _occupied = value; } }
     public bool local { get { return _local; } set { _local = value; } }
     public int rewiredId { get { return _rewiredIndex; } set { _rewiredIndex = value; } }
     public int startingSpawnPosInd { get { return _startingSpawnPosInd; } set { _startingSpawnPosInd = value; } }
@@ -69,11 +69,11 @@ public class ScriptObjPlayerData : ScriptableObject
     {
         _steamId = -999; _steamName = "";
         _playerCurrentGameScore = new PlayerCurrentGameScore();
-        _photonRoomIndex = -999; 
+        _playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
+        _photonRoomIndex = -999;
         _occupied = _local = false;
         _rewiredIndex = _startingSpawnPosInd = 0;
         _team = GameManager.Team.None;
-        _playerExtendedPublicData = null;
         _cardsFound = "";
         _armorPiecesPurchased = 0;
         _invites = 0;

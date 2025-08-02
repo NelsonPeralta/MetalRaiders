@@ -26,7 +26,7 @@ public class ScoreboardRowRuntime : MonoBehaviour
 
 
 
-            _playerNameText.text = pss.playerExtendedPublicData.username;
+            _playerNameText.text = pss.steamName;
             _playerTagText.text = pss.playerCurrentGameScore.damage.ToString();
             _playerScoreText.text = pss.playerCurrentGameScore.score.ToString();
 

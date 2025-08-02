@@ -530,7 +530,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         PhotonNetwork.LocalPlayer.SetCustomProperties(h);
 
 
-        CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT = new Dictionary<string, int>();
         CurrentRoomManager.instance.expectedNbPlayers = 0;
         GameManager.instance.RecalculateExpectedNbPlayersUsingPlayerCustomProperties();
         CurrentRoomManager.instance.vetoCountdown = CurrentRoomManager.instance.roomGameStartCountdown = DEFAULT_ROOM_COUNTDOWN;
@@ -639,19 +638,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
 
                     PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
-
-                    if (CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT.ContainsKey(PhotonNetwork.NickName))
-                        CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT[PhotonNetwork.NickName] = GameManager.instance.nbLocalPlayersPreset;
-                    else
-                        CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT.Add(PhotonNetwork.NickName, GameManager.instance.nbLocalPlayersPreset);
-                    CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT = CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT;
-
-
                     NetworkGameManager.instance.SendGameParams();
-                }
-                //else
-                {
-                    StartCoroutine(SendLocalGameParamsToMasterClient_Coroutine());
                 }
             }
 
@@ -683,36 +670,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     }
 
-    IEnumerator SendLocalGameParamsToMasterClient_Coroutine() // Allow time for the NetworkGameManager instance to fully set
-    {
-        yield return new WaitForEndOfFrame();
-        NetworkGameManager.instance.SendLocalPlayerDataToMasterClient();
-    }
 
-
-    //[PunRPC]
-    //public void UpdatePlayerList()
-    //{
-    //    PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
-    //    Photon.Realtime.Player[] players = PhotonNetwork.PlayerList;
-    //public void UpdatePlayerList()
-    //{
-    //    PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.playerDatabaseAdaptor;
-    //    Photon.Realtime.Player[] players = PhotonNetwork.PlayerList;
-
-    ////    foreach (Transform child in _playerListContent)
-    ////    for (int i = 0; i < players.Count(); i++)
-    ////    {
-    ////        Debug.Log(players[i].NickName);
-    ////        GameObject plt = Instantiate(_playerListItemPrefab, _playerListContent);
-    ////        plt.GetComponent<PlayerListItem>().SetUp(players[i]);
-    ////        plt.GetComponent<PlayerListItem>().levelText.text = pda.playerBasicOnlineStats.level.ToString();
-    ////    }
-    ////}
-    //        plt.GetComponent<PlayerListItem>().SetUp(players[i]);
-    //        plt.GetComponent<PlayerListItem>().levelText.text = pda.playerBasicOnlineStats.level.ToString();
-    //    }
-    //}
 
 
 
@@ -841,8 +799,6 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnLeftRoom() // Is also called when quitting a game while connected to the internet. Does not trigger when offline
     {
         Debug.Log("LAUNCHER: OnLeftRoom");
-        CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT.Clear();
-        CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT = CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT;
         CurrentRoomManager.instance.expectedNbPlayers = 0;
         try
         {
@@ -863,20 +819,13 @@ public class Launcher : MonoBehaviourPunCallbacks
     // Runs only when other player left room
     public override void OnPlayerLeftRoom(Photon.Realtime.Player otherPlayer)
     {
-        try
-        {
-            CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT.Remove(otherPlayer.NickName);
-            CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT = CurrentRoomManager.instance.playerNickname_To_NbLocalPlayers_DICT;
-        }
-        catch (System.Exception e) { Debug.LogWarning(e); }
-
-        if (CurrentRoomManager.instance.PlayerDataContains(int.Parse(otherPlayer.NickName)))
+        if (CurrentRoomManager.instance.PlayerDataContains(long.Parse(otherPlayer.NickName)))
         {
             foreach (Transform child in instance.namePlatesParent)
-                if (child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id == int.Parse(otherPlayer.NickName))
+                if (child.GetComponent<PlayerNamePlate>().playerDataCell.steamId == long.Parse(otherPlayer.NickName))
                     Destroy(child.gameObject);
 
-            CurrentRoomManager.instance.RemoveExtendedPlayerData(int.Parse(otherPlayer.NickName));
+            CurrentRoomManager.instance.RemoveExtendedPlayerData(long.Parse(otherPlayer.NickName));
         }
     }
 
@@ -1280,32 +1229,32 @@ public class Launcher : MonoBehaviourPunCallbacks
                     for (int i = 1; i < (int)player.CustomProperties["localPlayerCount"]; i++)
                     {
                         if (CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied
-                        && item.rewiredId == i && item.playerExtendedPublicData.player_id == int.Parse(player.NickName)).Count() > 0)
+                        && item.rewiredId == i && item.steamId == long.Parse(player.NickName)).Count() > 0)
                         {
                             // there is already a cell for that invite. Do this
-                            print($"CreateNameplates there is already a cell for that invite {int.Parse(player.NickName)} - {(string)player.CustomProperties["username"]}: {i}");
+                            print($"CreateNameplates there is already a cell for that invite {long.Parse(player.NickName)} - {(string)player.CustomProperties["username"]}: {i}");
                             Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().Setup(CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied
-                        && item.rewiredId == i && item.playerExtendedPublicData.player_id == int.Parse(player.NickName)).FirstOrDefault().playerExtendedPublicData.username
-                        , CurrentRoomManager.instance.playerDataCells.IndexOf(CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied && item.rewiredId == i && item.playerExtendedPublicData.player_id == int.Parse(player.NickName)).FirstOrDefault()));
+                        && item.rewiredId == i && item.steamId == long.Parse(player.NickName)).FirstOrDefault().steamName
+                        , CurrentRoomManager.instance.playerDataCells.IndexOf(CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied && item.rewiredId == i && item.steamId == long.Parse(player.NickName)).FirstOrDefault()));
                         }
                         else
                         {
-                            print($"CreateNameplates making for invite {int.Parse(player.NickName)} - {(string)player.CustomProperties["username"]}: {i}");
+                            print($"CreateNameplates making for invite {long.Parse(player.NickName)} - {(string)player.CustomProperties["username"]}: {i}");
                             int ii = CurrentRoomManager.GetUnoccupiedDataCell();
                             ScriptObjPlayerData s = CurrentRoomManager.GetLocalPlayerData(ii);
+                            s.steamId = long.Parse(player.NickName);
+                            s.steamName = $"{(string)player.CustomProperties["username"]} - {i}";
                             s.playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
                             s.occupied = true;
                             s.rewiredId = i;
                             s.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == player).Key;
-                            s.playerExtendedPublicData.player_id = int.Parse(player.NickName);
-                            s.playerExtendedPublicData.username = $"{(string)player.CustomProperties["username"]} - {i}";
                             s.playerExtendedPublicData.armorDataString = "helmet1";
                             s.playerExtendedPublicData.armorColorPalette = "grey";
                             s.playerExtendedPublicData.level = 1;
 
                             s.local = (PhotonNetwork.NickName == player.NickName);
 
-                            Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().Setup(s.playerExtendedPublicData.username, ii);
+                            Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().Setup(s.steamName, ii);
                         }
                     }
                 }

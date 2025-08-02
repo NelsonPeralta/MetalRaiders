@@ -279,6 +279,8 @@ public class PlayerDatabaseAdaptor
 
         public PlayerExtendedPublicData()
         {
+            username = "unfetched";
+            player_id = -999;
             armor_data_string = "helmet1-";
             armor_color_palette = "grey";
         }

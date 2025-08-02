@@ -334,141 +334,142 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
             // https://techdifferences.com/difference-between-break-and-continue.html#:~:text=The%20main%20difference%20between%20break,next%20iteration%20of%20the%20loop.
             // return will stop this method, break will stop the loop, continue will stop the current iteration
-            if (!pp.PV.IsMine) continue;
-
-            pp.playerUI.gamepadCursor.gameObject.SetActive(false);
-
-
-
-            //CarnageReportMenu.winningTeam = GameManager.Team.None;
-
-
-            //if (highestScore >= scoreToWin)
-            //{
-            //    print($"EndGame {highestScore} / {scoreToWin}");
-            //    if (GameManager.instance.teamMode == GameManager.TeamMode.None)
-            //    {
-            //        if (GameManager.instance.gameType != GameManager.GameType.GunGame)
-            //            foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
-            //            {
-            //                print($"EndGame {pms.score} / {scoreToWin}");
-            //                if (pms.score >= scoreToWin)
-            //                {
-            //                    pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! {pms.GetComponent<Player>().username} wins!");
-            //                    this.winningPlayers.Add(pms.GetComponent<Player>());
-            //                    this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
-            //                }
-            //            }
-            //        else if (GameManager.instance.gameType == GameManager.GameType.GunGame)
-            //        {
-            //            this.winningPlayers.Clear();
-            //            this.winningPlayersId.Clear();
-
-            //            foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
-            //            {
-            //                if (pms.player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Plasma_Pistol)
-            //                {
-            //                    this.winningPlayers.Add(pms.GetComponent<Player>());
-            //                    this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
-            //                    break;
-            //                }
-            //            }
-
-            //            foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
-            //            {
-            //                pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! {winningPlayers[0].username} wins!");
-            //            }
-            //        }
-            //    }
-            //    else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
-            //    {
-            //        if (redTeamScore >= scoreToWin)
-            //        {
-            //            CarnageReportMenu.winningTeam = GameManager.Team.Red;
-
-            //            pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! Red Team wins!");
-
-
-            //            foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
-            //                if (pms.GetComponent<Player>().team == GameManager.Team.Red)
-            //                {
-            //                    this.winningPlayers.Add(pms.GetComponent<Player>());
-            //                    this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
-            //                }
-            //        }
-            //        else if (blueTeamScore >= scoreToWin)
-            //        {
-            //            CarnageReportMenu.winningTeam = GameManager.Team.Blue;
-
-            //            pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! Blue Team wins!");
-
-            //            foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
-            //                if (pms.GetComponent<Player>().team == GameManager.Team.Blue)
-            //                {
-            //                    this.winningPlayers.Add(pms.GetComponent<Player>());
-            //                    this.winningPlayersId.Add(pms.GetComponent<Player>().playerId);
-            //                }
-            //        }
-            //    }
-            //}
-            //else
-            //{
-            //    pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER!");
-
-
-            //    if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
-            //        if (redTeamScore >= blueTeamScore)
-            //        {
-            //            CarnageReportMenu.winningTeam = GameManager.Team.Red;
-            //        }
-            //        else
-            //        {
-            //            CarnageReportMenu.winningTeam = GameManager.Team.Blue;
-            //        }
-            //}
-
-            if (saveXp)
+            if (pp.PV.IsMine)
             {
-                if (pp.controllerId == 0)
+                pp.playerUI.gamepadCursor.gameObject.SetActive(false);
+
+                CarnageReportMenu.winningTeam = GameManager.Team.None;
+
+
+                if (highestScore >= scoreToWin)
                 {
-                    pp.allPlayerScripts.announcer.PlayGameOverClip();
-
-                    //if (!GameManager.instance.devMode)
-                    if (CurrentRoomManager.instance.youHaveInvites)
+                    print($"EndGame {highestScore} / {scoreToWin}");
+                    if (GameManager.instance.teamMode == GameManager.TeamMode.None)
                     {
-                        if (CurrentRoomManager.instance.halfOfPlayersInRoomAreRandos)
-                            WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), this.winningPlayersId);
+                        if (GameManager.instance.gameType != GameManager.GameType.GunGame)
+                            foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
+                            {
+                                print($"EndGame {pms.score} / {scoreToWin}");
+                                if (pms.score >= scoreToWin)
+                                {
+                                    pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! {pms.GetComponent<Player>().username} wins!");
+                                    this.winningPlayers.Add(pms.GetComponent<Player>());
+                                    this.winningPlayersId.Add(pms.GetComponent<Player>().playerSteamId);
+                                }
+                            }
+                        else if (GameManager.instance.gameType == GameManager.GameType.GunGame)
+                        {
+                            this.winningPlayers.Clear();
+                            this.winningPlayersId.Clear();
+
+                            foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
+                            {
+                                if (pms.player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Plasma_Pistol)
+                                {
+                                    this.winningPlayers.Add(pms.GetComponent<Player>());
+                                    this.winningPlayersId.Add(pms.GetComponent<Player>().playerSteamId);
+                                    break;
+                                }
+                            }
+
+                            foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
+                            {
+                                pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! {winningPlayers[0].username} wins!");
+                            }
+                        }
                     }
-                    else
-                        WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), this.winningPlayersId);
-
+                    else if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
                     {
+                        if (redTeamScore >= scoreToWin)
+                        {
+                            CarnageReportMenu.winningTeam = GameManager.Team.Red;
+
+                            pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! Red Team wins!");
+
+
+                            foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
+                                if (pms.GetComponent<Player>().team == GameManager.Team.Red)
+                                {
+                                    this.winningPlayers.Add(pms.GetComponent<Player>());
+                                    this.winningPlayersId.Add(pms.GetComponent<Player>().playerSteamId);
+                                }
+                        }
+                        else if (blueTeamScore >= scoreToWin)
+                        {
+                            CarnageReportMenu.winningTeam = GameManager.Team.Blue;
+
+                            pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! Blue Team wins!");
+
+                            foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
+                                if (pms.GetComponent<Player>().team == GameManager.Team.Blue)
+                                {
+                                    this.winningPlayers.Add(pms.GetComponent<Player>());
+                                    this.winningPlayersId.Add(pms.GetComponent<Player>().playerSteamId);
+                                }
+                        }
+                    }
+                }
+                else
+                {
+                    pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER!");
+
+
+                    if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+                        if (redTeamScore >= blueTeamScore)
+                        {
+                            CarnageReportMenu.winningTeam = GameManager.Team.Red;
+                        }
+                        else
+                        {
+                            CarnageReportMenu.winningTeam = GameManager.Team.Blue;
+                        }
+                }
+
+                if (saveXp)
+                {
+                    if (pp.controllerId == 0)
+                    {
+                        pp.allPlayerScripts.announcer.PlayGameOverClip();
+
+                        //if (!GameManager.instance.devMode)
+                        if (CurrentRoomManager.instance.youHaveInvites)
+                        {
+                            if (CurrentRoomManager.instance.halfOfPlayersInRoomAreRandos)
+                                if (pp.playerDataCell.playerExtendedPublicData.player_id != -999)
+                                    WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), this.winningPlayersId);
+                        }
+                        else
+                        {
+                            if (pp.playerDataCell.playerExtendedPublicData.player_id != -999)
+                                WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), this.winningPlayersId);
+                        }
 
                         pp.LeaveLevelButStayInRoom();
                     }
                 }
-            }
-            else
-            {
-                if (GameManager.instance.connection == GameManager.NetworkType.Internet)
+                else
                 {
-                    //if (!GameManager.instance.devMode)
+                    if (GameManager.instance.connection == GameManager.NetworkType.Internet)
                     {
-                        PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
-                        PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestAndNextRank(pda.playerBasicOnlineStats.honor)[0];
-                        GameManager.instance.carnageReport = new CarnageReport(rank, pda.level, pda.xp, 0, pda.honor, 0, false, 0);
+                        //if (!GameManager.instance.devMode)
+                        if (pp.playerDataCell.playerExtendedPublicData.player_id != -999)
+                        {
+                            PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
+                            PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestAndNextRank(pda.playerBasicOnlineStats.honor)[0];
+                            GameManager.instance.carnageReport = new CarnageReport(rank, pda.level, pda.xp, 0, pda.honor, 0, false, 0);
+                        }
+                    }
+
+                    if (pp.controllerId == 0)
+                    {
+                        GameManager.instance.LeaveCurrentRoomAndLoadLevelZero();
+                        //pp.LeaveLevelButStayInRoom();
+
                     }
                 }
 
-                if (pp.controllerId == 0)
-                {
-                    GameManager.instance.LeaveCurrentRoomAndLoadLevelZero();
-                    //pp.LeaveLevelButStayInRoom();
-
-                }
+                pp.playerUI.scoreboard.OpenScoreboard(true);
             }
-
-            pp.playerUI.scoreboard.OpenScoreboard(true);
         }
     }
 

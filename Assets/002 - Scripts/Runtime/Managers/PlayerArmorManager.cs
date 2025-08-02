@@ -20,7 +20,10 @@ public class PlayerArmorManager : MonoBehaviour
         get { return _playerDataCell; }
         set
         {
-            Debug.Log("set playerDataCell");
+            Debug.Log($"set playerDataCell {value != null}");
+            print($"{value.name}");
+            print($"{value.steamId}");
+            print($"{value.playerExtendedPublicData != null}");
             _playerDataCell = value;
 
             if (SceneManager.GetActiveScene().buildIndex == 0)
@@ -131,6 +134,8 @@ public class PlayerArmorManager : MonoBehaviour
             playerArmorPieces = playerArmorPieces.OrderByDescending(x => x.listingPriority).ToList();
         }
 
+        Debug.Log($"EnableAllArmorsInDataString: {playerDataCell}");
+        Debug.Log($"EnableAllArmorsInDataString: {playerDataCell.playerExtendedPublicData != null}");
         Debug.Log($"EnableAllArmorsInDataString: {playerDataCell.playerExtendedPublicData.armorDataString}");
         {
             foreach (PlayerArmorPiece piece in playerArmorPieces)
