@@ -44,7 +44,7 @@ public partial class WebManager : MonoBehaviour
         Debug.Log("SetPlayerListItemInRoom");
 
         if (PhotonNetwork.NetworkClientState != Photon.Realtime.ClientState.Disconnected)
-            StartCoroutine(GetPlayerExtendedPublicData_Coroutine(playerid, pli));
+            StartCoroutine(GetPlayerExtendedPublicData_Coroutine(playerid));
     }
 
     public void UpdatePlayerCommonData()

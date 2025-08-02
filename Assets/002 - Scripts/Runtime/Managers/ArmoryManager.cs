@@ -10,6 +10,9 @@ public class ArmoryManager : MonoBehaviour
 {
     public static ArmoryManager instance;
 
+
+    public ScriptObjPlayerData playerDataCell;
+
     public Transform scrollMenuContainer;
 
     public TMP_Text creditsText;
@@ -45,19 +48,19 @@ public class ArmoryManager : MonoBehaviour
         Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().PreventReloadArmor = true;
         Launcher.instance.playerModel.SetActive(true);
         Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetLocalPlayerData(0);
-        PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
 
-        creditsText.text = $"{pda.playerBasicOnlineStats.credits}cb";
-        armorDataString.text = $"ADS: {pda.armorDataString.ToString()}";
-        newArmorDataString.text = $"NADS: {pda.armorDataString.ToString()}";
-        unlockedArmorDataString.text = $"UADS: {pda.unlockedArmorDataString.ToString()}";
+        creditsText.text = $"{playerDataCell.playerExtendedPublicData.credits}cb";
+        armorDataString.text = $"ADS: {playerDataCell.playerExtendedPublicData.armorDataString}";
+        newArmorDataString.text = $"NADS: {playerDataCell.playerExtendedPublicData.armorDataString}";
+        unlockedArmorDataString.text = $"UADS: {playerDataCell.playerExtendedPublicData.unlocked_armor_data_string}";
 
         int i = 1;
         foreach (PlayerArmorPiece playerArmorPiece in Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().playerArmorPieces)
         {
             if (!playerArmorPiece.hideFromArmory)
             {
-                if (playerArmorPiece.cost < 0 && !pda.unlockedArmorDataString.Contains(playerArmorPiece.entity)) continue;
+                if (playerArmorPiece.cost < 0 &&
+                    !playerDataCell.playerExtendedPublicData.unlocked_armor_data_string.Contains(playerArmorPiece.entity)) continue;
 
                 GameObject pal = Instantiate(armorPieceListingPrefab.gameObject, scrollMenuContainer);
                 armorPieceListingList.Add(pal.GetComponent<ArmorPieceListing>());
@@ -82,6 +85,7 @@ public class ArmoryManager : MonoBehaviour
         foreach (ArmorPieceListing armorPieceListing in armorPieceListingList)
             Destroy(armorPieceListing.gameObject);
         armorPieceListingList.Clear();
+        playerDataCell = null;
     }
 
     public void OnArmorBuy_Delegate()

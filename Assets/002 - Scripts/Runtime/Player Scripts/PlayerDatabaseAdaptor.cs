@@ -266,7 +266,9 @@ public class PlayerDatabaseAdaptor
         }
 
         public string username;
-        public int player_id, invites;
+        public int player_id;
+        public long steamid;
+        public int invites;
         public int level, xp, rank, honor, credits;
         public string unlocked_armor_data_string;
         [SerializeField] string armor_data_string, armor_color_palette;
@@ -281,6 +283,7 @@ public class PlayerDatabaseAdaptor
         {
             username = "unfetched";
             player_id = -999;
+            steamid = -999;
             armor_data_string = "helmet1-";
             armor_color_palette = "grey";
         }

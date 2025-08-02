@@ -56,7 +56,7 @@ public partial class WebManager
                 try
                 {
                     //StartCoroutine(Login_Coroutine_Set_Online_Stats(pda.steamid));
-                    //StartCoroutine(GetPlayerExtendedPublicData_Coroutine(pda.steamid));
+                    StartCoroutine(GetPlayerExtendedPublicData_Coroutine(pda.steamid));
                     //StartCoroutine(Login_Coroutine_Set_PvP_Stats(pda.steamid));
                     //StartCoroutine(Login_Coroutine_Set_PvE_Stats(pda.steamid));
 
@@ -71,24 +71,17 @@ public partial class WebManager
         }
     }
 
-    IEnumerator GetPlayerExtendedPublicData_Coroutine(long playerid, PlayerNamePlate playerNamePlateInstance = null)
+    IEnumerator GetPlayerExtendedPublicData_Coroutine(long playerid)
     {
-        Debug.Log($"GET PLAYER EXTENDED PUBLIC DATA {playerNamePlateInstance != null} {playerid}");
-        playerNamePlateInstance.playerDataCell = CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(playerid, 0);
-
-
-        foreach (Photon.Realtime.Player p in PhotonNetwork.CurrentRoom.Players.Values)
-        {
-            if (long.Parse(p.NickName) == playerNamePlateInstance.playerDataCell.steamId)
-                playerNamePlateInstance.playerDataCell.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == p).Key;
-        }
+        //Debug.Log($"GET PLAYER EXTENDED PUBLIC DATA {playerNamePlateInstance != null} {playerid}");
+        //playerNamePlateInstance.playerDataCell = CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(playerid, 0);
 
 
 
         // DISCLAIMER
         // PlayerDatabaseAdaptor has authority on the data put into the PlayerListItem. Check var pda.playerBasicOnlineStats
 
-        PlayerDatabaseAdaptor pda = new PlayerDatabaseAdaptor();
+        //PlayerDatabaseAdaptor pda = new PlayerDatabaseAdaptor();
         //if (pli)
         //    pda.playerListItem = pli;
         WWWForm form = new WWWForm();
@@ -99,45 +92,35 @@ public partial class WebManager
         {
             yield return www.SendWebRequest();
 
-            //if (www.result != UnityWebRequest.Result.Success)
-            //{
-            //    Debug.Log(www.error);
-            //}
-            //else
-            //{
-            //    Debug.Log($"GET PLAYER EXTENDED PUBLIC DATA RESULTS {playerid}");
-            //    Debug.Log(www.result);
-            //    Debug.Log(www.downloadHandler.text);
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.Log(www.error);
+            }
+            else
+            {
+                Debug.Log($"GET PLAYER EXTENDED PUBLIC DATA RESULTS {playerid}");
+                Debug.Log(www.result);
+                Debug.Log(www.downloadHandler.text);
 
-            //    string jsonarray = www.downloadHandler.text;
+                string jsonarray = www.downloadHandler.text;
 
-            //    Debug.Log(jsonarray);
-            //    PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = PlayerDatabaseAdaptor.PlayerExtendedPublicData.CreateFromJSON(jsonarray);
+                Debug.Log(jsonarray);
+                PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = PlayerDatabaseAdaptor.PlayerExtendedPublicData.CreateFromJSON(jsonarray);
 
-            //    CurrentRoomManager.instance.AddExtendedPlayerDataCell(pepd); // ERROR IF NULL, BREAKS GAME
+                CurrentRoomManager.instance.AddExtendedPlayerDataCell(pepd); // ERROR IF NULL, BREAKS GAME
 
-            //    try
-            //    {
-            //        
+                //try
+                //{
 
-            //        if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
-            //        {
-            //            playerNamePlateInstance.playerDataCell.team = GameManager.Team.Red;
-            //            playerNamePlateInstance.UpdateColorPalette();
-            //        }
-            //    }
-            //    catch (Exception e) { Debug.LogWarning(e); }
 
-            //    try
-            //    {
-            //        foreach (Photon.Realtime.Player p in PhotonNetwork.CurrentRoom.Players.Values)
-            //        {
-            //            if (long.Parse(p.NickName) == playerNamePlateInstance.playerDataCell.steamId)
-            //                playerNamePlateInstance.playerDataCell.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == p).Key;
-            //        }
-            //    }
-            //    catch (Exception e) { Debug.LogWarning(e); }
-            //}
+                //    if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
+                //    {
+                //        playerNamePlateInstance.playerDataCell.team = GameManager.Team.Red;
+                //        playerNamePlateInstance.UpdateColorPalette();
+                //    }
+                //}
+                //catch (Exception e) { Debug.LogWarning(e); }
+            }
         }
     }
 

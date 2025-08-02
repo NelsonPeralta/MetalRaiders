@@ -116,15 +116,20 @@ public class MenuManager : MonoBehaviour
     {
         print($"OpenPopUpMenu {menu.menuName}");
 
-        if (GameManager.instance.connection == NetworkType.Internet)
-        {
-            if (CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.player_id == -999 &&
-                 (menu.menuName.Equals("armory") || menu.menuName.Equals("service_record")))
-                OpenErrorMenu("Could not fetch your data.");
-            else
-                menu.Open(); // Then open the one we need
-        }
-        else
+        if (!PhotonNetwork.InRoom && (menu.menuName.Equals("armory") || menu.menuName.Equals("service_record")))
+            menu.GetComponent<ServiceRecordMenu>().playerDataCell = CurrentRoomManager.instance.playerDataCells[0];
+
+        //if (GameManager.instance.connection == NetworkType.Internet)
+        //{
+        //    if (CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.player_id == -999 &&
+        //         (menu.menuName.Equals("armory") || menu.menuName.Equals("service_record")))
+        //        OpenErrorMenu("Could not fetch your data.");
+        //    else
+        //    {
+        //        menu.Open(); // Then open the one we need
+        //    }
+        //}
+        //else
         {
             menu.Open(); // Then open the one we need
         }
@@ -269,6 +274,26 @@ public class MenuManager : MonoBehaviour
     {
         print("OpenCarnageReportMenu");
         OpenMenu("carnage report");
+    }
+
+    public void OpenArmoryMenu(ScriptObjPlayerData scriptObjPlayerData)
+    {
+        GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell = scriptObjPlayerData;
+
+        if (scriptObjPlayerData.playerExtendedPublicData.player_id == -999)
+            OpenErrorMenu("Could not fetch your data.");
+        else
+            OpenMenu("armory");
+    }
+
+    public void OpenServiceRecordPopUpMenu(ScriptObjPlayerData scriptObjPlayerData)
+    {
+        GetMenu("service_record").GetComponent<ServiceRecordMenu>().playerDataCell = scriptObjPlayerData;
+
+        if (scriptObjPlayerData.playerExtendedPublicData.player_id == -999)
+            OpenErrorMenu("Could not fetch your data.");
+        else
+            OpenPopUpMenu("service_record");
     }
 
     public void OpenRoomBrowserMenu()

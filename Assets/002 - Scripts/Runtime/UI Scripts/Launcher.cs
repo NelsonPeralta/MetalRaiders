@@ -577,6 +577,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         Debug.Log($"Joined room {PhotonNetwork.CurrentRoom.Name}");
         _creatingRoomTimeOut = 999;
+        CreatePrimitiveDataCellsFromRoomDataWhenJoiningRoom_Online(JoinType.IJoinedARoom);
         TriggerOnJoinedRoomBehaviour();
 
         //FindMasterClientAndToggleIcon();
@@ -584,7 +585,6 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void TriggerOnJoinedRoomBehaviour(bool changeMenusAlso = true)
     {
-        CreateDataCellsFromRoomDataWhenJoiningRoom_Online();
         GameManager.instance.RecalculateExpectedNbPlayersUsingPlayerCustomProperties();
 
         if (PhotonNetwork.InRoom)
@@ -655,7 +655,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         print("Other player joined room");
         Debug.Log("LAUNCHER OnPlayerEnteredRoom");
 
-        CreateDataCellsFromRoomDataWhenJoiningRoom_Online();
+        CreatePrimitiveDataCellsFromRoomDataWhenJoiningRoom_Online(JoinType.AnotherPlayerJoinedARoom);
         DestroyAndCreateNameplates();
 
         if (PhotonNetwork.IsMasterClient)
@@ -1213,7 +1213,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
 
 
-    void CreateDataCellsFromRoomDataWhenJoiningRoom_Online()
+    public enum JoinType { IJoinedARoom, AnotherPlayerJoinedARoom }
+    public void CreatePrimitiveDataCellsFromRoomDataWhenJoiningRoom_Online(JoinType jt)
     {
         if (GameManager.instance.connection == GameManager.NetworkType.Internet)
         {
@@ -1235,7 +1236,6 @@ public class Launcher : MonoBehaviourPunCallbacks
                 print($"CreateDataCellsFromRoomDataWhenJoiningRoom_Online {test[i].steamName} {test[i].supposedRoomIndex} will become {i}");
                 test[i] = (test[i].steamIdd, test[i].steamName, test[i].supposedRoomIndex, i, test[i].nbLocalPlayers);
             }
-
             // DO NOT DELETE THIS
 
 
@@ -1260,7 +1260,9 @@ public class Launcher : MonoBehaviourPunCallbacks
 
 
                 // Online Splitscreen
-                if (entry.nbLocalPlayers > 1)
+                if (entry.nbLocalPlayers > 1 &&
+                    (jt == JoinType.IJoinedARoom ||
+                    (jt == JoinType.AnotherPlayerJoinedARoom && !entry.steamName.Equals(CurrentRoomManager.instance.playerDataCells[0].steamName))))
                 {
                     for (int i = 1; i < entry.nbLocalPlayers; i++)
                     {
@@ -1284,8 +1286,42 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
     }
 
+
+    public void FetchExtendedPlayerStats()
+    {
+
+    }
+
+
+
     void CreateNameplates()
     {
+        if (GameManager.instance.connection == GameManager.NetworkType.Internet)
+        {
+            foreach (ScriptObjPlayerData s in CurrentRoomManager.instance.playerDataCells.Where(x => x.occupied))
+            {
+                Instantiate(_namePlatePrefab, _namePlatesParent).
+                    GetComponent<PlayerNamePlate>().Setup(s.steamName, CurrentRoomManager.instance.playerDataCells.IndexOf(s));
+            }
+        }
+        else
+        {
+            print($"CreateNameplates local: {_nbLocalPlayersInputed.text} {GameManager.instance.nbLocalPlayersPreset}");
+            if (_nbLocalPlayersInputed.text.Equals("")) _nbLocalPlayersInputed.text = "1";
+            for (int i = 0; i < int.Parse(_nbLocalPlayersInputed.text.ToString()); i++)
+                Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().Setup($"player{i + 1}", i);
+        }
+
+
+
+
+
+
+
+
+
+
+
         //Debug.Log($"CreateNameplates. Steam State: {SteamAPI.IsSteamRunning()}. Nb local: {_nbLocalPlayersInputed.text}");
         //if (GameManager.instance.connection == GameManager.NetworkType.Internet)
         //{

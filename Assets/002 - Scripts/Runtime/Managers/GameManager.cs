@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum OneObjMode { Off, On }
     public enum FlyingCamera { Enabled, Disabled }
 
-    public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates, OpenMainMenu, PlayerWasKicked, PlayerQuitGame, ErrorWhileCreatingRoom }
+    public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ReFetchPlayerStats, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates, OpenMainMenu, PlayerWasKicked, PlayerQuitGame, ErrorWhileCreatingRoom }
 
     public List<int> arenaLevelIndexes = new List<int>();
 
@@ -732,6 +732,12 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             if (previousScenePayloads.Contains(PreviousScenePayload.OpenCarnageReportAndCredits))
             {
+                if (previousScenePayloads.Contains(PreviousScenePayload.ReFetchPlayerStats))
+                {
+
+                }
+
+
                 RecalculateExpectedNbPlayersUsingPlayerCustomProperties();
 
 
@@ -1085,7 +1091,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         Transform spt = SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[indd].startingSpawnPosInd, CurrentRoomManager.instance.playerDataCells[indd].team);
 
         Player player = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "Network Player"), spt.position + (2 * Vector3.up), spt.rotation).GetComponent<Player>();
-        player.playerController.rid = indd;
+        player.playerController.rid = CurrentRoomManager.instance.playerDataCells[indd].rewiredId;
         player.RotatePlayerCameraToDirection(spt.forward);
 
 

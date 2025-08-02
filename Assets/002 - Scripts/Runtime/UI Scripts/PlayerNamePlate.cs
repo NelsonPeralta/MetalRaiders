@@ -59,20 +59,36 @@ public class PlayerNamePlate : MonoBehaviour
     [SerializeField] KickPlayerBtn _kickPlayerBtn; // bugs when not stored, dont touch
 
     Color _tCol;
+    float _checkForChanges;
 
 
 
 
 
-
-
-
+    private void Awake()
+    {
+        _checkForChanges = 0.6f;
+    }
 
 
 
     private void Start()
     {
 
+    }
+
+    private void Update()
+    {
+        if (_checkForChanges > 0)
+        {
+            _checkForChanges -= Time.deltaTime;
+
+            if (_checkForChanges <= 0)
+            {
+                playerDataCell = playerDataCell;
+                _checkForChanges = 0.6f;
+            }
+        }
     }
 
 
@@ -102,11 +118,12 @@ public class PlayerNamePlate : MonoBehaviour
         //text.text = s;
     }
 
-    public void Setup(string name, int playerDataCell) // Only used for LOCAL play
+    public void Setup(string name, int playerDataCellInd, bool fetchPlayerStats = false) // Only used for LOCAL play
     {
         playerText.text = name;
-        _playerData = CurrentRoomManager.GetLocalPlayerData(playerDataCell);
+        this.playerDataCell = CurrentRoomManager.GetLocalPlayerData(playerDataCellInd);
         _kickPlayerBtn.SetPlayerDataCell(_playerData);
+        WebManager.webManagerInstance.SetPlayerListItemInRoom(this.playerDataCell.steamId, this);
 
         UpdateColorPalette();
     }
@@ -118,7 +135,7 @@ public class PlayerNamePlate : MonoBehaviour
         if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
         {
 
-            ScriptObjPlayerData spd = CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(_playerData.playerExtendedPublicData.player_id, _playerData.rewiredId);
+            ScriptObjPlayerData spd = CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(_playerData.steamId, _playerData.rewiredId);
 
             if ((spd.team != GameManager.Team.None))
             {
@@ -127,7 +144,6 @@ public class PlayerNamePlate : MonoBehaviour
                 Debug.Log(_tCol);
                 mainBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
                 secBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 0.4f);
-                Debug.Log($"Setup TEAM Color: {playerDataCell.team} {_tCol} {_playerData.playerExtendedPublicData.player_id}");
             }
             else
                 print("PLAYER TEAM IS NONE");
@@ -156,9 +172,9 @@ public class PlayerNamePlate : MonoBehaviour
             print($"PlayerNamePLate {_playerData.playerExtendedPublicData.player_id} {_playerData.playerExtendedPublicData.player_id != -999}");
             if (_playerData.playerExtendedPublicData.player_id > 0)
             {
-                MenuManager.Instance.OpenMenu("service_record", false);
                 ServiceRecordMenu s = MenuManager.Instance.GetMenu("service_record").GetComponent<ServiceRecordMenu>();
-                s.playerData = _playerData;
+                s.playerDataCell = _playerData;
+                MenuManager.Instance.OpenMenu("service_record", false);
                 Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().playerDataCell = playerDataCell;
                 Launcher.TogglePlayerModel(true);
             }

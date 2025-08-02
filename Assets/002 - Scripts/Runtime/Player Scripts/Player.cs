@@ -1253,6 +1253,7 @@ public class Player : Biped
         if (controllerId == 0)
         {
             GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits);
+            GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.ReFetchPlayerStats);
             GameManager.instance.StartCoroutine(GameManager.instance.LeaveLevelButStayInRoom_Coroutine());
         }
     }
@@ -2377,6 +2378,8 @@ public class Player : Biped
             if (playerSteamId != -99999 && playerController.rid != -99999)
             {
                 print($"UpdateRewiredId: OnPlayerIdAssigned");
+                print($"UpdateRewiredId: {playerSteamId}");
+                print($"UpdateRewiredId: {playerController.rid} {i}");
                 OnPlayerIdAssigned?.Invoke(this);
                 if (PV.IsMine) NetworkGameManager.instance.AddPlayerSetCount();
 

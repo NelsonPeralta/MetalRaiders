@@ -46,7 +46,7 @@ public class ArmorPieceListing : MonoBehaviour
             buyButton.onClick.AddListener(BuyArmorPiece);
 
 
-            PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
+            ScriptObjPlayerData playerData = MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell;
             _playerArmorPiece = value;
 
             armorPieceNameText.text = playerArmorPiece.cleanName;
@@ -54,9 +54,9 @@ public class ArmorPieceListing : MonoBehaviour
             armorPieceBodyPartText.text = string.Concat(playerArmorPiece.bodyPart.ToString().Select(x => Char.IsUpper(x) ? " " + x : x.ToString())).TrimStart(' ');
             //armorPieceNameText.text = $"{playerArmorPiece.bodyPart} {playerArmorPiece.cleanName}";
 
-            if (pda.playerBasicOnlineStats.unlocked_armor_data_string.Contains(playerArmorPiece.entity))
+            if (playerData.playerExtendedPublicData.unlocked_armor_data_string.Contains(playerArmorPiece.entity))
             {
-                if (!pda.armorDataString.Contains(playerArmorPiece.entity))
+                if (!playerData.playerExtendedPublicData.armorDataString.Contains(playerArmorPiece.entity))
                 {
 
                     equipButton.gameObject.SetActive(true);
@@ -71,28 +71,15 @@ public class ArmorPieceListing : MonoBehaviour
 
             if (playerArmorPiece.minLvl > 0 || playerArmorPiece.minHonor > 0)
             {
-                Debug.Log(pda.playerBasicOnlineStats.credits);
-                Debug.Log(playerArmorPiece.cost);
-                Debug.Log(pda.level);
-                Debug.Log(playerArmorPiece.minLvl);
-                Debug.Log(pda.honor);
-                Debug.Log(playerArmorPiece.minHonor);
-
-                if (pda.playerBasicOnlineStats.credits >= playerArmorPiece.cost)
-                    Debug.Log("Here1");
-                if (pda.level >= playerArmorPiece.minLvl)
-                    Debug.Log("Here2");
-                if (pda.honor >= playerArmorPiece.minHonor)
-                    Debug.Log("Her3");
-
-                if (pda.playerBasicOnlineStats.credits >= playerArmorPiece.cost &&
-                    (pda.level >= playerArmorPiece.minLvl && pda.honor >= playerArmorPiece.minHonor))
+                if (playerData.playerExtendedPublicData.credits >= playerArmorPiece.cost &&
+                    (playerData.playerExtendedPublicData.level >= playerArmorPiece.minLvl
+                    && playerData.playerExtendedPublicData.honor >= playerArmorPiece.minHonor))
                     Debug.Log("Her4");
             }
 
             if (playerArmorPiece.cost > 0)
-                if (pda.playerBasicOnlineStats.credits >= playerArmorPiece.cost &&
-                    (pda.level >= playerArmorPiece.minLvl && pda.honor >= playerArmorPiece.minHonor))
+                if (playerData.playerExtendedPublicData.credits >= playerArmorPiece.cost &&
+                    (playerData.playerExtendedPublicData.level >= playerArmorPiece.minLvl && playerData.playerExtendedPublicData.honor >= playerArmorPiece.minHonor))
                 {
                     buyButton.gameObject.SetActive(true);
                     buyButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.cost}cb";
@@ -108,10 +95,10 @@ public class ArmorPieceListing : MonoBehaviour
                     notEnoughCreditsButton.gameObject.SetActive(true);
                     notEnoughCreditsButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.cost}cb";
 
-                    if (pda.honor < playerArmorPiece.minLvl)
+                    if (playerData.playerExtendedPublicData.honor < playerArmorPiece.minLvl)
                         notEnoughCreditsButton.GetComponentInChildren<Text>().text = $"lvl {playerArmorPiece.minLvl}";
 
-                    if (pda.honor < playerArmorPiece.minHonor)
+                    if (playerData.playerExtendedPublicData.honor < playerArmorPiece.minHonor)
                         notEnoughCreditsButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.minHonor}ho";
 
                 }
@@ -133,7 +120,7 @@ public class ArmorPieceListing : MonoBehaviour
         GameManager.PlayClickSound();
         StartCoroutine(WebManager.webManagerInstance.SaveUnlockedArmorStringData_Coroutine(playerArmorPiece));
 
-        ArmoryManager.instance.creditsText.text = $"{WebManager.webManagerInstance.pda.playerBasicOnlineStats.credits.ToString()}cb";
+        ArmoryManager.instance.creditsText.text = $"{MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.credits.ToString()}cb";
         ArmoryManager.instance.OnArmorBuy_Delegate();
         buyButton.gameObject.SetActive(false);
         equipButton.gameObject.SetActive(true);
@@ -142,16 +129,16 @@ public class ArmorPieceListing : MonoBehaviour
     void EquipArmorPiece()
     {
         print("EquipArmorPiece");
-        //Debug.Log($"Previous: {WebManager.webManagerInstance.pda.armorDataString}");
+        //Debug.Log($"Previous: {.armorDataString}");
         GameManager.PlayClickSound();
-        string newData = WebManager.webManagerInstance.pda.armorDataString;
+        string newData = MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.armorDataString;
 
 
         foreach (ArmorPieceListing armorPieceListing in ArmoryManager.instance.armorPieceListingList)
             if (armorPieceListing != this)
                 if (this.playerArmorPiece.pieceType == armorPieceListing.playerArmorPiece.pieceType && this.playerArmorPiece.bodyPart == armorPieceListing.playerArmorPiece.bodyPart)
                 {
-                    if (WebManager.webManagerInstance.pda.unlockedArmorDataString.Contains(armorPieceListing.playerArmorPiece.entity))
+                    if (MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.unlocked_armor_data_string.Contains(armorPieceListing.playerArmorPiece.entity))
                     {
                         //Debug.Log($"Replacing string");
                         //Debug.Log(armorPieceListing.playerArmorPiece.entity);
@@ -169,8 +156,8 @@ public class ArmorPieceListing : MonoBehaviour
         newData = newData.Replace($"----", "--");
         newData = newData.Replace($"---", "--");
 
-        WebManager.webManagerInstance.pda.armorDataString = newData;
-        StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(WebManager.webManagerInstance.pda.armorDataString));
+        MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.armorDataString = newData;
+        StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.armorDataString));
 
         model.gameObject.SetActive(true);
         equipButton.gameObject.SetActive(false);
@@ -182,12 +169,12 @@ public class ArmorPieceListing : MonoBehaviour
     {
         print("UnequipArmorPiece");
         GameManager.PlayCancelSound();
-        string newData = WebManager.webManagerInstance.pda.armorDataString.Replace($"{playerArmorPiece.entity}", "");
+        string newData = MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.armorDataString.Replace($"{playerArmorPiece.entity}", "");
         newData = newData.Replace($"----", "--");
         newData = newData.Replace($"---", "--");
 
-        WebManager.webManagerInstance.pda.armorDataString = newData;
-        StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(WebManager.webManagerInstance.pda.armorDataString));
+        MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.armorDataString = newData;
+        StartCoroutine(WebManager.webManagerInstance.SaveEquippedArmorStringData_Coroutine(MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.armorDataString));
 
         model.gameObject.SetActive(false);
         equipButton.gameObject.SetActive(true);
@@ -214,7 +201,7 @@ public class ArmorPieceListing : MonoBehaviour
         print("OnButtonMouseExit");
         foreach (ArmorPieceListing armorPieceListing in ArmoryManager.instance.armorPieceListingList)
             if (armorPieceListing != this)
-                if (WebManager.webManagerInstance.pda.armorDataString.Contains(armorPieceListing.playerArmorPiece.entity))
+                if (MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.armorDataString.Contains(armorPieceListing.playerArmorPiece.entity))
                 {
                     armorPieceListing.model.SetActive(true);
                 }

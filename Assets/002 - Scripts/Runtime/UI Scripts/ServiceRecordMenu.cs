@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class ServiceRecordMenu : MonoBehaviour
 {
-    public ScriptObjPlayerData playerData // Used for nameplate
+    public ScriptObjPlayerData playerDataCell // Used for nameplate
     {
         get { return _playerData; }
         set
@@ -13,8 +13,6 @@ public class ServiceRecordMenu : MonoBehaviour
             _playerData = value;
             print($"ServiceRecordMenu setting player data: {_playerData}");
 
-
-            Launcher.instance.playerModel.SetActive(true);
 
             float kd = 0;
 
@@ -81,11 +79,11 @@ public class ServiceRecordMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        print($"ServiceRecordMenu OnEnable {playerData}");
+        print($"ServiceRecordMenu OnEnable {playerDataCell}");
 
 
 
-
+        Launcher.instance.playerModel.SetActive(true);
         Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetLocalPlayerData(0);
         Launcher.TogglePlayerModel(true);
         Launcher.instance.playerModel.GetComponent<Animator>().SetBool("hold rifle", true);
@@ -97,33 +95,41 @@ public class ServiceRecordMenu : MonoBehaviour
 
 
 
-        PlayerDatabaseAdaptor pda = WebManager.webManagerInstance.pda;
-        print(pda != null);
 
         float kd = 0;
 
-        if (pda.GetPvPDeaths() > 0)
-        {
-            kd = pda.GetPvPKills() / (float)pda.GetPvPDeaths();
-        }
-        Debug.Log($"Initializing Service Record Menu. PvE Kills {pda.GetPvEKills()}");
-        multiplayerStatsText.text = $"MULTIPLAYER\n----------\n\nKills: {pda.GetPvPKills()}\nDeaths: {pda.GetPvPDeaths()}\nK/D: {kd}\nHeadshots: {pda.GetPvPHeadshots()}\nMelee Kills: {pda.PvPMeleeKills}\nGrenade Kills: {pda.PvPGrenadeKills}";
-        swarmStatsText.text = $"SWARM\n-----\n\nKills: {pda.GetPvEKills()}\nDeaths: {pda.GetPvEDeaths()}\nHeadshots: {pda.GetPvEHeadshots()}\nHighest Score: {pda.GetPvEHighestPoints()}";
+        if (playerDataCell.playerExtendedPublicData.deaths > 0)
+            kd = playerDataCell.playerExtendedPublicData.kills / (float)playerDataCell.playerExtendedPublicData.deaths;
+        else
+            kd = 0;
 
-        levelText.text = $"Level: {pda.level.ToString()}";
-        xpText.text = $"Xp: {pda.xp.ToString()}";
-        creditsText.text = $"Cuckbucks: {pda.credits.ToString()}";
+
+        multiplayerStatsText.text = $"MULTIPLAYER\n----------\n\nKills: {playerDataCell.playerExtendedPublicData.kills}" +
+            $"\nDeaths: {playerDataCell.playerExtendedPublicData.deaths}" +
+            $"\nK/D: {kd}\nHeadshots: {playerDataCell.playerExtendedPublicData.headshots}" +
+            $"\nMelee Kills: {playerDataCell.playerExtendedPublicData.melee_kills}" +
+            $"\nGrenade Kills: {playerDataCell.playerExtendedPublicData.grenade_kills}";
+
+        swarmStatsText.text = $"SWARM\n-----\n\nKills: {playerDataCell.playerExtendedPublicData.pve_kills}" +
+            $"\nDeaths: {playerDataCell.playerExtendedPublicData.pve_deaths}" +
+            $"\nHeadshots: {playerDataCell.playerExtendedPublicData.headshots}" +
+            $"\nHighest Score: {playerDataCell.playerExtendedPublicData.highest_points}";
+
+        levelText.text = $"Level: {playerDataCell.playerExtendedPublicData.level}";
+        xpText.text = $"Xp: {playerDataCell.playerExtendedPublicData.xp}";
+        creditsText.text = $"Cuckbucks: {playerDataCell.playerExtendedPublicData.credits}";
 
         int xpNeeded = 0;
-        if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(pda.level + 1)) xpNeeded = PlayerProgressionManager.playerLevelToXpDic[pda.level + 1];
+        if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(playerDataCell.playerExtendedPublicData.level + 1)) xpNeeded 
+                = PlayerProgressionManager.playerLevelToXpDic[playerDataCell.playerExtendedPublicData.level + 1];
 
         if (xpNeeded > 0) xpText.text += $" / {xpNeeded}";
 
 
 
-        PlayerProgressionManager.Rank[] rank = PlayerProgressionManager.GetClosestAndNextRank(pda.honor);
+        PlayerProgressionManager.Rank[] rank = PlayerProgressionManager.GetClosestAndNextRank(playerDataCell.playerExtendedPublicData.honor);
         _rankCleanNameText.text = $"Rank: {rank[0].cleanName}";
-        _honorText.text = $"Honor: {pda.honor}";
+        _honorText.text = $"Honor: {playerDataCell.playerExtendedPublicData.honor}";
         if (rank[1].honorRequired > 0)
             _honorText.text += $"\n\nNext rank: {rank[1].cleanName} at {rank[1].honorRequired} honor";
 
@@ -142,16 +148,16 @@ public class ServiceRecordMenu : MonoBehaviour
 
         // In Service Record, not nameplate
         {
-            _redWitness.SetActive(!playerData && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("red"));
-            _blueWitness.SetActive(!playerData && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("blue"));
-            _yellowWitness.SetActive(!playerData && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("yellow"));
-            _greenWitness.SetActive(!playerData && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("green"));
-            _orangeWitness.SetActive(!playerData && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("orange"));
-            _whiteWitness.SetActive(!playerData && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("white"));
-            _blackWitness.SetActive(!playerData && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("black"));
+            _redWitness.SetActive(!playerDataCell && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("red"));
+            _blueWitness.SetActive(!playerDataCell && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("blue"));
+            _yellowWitness.SetActive(!playerDataCell && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("yellow"));
+            _greenWitness.SetActive(!playerDataCell && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("green"));
+            _orangeWitness.SetActive(!playerDataCell && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("orange"));
+            _whiteWitness.SetActive(!playerDataCell && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("white"));
+            _blackWitness.SetActive(!playerDataCell && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("black"));
 
 
-            if (GameManager.instance.connection == GameManager.NetworkType.Internet && playerData && !playerData.local) _allCardsWitness.SetActive(false);
+            if (GameManager.instance.connection == GameManager.NetworkType.Internet && playerDataCell && !playerDataCell.local) _allCardsWitness.SetActive(false);
             else _allCardsWitness.SetActive(true);
         }
     }

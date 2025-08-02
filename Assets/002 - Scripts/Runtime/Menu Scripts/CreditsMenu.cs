@@ -88,7 +88,6 @@ public class CreditsMenu : MonoBehaviour
         if (GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits))
             GameManager.instance.previousScenePayloads.Remove(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits);
 
-
         Launcher.instance.playerModel.SetActive(false);
     }
 

@@ -741,11 +741,10 @@ public class CurrentRoomManager : MonoBehaviour
 
     public void AddExtendedPlayerDataCell(PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd)
     {
-        Debug.Log($"AddExtendedPlayerData {pepd.player_id} {pepd.username}");
-        Debug.Log(GameManager.ROOT_PLAYER_NAME);
+        Debug.Log($"AddExtendedPlayerData {pepd.steamid} {pepd.username}");
 
 
-        if (pepd.username.Equals(GameManager.ROOT_PLAYER_NAME))
+        if (pepd.steamid == CurrentRoomManager.instance.playerDataCells[0].steamId)
         {
             Debug.Log($"UPDATING ROOT PLAYER DATA");
             instance._playerDataCells[0].playerExtendedPublicData = pepd;
@@ -854,9 +853,9 @@ public class CurrentRoomManager : MonoBehaviour
         }
         else
         {
-            if (instance._playerDataCells.Where(item => item.occupied && item.playerExtendedPublicData.player_id == pepd.player_id && item.rewiredId == 0).Count() == 1)
+            if (instance._playerDataCells.Where(item => item.occupied && item.steamId == pepd.steamid && item.rewiredId == 0).Count() == 1)
             {
-                instance._playerDataCells.Where(item => item.occupied && item.playerExtendedPublicData.player_id == pepd.player_id && item.rewiredId == 0).FirstOrDefault().playerExtendedPublicData = pepd;
+                instance._playerDataCells.Where(item => item.occupied && item.steamId == pepd.steamid && item.rewiredId == 0).FirstOrDefault().playerExtendedPublicData = pepd;
             }
             else
             {
