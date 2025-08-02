@@ -585,6 +585,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public void TriggerOnJoinedRoomBehaviour(bool changeMenusAlso = true)
     {
         GameManager.instance.RecalculateExpectedNbPlayersUsingPlayerCustomProperties();
+        CreateDataCellsFromRoomDataWhenJoiningRoom_Online();
 
         if (PhotonNetwork.InRoom)
         {
@@ -654,7 +655,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         print("Other player joined room");
         Debug.Log("LAUNCHER OnPlayerEnteredRoom");
 
-
+        CreateDataCellsFromRoomDataWhenJoiningRoom_Online();
         DestroyAndCreateNameplates();
 
         if (PhotonNetwork.IsMasterClient)
@@ -1209,18 +1210,30 @@ public class Launcher : MonoBehaviourPunCallbacks
             Destroy(child.gameObject);
     }
 
-    void CreateNameplates()
+    void CreateDataCellsFromRoomDataWhenJoiningRoom_Online()
     {
-        Debug.Log($"CreateNameplates. Steam State: {SteamAPI.IsSteamRunning()}. Nb local: {_nbLocalPlayersInputed.text}");
         if (GameManager.instance.connection == GameManager.NetworkType.Internet)
         {
             List<Photon.Realtime.Player> newListPlayers = PhotonNetwork.CurrentRoom.Players.Values.ToList();
             foreach (Photon.Realtime.Player player in newListPlayers)
             {
-                print($"CreateNameplates Player {player.NickName} - {(string)player.CustomProperties["username"]} " +
-                    $"has {(int)player.CustomProperties["localPlayerCount"] - 1} invites");
-                Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().SetUp(player, false);
+                if (!player.CustomProperties["username"].Equals(CurrentRoomManager.instance.playerDataCells[0].steamName))
+                {
+                    int ii = CurrentRoomManager.GetUnoccupiedDataCell();
+                    ScriptObjPlayerData s = CurrentRoomManager.GetLocalPlayerData(ii);
+                    s.steamId = long.Parse(player.NickName);
+                    s.steamName = $"{(string)player.CustomProperties["username"]}";
+                    s.playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
+                    s.occupied = true;
+                    s.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == player).Key;
 
+                    s.local = (PhotonNetwork.NickName == player.NickName);
+                }
+                else
+                {
+                    CurrentRoomManager.instance.playerDataCells[0].photonRoomIndex = 
+                        PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == player).Key;
+                }
 
 
                 // Online Splitscreen
@@ -1232,14 +1245,11 @@ public class Launcher : MonoBehaviourPunCallbacks
                         && item.rewiredId == i && item.steamId == long.Parse(player.NickName)).Count() > 0)
                         {
                             // there is already a cell for that invite. Do this
-                            print($"CreateNameplates there is already a cell for that invite {long.Parse(player.NickName)} - {(string)player.CustomProperties["username"]}: {i}");
-                            Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().Setup(CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied
-                        && item.rewiredId == i && item.steamId == long.Parse(player.NickName)).FirstOrDefault().steamName
-                        , CurrentRoomManager.instance.playerDataCells.IndexOf(CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied && item.rewiredId == i && item.steamId == long.Parse(player.NickName)).FirstOrDefault()));
+                            // do nothing
+                            // used when returning from a game
                         }
                         else
                         {
-                            print($"CreateNameplates making for invite {long.Parse(player.NickName)} - {(string)player.CustomProperties["username"]}: {i}");
                             int ii = CurrentRoomManager.GetUnoccupiedDataCell();
                             ScriptObjPlayerData s = CurrentRoomManager.GetLocalPlayerData(ii);
                             s.steamId = long.Parse(player.NickName);
@@ -1248,13 +1258,9 @@ public class Launcher : MonoBehaviourPunCallbacks
                             s.occupied = true;
                             s.rewiredId = i;
                             s.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == player).Key;
-                            s.playerExtendedPublicData.armorDataString = "helmet1";
-                            s.playerExtendedPublicData.armorColorPalette = "grey";
                             s.playerExtendedPublicData.level = 1;
 
                             s.local = (PhotonNetwork.NickName == player.NickName);
-
-                            Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().Setup(s.steamName, ii);
                         }
                     }
                 }
@@ -1262,11 +1268,68 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
         else
         {
-            print($"CreateNameplates local: {_nbLocalPlayersInputed.text} {GameManager.instance.nbLocalPlayersPreset}");
-            if (_nbLocalPlayersInputed.text.Equals("")) _nbLocalPlayersInputed.text = "1";
-            for (int i = 0; i < int.Parse(_nbLocalPlayersInputed.text.ToString()); i++)
-                Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().Setup($"player{i + 1}", i);
+
         }
+    }
+
+    void CreateNameplates()
+    {
+        //Debug.Log($"CreateNameplates. Steam State: {SteamAPI.IsSteamRunning()}. Nb local: {_nbLocalPlayersInputed.text}");
+        //if (GameManager.instance.connection == GameManager.NetworkType.Internet)
+        //{
+        //    List<Photon.Realtime.Player> newListPlayers = PhotonNetwork.CurrentRoom.Players.Values.ToList();
+        //    foreach (Photon.Realtime.Player player in newListPlayers)
+        //    {
+        //        print($"CreateNameplates Player {player.NickName} - {(string)player.CustomProperties["username"]} " +
+        //            $"has {(int)player.CustomProperties["localPlayerCount"] - 1} invites");
+        //        Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().SetUp(player, false);
+
+
+
+        //        // Online Splitscreen
+        //        if ((int)player.CustomProperties["localPlayerCount"] > 1)
+        //        {
+        //            for (int i = 1; i < (int)player.CustomProperties["localPlayerCount"]; i++)
+        //            {
+        //                if (CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied
+        //                && item.rewiredId == i && item.steamId == long.Parse(player.NickName)).Count() > 0)
+        //                {
+        //                    // there is already a cell for that invite. Do this
+        //                    print($"CreateNameplates there is already a cell for that invite {long.Parse(player.NickName)} - {(string)player.CustomProperties["username"]}: {i}");
+        //                    Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().Setup(CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied
+        //                && item.rewiredId == i && item.steamId == long.Parse(player.NickName)).FirstOrDefault().steamName
+        //                , CurrentRoomManager.instance.playerDataCells.IndexOf(CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied && item.rewiredId == i && item.steamId == long.Parse(player.NickName)).FirstOrDefault()));
+        //                }
+        //                else
+        //                {
+        //                    print($"CreateNameplates making for invite {long.Parse(player.NickName)} - {(string)player.CustomProperties["username"]}: {i}");
+        //                    int ii = CurrentRoomManager.GetUnoccupiedDataCell();
+        //                    ScriptObjPlayerData s = CurrentRoomManager.GetLocalPlayerData(ii);
+        //                    s.steamId = long.Parse(player.NickName);
+        //                    s.steamName = $"{(string)player.CustomProperties["username"]} - {i}";
+        //                    s.playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
+        //                    s.occupied = true;
+        //                    s.rewiredId = i;
+        //                    s.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == player).Key;
+        //                    s.playerExtendedPublicData.armorDataString = "helmet1";
+        //                    s.playerExtendedPublicData.armorColorPalette = "grey";
+        //                    s.playerExtendedPublicData.level = 1;
+
+        //                    s.local = (PhotonNetwork.NickName == player.NickName);
+
+        //                    Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().Setup(s.steamName, ii);
+        //                }
+        //            }
+        //        }
+        //    }
+        //}
+        //else
+        //{
+        //    print($"CreateNameplates local: {_nbLocalPlayersInputed.text} {GameManager.instance.nbLocalPlayersPreset}");
+        //    if (_nbLocalPlayersInputed.text.Equals("")) _nbLocalPlayersInputed.text = "1";
+        //    for (int i = 0; i < int.Parse(_nbLocalPlayersInputed.text.ToString()); i++)
+        //        Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().Setup($"player{i + 1}", i);
+        //}
 
     }
 
