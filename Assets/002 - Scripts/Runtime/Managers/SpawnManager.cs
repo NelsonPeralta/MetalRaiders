@@ -114,14 +114,19 @@ public class SpawnManager : MonoBehaviour
 
                 if (_tempListOfSpawns.Count > 0)
                 {
-                    _tempListOfSpawns.Sort((hit1, hit2) => hit1.dangerLevel.CompareTo(hit2.dangerLevel)); // this should sort by danger level. Smallest index = lowest
-                    _tempDangerLevel = _tempListOfSpawns[0].dangerLevel;
-                    _tempListOfSpawns = _tempListOfSpawns.Where(x => x.dangerLevel == _tempDangerLevel).ToList();
+                    for (int i = 0; i < _tempListOfSpawns.Count; i++)
+                    {
+                        print($"SpawnManager F0 {i}/{_tempListOfSpawns.Count} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
+                    }
+
+                    _tempListOfSpawns.Sort((hit1, hit2) => hit1.blockingLevel.CompareTo(hit2.blockingLevel)); // this should sort by danger level. Smallest index = lowest
+                    _tempDangerLevel = _tempListOfSpawns[0].blockingLevel;
+                    _tempListOfSpawns = _tempListOfSpawns.Where(x => x.blockingLevel == _tempDangerLevel).ToList();
                     availableSpawnPoints = new List<SpawnPoint>(_tempListOfSpawns);
 
                     for (int i = 0; i < _tempListOfSpawns.Count; i++)
                     {
-                        print($"SpawnManager F1 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].dangerLevel}");
+                        print($"SpawnManager F1 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
                     }
                 }
                 else
@@ -133,14 +138,14 @@ public class SpawnManager : MonoBehaviour
 
                     if (_tempListOfSpawns.Count > 0)
                     {
-                        _tempListOfSpawns.Sort((hit1, hit2) => hit1.dangerLevel.CompareTo(hit2.dangerLevel)); // this should sort by danger level. Smallest index = lowest
-                        _tempDangerLevel = _tempListOfSpawns[0].dangerLevel;
-                        _tempListOfSpawns = _tempListOfSpawns.Where(x => x.dangerLevel == _tempDangerLevel).ToList();
+                        _tempListOfSpawns.Sort((hit1, hit2) => hit1.blockingLevel.CompareTo(hit2.blockingLevel)); // this should sort by danger level. Smallest index = lowest
+                        _tempDangerLevel = _tempListOfSpawns[0].blockingLevel;
+                        _tempListOfSpawns = _tempListOfSpawns.Where(x => x.blockingLevel == _tempDangerLevel).ToList();
                         availableSpawnPoints = new List<SpawnPoint>(_tempListOfSpawns);
 
                         for (int i = 0; i < _tempListOfSpawns.Count; i++)
                         {
-                            print($"SpawnManager F2 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].dangerLevel}");
+                            print($"SpawnManager F2 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
                         }
                     }
                     else
@@ -151,14 +156,14 @@ public class SpawnManager : MonoBehaviour
 
                         if (_tempListOfSpawns.Count > 0)
                         {
-                            _tempListOfSpawns.Sort((hit1, hit2) => hit1.dangerLevel.CompareTo(hit2.dangerLevel)); // this should sort by danger level. Smallest index = lowest
-                            _tempDangerLevel = _tempListOfSpawns[0].dangerLevel;
-                            _tempListOfSpawns = _tempListOfSpawns.Where(x => x.dangerLevel == _tempDangerLevel).ToList();
+                            _tempListOfSpawns.Sort((hit1, hit2) => hit1.blockingLevel.CompareTo(hit2.blockingLevel)); // this should sort by danger level. Smallest index = lowest
+                            _tempDangerLevel = _tempListOfSpawns[0].blockingLevel;
+                            _tempListOfSpawns = _tempListOfSpawns.Where(x => x.blockingLevel == _tempDangerLevel).ToList();
                             availableSpawnPoints = new List<SpawnPoint>(_tempListOfSpawns);
 
                             for (int i = 0; i < _tempListOfSpawns.Count; i++)
                             {
-                                print($"SpawnManager F3 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].dangerLevel}");
+                                print($"SpawnManager F3 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
                             }
                         }
                     }
@@ -174,14 +179,14 @@ public class SpawnManager : MonoBehaviour
 
                     if (_tempListOfSpawns.Count > 0)
                     {
-                        _tempListOfSpawns.Sort((hit1, hit2) => hit1.dangerLevel.CompareTo(hit2.dangerLevel)); // this should sort by danger level. Smallest index = lowest
-                        _tempDangerLevel = _tempListOfSpawns[0].dangerLevel;
-                        _tempListOfSpawns = _tempListOfSpawns.Where(x => x.dangerLevel == _tempDangerLevel).ToList();
+                        _tempListOfSpawns.Sort((hit1, hit2) => hit1.blockingLevel.CompareTo(hit2.blockingLevel)); // this should sort by danger level. Smallest index = lowest
+                        _tempDangerLevel = _tempListOfSpawns[0].blockingLevel;
+                        _tempListOfSpawns = _tempListOfSpawns.Where(x => x.blockingLevel == _tempDangerLevel).ToList();
                         availableSpawnPoints = new List<SpawnPoint>(_tempListOfSpawns);
 
                         for (int i = 0; i < _tempListOfSpawns.Count; i++)
                         {
-                            print($"SpawnManager F1 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].dangerLevel}");
+                            print($"SpawnManager F1 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
                         }
                     }
                     else
@@ -193,14 +198,14 @@ public class SpawnManager : MonoBehaviour
 
                         if (_tempListOfSpawns.Count > 0)
                         {
-                            _tempListOfSpawns.Sort((hit1, hit2) => hit1.dangerLevel.CompareTo(hit2.dangerLevel)); // this should sort by danger level. Smallest index = lowest
-                            _tempDangerLevel = _tempListOfSpawns[0].dangerLevel;
-                            _tempListOfSpawns = _tempListOfSpawns.Where(x => x.dangerLevel == _tempDangerLevel).ToList();
+                            _tempListOfSpawns.Sort((hit1, hit2) => hit1.blockingLevel.CompareTo(hit2.blockingLevel)); // this should sort by danger level. Smallest index = lowest
+                            _tempDangerLevel = _tempListOfSpawns[0].blockingLevel;
+                            _tempListOfSpawns = _tempListOfSpawns.Where(x => x.blockingLevel == _tempDangerLevel).ToList();
                             availableSpawnPoints = new List<SpawnPoint>(_tempListOfSpawns);
 
                             for (int i = 0; i < _tempListOfSpawns.Count; i++)
                             {
-                                print($"SpawnManager F2 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].dangerLevel}");
+                                print($"SpawnManager F2 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
                             }
                         }
                         else
@@ -211,14 +216,14 @@ public class SpawnManager : MonoBehaviour
 
                             if (_tempListOfSpawns.Count > 0)
                             {
-                                _tempListOfSpawns.Sort((hit1, hit2) => hit1.dangerLevel.CompareTo(hit2.dangerLevel)); // this should sort by danger level. Smallest index = lowest
-                                _tempDangerLevel = _tempListOfSpawns[0].dangerLevel;
-                                _tempListOfSpawns = _tempListOfSpawns.Where(x => x.dangerLevel == _tempDangerLevel).ToList();
+                                _tempListOfSpawns.Sort((hit1, hit2) => hit1.blockingLevel.CompareTo(hit2.blockingLevel)); // this should sort by danger level. Smallest index = lowest
+                                _tempDangerLevel = _tempListOfSpawns[0].blockingLevel;
+                                _tempListOfSpawns = _tempListOfSpawns.Where(x => x.blockingLevel == _tempDangerLevel).ToList();
                                 availableSpawnPoints = new List<SpawnPoint>(_tempListOfSpawns);
 
                                 for (int i = 0; i < _tempListOfSpawns.Count; i++)
                                 {
-                                    print($"SpawnManager F3 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].dangerLevel}");
+                                    print($"SpawnManager F3 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
                                 }
                             }
                         }
@@ -235,14 +240,14 @@ public class SpawnManager : MonoBehaviour
 
                     if (_tempListOfSpawns.Count > 0)
                     {
-                        _tempListOfSpawns.Sort((hit1, hit2) => hit1.dangerLevel.CompareTo(hit2.dangerLevel)); // this should sort by danger level. Smallest index = lowest
-                        _tempDangerLevel = _tempListOfSpawns[0].dangerLevel;
-                        _tempListOfSpawns = _tempListOfSpawns.Where(x => x.dangerLevel == _tempDangerLevel).ToList();
+                        _tempListOfSpawns.Sort((hit1, hit2) => hit1.blockingLevel.CompareTo(hit2.blockingLevel)); // this should sort by danger level. Smallest index = lowest
+                        _tempDangerLevel = _tempListOfSpawns[0].blockingLevel;
+                        _tempListOfSpawns = _tempListOfSpawns.Where(x => x.blockingLevel == _tempDangerLevel).ToList();
                         availableSpawnPoints = new List<SpawnPoint>(_tempListOfSpawns);
 
                         for (int i = 0; i < _tempListOfSpawns.Count; i++)
                         {
-                            print($"SpawnManager F1 {i} {_tempListOfSpawns[i].dangerLevel}");
+                            print($"SpawnManager F1 {i} {_tempListOfSpawns[i].blockingLevel}");
                         }
                     }
                     else
@@ -254,14 +259,14 @@ public class SpawnManager : MonoBehaviour
 
                         if (_tempListOfSpawns.Count > 0)
                         {
-                            _tempListOfSpawns.Sort((hit1, hit2) => hit1.dangerLevel.CompareTo(hit2.dangerLevel)); // this should sort by danger level. Smallest index = lowest
-                            _tempDangerLevel = _tempListOfSpawns[0].dangerLevel;
-                            _tempListOfSpawns = _tempListOfSpawns.Where(x => x.dangerLevel == _tempDangerLevel).ToList();
+                            _tempListOfSpawns.Sort((hit1, hit2) => hit1.blockingLevel.CompareTo(hit2.blockingLevel)); // this should sort by danger level. Smallest index = lowest
+                            _tempDangerLevel = _tempListOfSpawns[0].blockingLevel;
+                            _tempListOfSpawns = _tempListOfSpawns.Where(x => x.blockingLevel == _tempDangerLevel).ToList();
                             availableSpawnPoints = new List<SpawnPoint>(_tempListOfSpawns);
 
                             for (int i = 0; i < _tempListOfSpawns.Count; i++)
                             {
-                                print($"SpawnManager F2 {i} {_tempListOfSpawns[i].dangerLevel}");
+                                print($"SpawnManager F2 {i} {_tempListOfSpawns[i].blockingLevel}");
                             }
                         }
                         else
@@ -272,14 +277,14 @@ public class SpawnManager : MonoBehaviour
 
                             if (_tempListOfSpawns.Count > 0)
                             {
-                                _tempListOfSpawns.Sort((hit1, hit2) => hit1.dangerLevel.CompareTo(hit2.dangerLevel)); // this should sort by danger level. Smallest index = lowest
-                                _tempDangerLevel = _tempListOfSpawns[0].dangerLevel;
-                                _tempListOfSpawns = _tempListOfSpawns.Where(x => x.dangerLevel == _tempDangerLevel).ToList();
+                                _tempListOfSpawns.Sort((hit1, hit2) => hit1.blockingLevel.CompareTo(hit2.blockingLevel)); // this should sort by danger level. Smallest index = lowest
+                                _tempDangerLevel = _tempListOfSpawns[0].blockingLevel;
+                                _tempListOfSpawns = _tempListOfSpawns.Where(x => x.blockingLevel == _tempDangerLevel).ToList();
                                 availableSpawnPoints = new List<SpawnPoint>(_tempListOfSpawns);
 
                                 for (int i = 0; i < _tempListOfSpawns.Count; i++)
                                 {
-                                    print($"SpawnManager F3 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].dangerLevel}");
+                                    print($"SpawnManager F3 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
                                 }
                             }
                         }
@@ -304,7 +309,7 @@ public class SpawnManager : MonoBehaviour
         if (availableSpawnPoints.Count > 0)
         {
             int ran = Random.Range(0, availableSpawnPoints.Count);
-            print($"Returning {availableSpawnPoints[ran].name} spawn (danger level {availableSpawnPoints[ran].dangerLevel})");
+            print($"Returning {availableSpawnPoints[ran].name} spawn (danger level {availableSpawnPoints[ran].blockingLevel})");
             return (availableSpawnPoints[ran].transform, false);
         }
 

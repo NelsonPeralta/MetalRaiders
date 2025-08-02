@@ -9,7 +9,7 @@ public class SpawnPointDisablerRay : MonoBehaviour
 
     [SerializeField] LayerMask _layerMask;
     [SerializeField] List<Transform> _hits = new List<Transform>();
-    [SerializeField] int _range, _dangerLevel, _id;
+    [SerializeField] int _range, _blockingLevel, _id;
 
     float _c;
     List<RaycastHit> _hits_ = new List<RaycastHit>();
@@ -68,7 +68,7 @@ public class SpawnPointDisablerRay : MonoBehaviour
 
                             if (_hits_[i].transform.GetComponent<SpawnPointDisablerRayTarget>())
                             {
-                                _hits_[i].transform.GetComponent<SpawnPointDisablerRayTarget>().spawnPoint.AddDanger(_id, _dangerLevel, SpawnPoint.SeenResetTime);
+                                _hits_[i].transform.GetComponent<SpawnPointDisablerRayTarget>().spawnPoint.AddBlockingLevelEntry(_id, _blockingLevel, SpawnPoint.SeenResetTime);
                             }
                             else
                             {
@@ -82,7 +82,7 @@ public class SpawnPointDisablerRay : MonoBehaviour
                         if (_hits_[0].transform.GetComponent<SpawnPointDisablerRayTarget>())
                         {
                             //_hits_[0].transform.GetComponent<SpawnPointDisablerRayTarget>().spawnPoint.seen = true;
-                            _hits_[0].transform.GetComponent<SpawnPointDisablerRayTarget>().spawnPoint.AddDanger(_id, _dangerLevel, SpawnPoint.SeenResetTime);
+                            _hits_[0].transform.GetComponent<SpawnPointDisablerRayTarget>().spawnPoint.AddBlockingLevelEntry(_id, _blockingLevel, SpawnPoint.SeenResetTime);
                         }
                     }
                 }
