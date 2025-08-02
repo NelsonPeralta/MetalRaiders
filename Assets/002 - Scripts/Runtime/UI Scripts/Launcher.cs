@@ -584,8 +584,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void TriggerOnJoinedRoomBehaviour(bool changeMenusAlso = true)
     {
-        GameManager.instance.RecalculateExpectedNbPlayersUsingPlayerCustomProperties();
         CreateDataCellsFromRoomDataWhenJoiningRoom_Online();
+        GameManager.instance.RecalculateExpectedNbPlayersUsingPlayerCustomProperties();
 
         if (PhotonNetwork.InRoom)
         {
@@ -1210,58 +1210,70 @@ public class Launcher : MonoBehaviourPunCallbacks
             Destroy(child.gameObject);
     }
 
+
+
+
     void CreateDataCellsFromRoomDataWhenJoiningRoom_Online()
     {
         if (GameManager.instance.connection == GameManager.NetworkType.Internet)
         {
+            // PHOTON DOES NOT REMOVE LEFT PLAYERS FROM THEIR LIST OF PLAYERS IN CURRENT ROOM. I MUST HANDLE THAT MYSELF
+            // DO NOT DELETE THIS
             List<Photon.Realtime.Player> newListPlayers = PhotonNetwork.CurrentRoom.Players.Values.ToList();
+
+            List<(long steamIdd, string steamName, int supposedRoomIndex, int trueRoomIndex, int nbLocalPlayers)> test
+                = new List<(long, string, int, int, int)>();
             foreach (Photon.Realtime.Player player in newListPlayers)
             {
-                if (!player.CustomProperties["username"].Equals(CurrentRoomManager.instance.playerDataCells[0].steamName))
-                {
-                    int ii = CurrentRoomManager.GetUnoccupiedDataCell();
-                    ScriptObjPlayerData s = CurrentRoomManager.GetLocalPlayerData(ii);
-                    s.steamId = long.Parse(player.NickName);
-                    s.steamName = $"{(string)player.CustomProperties["username"]}";
-                    s.playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
-                    s.occupied = true;
-                    s.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == player).Key;
+                test.Add((long.Parse(player.NickName),
+                    player.CustomProperties["username"].ToString(),
+                    PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == player).Key, 0, (int)player.CustomProperties["localPlayerCount"]));
+            }
+            test.Sort((a, b) => a.supposedRoomIndex.CompareTo(b.supposedRoomIndex));
+            for (int i = 1; i < test.Count; i++)
+            {
+                print($"CreateDataCellsFromRoomDataWhenJoiningRoom_Online {test[i].steamName} {test[i].supposedRoomIndex} will become {i}");
+                test[i] = (test[i].steamIdd, test[i].steamName, test[i].supposedRoomIndex, i, test[i].nbLocalPlayers);
+            }
 
-                    s.local = (PhotonNetwork.NickName == player.NickName);
+            // DO NOT DELETE THIS
+
+
+            foreach (var entry in test)
+            {
+                if (entry.steamName.Equals(CurrentRoomManager.instance.playerDataCells[0].steamName))
+                {
+                    CurrentRoomManager.instance.playerDataCells[0].photonRoomIndex = entry.trueRoomIndex;
                 }
                 else
                 {
-                    CurrentRoomManager.instance.playerDataCells[0].photonRoomIndex = 
-                        PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == player).Key;
+                    int ii = CurrentRoomManager.GetUnoccupiedDataCell();
+                    ScriptObjPlayerData s = CurrentRoomManager.GetLocalPlayerData(ii);
+                    s.steamId = entry.steamIdd;
+                    s.steamName = entry.steamName;
+                    s.playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
+                    s.occupied = true;
+                    s.photonRoomIndex = entry.trueRoomIndex;
+
+                    s.local = (PhotonNetwork.NickName == entry.steamIdd.ToString());
                 }
 
 
                 // Online Splitscreen
-                if ((int)player.CustomProperties["localPlayerCount"] > 1)
+                if (entry.nbLocalPlayers > 1)
                 {
-                    for (int i = 1; i < (int)player.CustomProperties["localPlayerCount"]; i++)
+                    for (int i = 1; i < entry.nbLocalPlayers; i++)
                     {
-                        if (CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied
-                        && item.rewiredId == i && item.steamId == long.Parse(player.NickName)).Count() > 0)
-                        {
-                            // there is already a cell for that invite. Do this
-                            // do nothing
-                            // used when returning from a game
-                        }
-                        else
-                        {
-                            int ii = CurrentRoomManager.GetUnoccupiedDataCell();
-                            ScriptObjPlayerData s = CurrentRoomManager.GetLocalPlayerData(ii);
-                            s.steamId = long.Parse(player.NickName);
-                            s.steamName = $"{(string)player.CustomProperties["username"]} - {i}";
-                            s.playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
-                            s.occupied = true;
-                            s.rewiredId = i;
-                            s.photonRoomIndex = PhotonNetwork.CurrentRoom.Players.FirstOrDefault(x => x.Value == player).Key;
-                            s.playerExtendedPublicData.level = 1;
+                        int ii = CurrentRoomManager.GetUnoccupiedDataCell();
+                        ScriptObjPlayerData s = CurrentRoomManager.GetLocalPlayerData(ii);
+                        s.steamId = entry.steamIdd;
+                        s.steamName = $"{entry.steamName} - {i}";
+                        s.playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
+                        s.occupied = true;
+                        s.rewiredId = i;
+                        s.photonRoomIndex = entry.trueRoomIndex;
 
-                            s.local = (PhotonNetwork.NickName == player.NickName);
-                        }
+                        s.local = (PhotonNetwork.NickName == entry.steamIdd.ToString());
                     }
                 }
             }
