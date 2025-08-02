@@ -666,18 +666,18 @@ public partial class WebManager
 
 
     // Armory
-    public IEnumerator SaveUnlockedArmorStringData_Coroutine(PlayerArmorPiece playerArmorPiece)
+    public IEnumerator SaveUnlockedArmorStringData_Coroutine(ScriptObjPlayerData playerDataCell,  PlayerArmorPiece playerArmorPiece)
     {
-        pda.unlockedArmorDataString += $"-{playerArmorPiece.entity}-";
+        playerDataCell.playerExtendedPublicData.unlocked_armor_data_string += $"-{playerArmorPiece.entity}-";
         //pda.unlockedArmorDataString.Replace("\n\n", "\n");
-        pda.credits -= playerArmorPiece.cost;
+        playerDataCell.playerExtendedPublicData.credits -= playerArmorPiece.cost;
 
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveUnlockedArmorStringData");
-        form.AddField("playerId", pda.steamid.ToString());
+        form.AddField("playerId", playerDataCell.playerExtendedPublicData.player_id.ToString());
 
-        form.AddField("newUnlockedArmorStringData", pda.unlockedArmorDataString);
-        form.AddField("newPlayerCredits", pda.credits);
+        form.AddField("newUnlockedArmorStringData", playerDataCell.playerExtendedPublicData.unlocked_armor_data_string);
+        form.AddField("newPlayerCredits", playerDataCell.playerExtendedPublicData.credits);
 
         using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
         {
@@ -708,18 +708,18 @@ public partial class WebManager
     }
 
     [Tooltip("FOR ACHIEVEMENTS ONLY")]
-    public static IEnumerator UnlockArmorPiece_Coroutine(string _armorPieceCodename)
+    public static IEnumerator UnlockArmorPiece_Coroutine(ScriptObjPlayerData playerDataCell, string _armorPieceCodename)
     {
         Debug.Log("UnlockArmorPiece_Coroutine");
-        webManagerInstance.pda.unlockedArmorDataString += $"-{_armorPieceCodename}-";
+        playerDataCell.playerExtendedPublicData.unlocked_armor_data_string += $"-{_armorPieceCodename}-";
         //pda.unlockedArmorDataString.Replace("\n\n", "\n");
 
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveUnlockedArmorStringData");
-        form.AddField("playerId", webManagerInstance.pda.ToString());
+        form.AddField("playerId", playerDataCell.playerExtendedPublicData.player_id.ToString());
 
-        form.AddField("newUnlockedArmorStringData", webManagerInstance.pda.unlockedArmorDataString);
-        form.AddField("newPlayerCredits", webManagerInstance.pda.credits);
+        form.AddField("newUnlockedArmorStringData", playerDataCell.playerExtendedPublicData.unlocked_armor_data_string);
+        form.AddField("newPlayerCredits", playerDataCell.playerExtendedPublicData.credits);
 
         using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
         {
