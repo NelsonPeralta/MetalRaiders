@@ -1253,7 +1253,7 @@ public class Player : Biped
         if (controllerId == 0)
         {
             GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits);
-            GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.ReFetchPlayerStats);
+            GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.ReFetchAllPlayerStats);
             GameManager.instance.StartCoroutine(GameManager.instance.LeaveLevelButStayInRoom_Coroutine());
         }
     }

@@ -105,11 +105,11 @@ public class PlayerNamePlate : MonoBehaviour
         _tCol = new Color(_tCol.r, _tCol.g, _tCol.b, (float)100);
         secBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 0.4f);
 
-        try
-        {
-            WebManager.webManagerInstance.SetPlayerListItemInRoom(long.Parse(_player.NickName), this);
-        }
-        catch { }
+        //try
+        //{
+        //    WebManager.webManagerInstance.SetPlayerListItemInRoom(long.Parse(_player.NickName), this);
+        //}
+        //catch { }
     }
 
     public void SetUp(string s)
@@ -123,9 +123,6 @@ public class PlayerNamePlate : MonoBehaviour
         playerText.text = name;
         this.playerDataCell = CurrentRoomManager.GetLocalPlayerData(playerDataCellInd);
         _kickPlayerBtn.SetPlayerDataCell(_playerData);
-        WebManager.webManagerInstance.SetPlayerListItemInRoom(this.playerDataCell.steamId, this);
-
-        UpdateColorPalette();
     }
 
     public void UpdateColorPalette()

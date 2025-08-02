@@ -1279,6 +1279,8 @@ public class Launcher : MonoBehaviourPunCallbacks
                     }
                 }
             }
+
+            FetchExtendedPlayerStats();
         }
         else
         {
@@ -1289,7 +1291,11 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void FetchExtendedPlayerStats()
     {
-
+        print("FetchExtendedPlayerStats");
+        foreach (ScriptObjPlayerData s in CurrentRoomManager.instance.playerDataCells.Where(x => x.occupied && x.rewiredId == 0))
+        {
+            WebManager.webManagerInstance.SetPlayerListItemInRoom(s.steamId);
+        }
     }
 
 

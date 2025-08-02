@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum OneObjMode { Off, On }
     public enum FlyingCamera { Enabled, Disabled }
 
-    public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ReFetchPlayerStats, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates, OpenMainMenu, PlayerWasKicked, PlayerQuitGame, ErrorWhileCreatingRoom }
+    public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ReFetchAllPlayerStats, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates, OpenMainMenu, PlayerWasKicked, PlayerQuitGame, ErrorWhileCreatingRoom }
 
     public List<int> arenaLevelIndexes = new List<int>();
 
@@ -732,9 +732,10 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             if (previousScenePayloads.Contains(PreviousScenePayload.OpenCarnageReportAndCredits))
             {
-                if (previousScenePayloads.Contains(PreviousScenePayload.ReFetchPlayerStats))
+                if (previousScenePayloads.Contains(PreviousScenePayload.ReFetchAllPlayerStats))
                 {
-
+                    Launcher.instance.FetchExtendedPlayerStats();
+                    previousScenePayloads.Remove(PreviousScenePayload.ResetPlayerDataCells);
                 }
 
 

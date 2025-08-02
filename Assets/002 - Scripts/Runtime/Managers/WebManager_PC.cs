@@ -305,30 +305,39 @@ public partial class WebManager
 
             Debug.Log($"SaveBasicOnlineStats_Coroutine. Xp: {pda.playerBasicOnlineStats.xp} -> {pda.playerBasicOnlineStats.xp + xpAndCreditGain}");
 
-            long playerId = pda.steamid;
-            int newLevel = pda.playerBasicOnlineStats.level;
-            int newXp = pda.playerBasicOnlineStats.xp + xpAndCreditGain;
-            int newCredits = pda.playerBasicOnlineStats.credits + xpAndCreditGain;
-            int newHonor = pda.playerBasicOnlineStats.honor;
+            ScriptObjPlayerData playerData = CurrentRoomManager.instance.playerDataCells[0];
+            
+            int playerId = playerData.playerExtendedPublicData.player_id;
+            int newLevel = playerData.playerExtendedPublicData.level;
+            int newXp = playerData.playerExtendedPublicData.xp + xpAndCreditGain;
+            int newCredits = playerData.playerExtendedPublicData.credits + xpAndCreditGain;
+            int newHonor = playerData.playerExtendedPublicData.honor;
             int minXpToLevelUp = 999999999;
 
-            if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(pda.playerBasicOnlineStats.level + 1))
-                minXpToLevelUp = PlayerProgressionManager.playerLevelToXpDic[pda.playerBasicOnlineStats.level + 1];
+            if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(playerData.playerExtendedPublicData.level + 1))
+                minXpToLevelUp = PlayerProgressionManager.playerLevelToXpDic[playerData.playerExtendedPublicData.level + 1];
 
 
             newHonor += honorGained;
 
 
-            PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestAndNextRank(pda.playerBasicOnlineStats.honor)[0];
+            PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestAndNextRank(playerData.playerExtendedPublicData.honor)[0];
 
 
 
             if (newXp >= minXpToLevelUp)
             {
                 Debug.Log("LEVEL UP");
-                newLevel = pda.playerBasicOnlineStats.level + 1;
+                newLevel = playerData.playerExtendedPublicData.level + 1;
             }
-            GameManager.instance.carnageReport = new CarnageReport(rank, pda.level, pda.xp, xpAndCreditGain, pda.honor, honorGained, newXp >= minXpToLevelUp && pda.level < 50, newLevel);
+            GameManager.instance.carnageReport = 
+                new CarnageReport(rank, 
+                playerData.playerExtendedPublicData.level,
+                playerData.playerExtendedPublicData.xp, 
+                xpAndCreditGain,
+                playerData.playerExtendedPublicData.honor, 
+                honorGained, 
+                newXp >= minXpToLevelUp && playerData.playerExtendedPublicData.level < 50, newLevel);
 
             WWWForm form = new WWWForm();
             form.AddField("service", "SaveBasicOnlineStats");
@@ -376,20 +385,18 @@ public partial class WebManager
                     }
                 }
             }
-            StartCoroutine(Login_Coroutine_Set_Online_Stats(playerId));
-
-            StartCoroutine(Login_Coroutine_Set_PvE_Stats(playerId));
-            StartCoroutine(Login_Coroutine_Set_PvP_Stats(playerId));
         }
     }
 
     IEnumerator SaveSwarmStats_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript)
     {
-        long playerId = pda.steamid;
-        int newKills = pda.GetPvEKills() + onlinePlayerSwarmScript.kills;
-        int newDeaths = pda.GetPvEDeaths() + onlinePlayerSwarmScript.deaths;
-        int newHeadshots = pda.GetPvEHeadshots() + onlinePlayerSwarmScript.headshots;
-        int newHighestScore = pda.GetPvEHighestPoints();
+        ScriptObjPlayerData playerData = CurrentRoomManager.instance.playerDataCells[0];
+
+        int playerId = playerData.playerExtendedPublicData.player_id;
+        int newKills = playerData.playerExtendedPublicData.pve_kills + onlinePlayerSwarmScript.kills;
+        int newDeaths = playerData.playerExtendedPublicData.pve_deaths + onlinePlayerSwarmScript.deaths;
+        int newHeadshots = playerData.playerExtendedPublicData.pve_headshots + onlinePlayerSwarmScript.headshots;
+        int newHighestScore = playerData.playerExtendedPublicData.highest_points;
         if (onlinePlayerSwarmScript.GetTotalPoints() > newHighestScore)
             newHighestScore = onlinePlayerSwarmScript.GetTotalPoints();
 
@@ -434,12 +441,14 @@ public partial class WebManager
 
     IEnumerator SaveMultiplayerStats_Coroutine(PlayerMultiplayerMatchStats playerMultiplayerStats)
     {
-        long playerId = pda.steamid;
-        int newKills = pda.GetPvPKills() + playerMultiplayerStats.kills;
-        int newDeaths = pda.GetPvPDeaths() + playerMultiplayerStats.deaths;
-        int newHeadshots = pda.GetPvPHeadshots() + playerMultiplayerStats.headshots;
-        int newMeleeKills = pda.PvPMeleeKills + playerMultiplayerStats.meleeKills;
-        int newGrenadeKills = pda.PvPGrenadeKills + playerMultiplayerStats.grenadeKills;
+        ScriptObjPlayerData playerData = CurrentRoomManager.instance.playerDataCells[0];
+
+        int playerId = playerData.playerExtendedPublicData.player_id;
+        int newKills = playerData.playerExtendedPublicData.kills + playerMultiplayerStats.kills;
+        int newDeaths = playerData.playerExtendedPublicData.deaths + playerMultiplayerStats.deaths;
+        int newHeadshots = playerData.playerExtendedPublicData.headshots + playerMultiplayerStats.headshots;
+        int newMeleeKills = playerData.playerExtendedPublicData.melee_kills + playerMultiplayerStats.meleeKills;
+        int newGrenadeKills = playerData.playerExtendedPublicData.grenade_kills + playerMultiplayerStats.grenadeKills;
 
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveMultiplayerStats");

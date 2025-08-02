@@ -39,7 +39,7 @@ public partial class WebManager : MonoBehaviour
         StartCoroutine(Login_Coroutine(steamid, username, password));
     }
 
-    public void SetPlayerListItemInRoom(long playerid, PlayerNamePlate pli)
+    public void SetPlayerListItemInRoom(long playerid)
     {
         Debug.Log("SetPlayerListItemInRoom");
 
@@ -74,9 +74,6 @@ public partial class WebManager : MonoBehaviour
         {
             StartCoroutine(SaveSwarmStats_Coroutine(onlinePlayerSwarmScript));
             StartCoroutine(SaveXp_Coroutine(onlinePlayerSwarmScript, swarmGameWon: sgw));
-
-            UpdatePlayerCommonData();
-            UpdatePlayerCommonPVEData();
         }
     }
 
@@ -87,9 +84,6 @@ public partial class WebManager : MonoBehaviour
         {
             StartCoroutine(SaveMultiplayerStats_Coroutine(playerMultiplayerStats));
             StartCoroutine(SaveXp_Coroutine(playerMultiplayerStats: playerMultiplayerStats, winPlayers: winPlayers));
-
-            UpdatePlayerCommonData();
-            UpdatePlayerCommonPVPData();
         }
     }
 
