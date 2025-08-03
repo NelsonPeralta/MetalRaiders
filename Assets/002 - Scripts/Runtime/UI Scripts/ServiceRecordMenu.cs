@@ -120,7 +120,7 @@ public class ServiceRecordMenu : MonoBehaviour
         creditsText.text = $"Cuckbucks: {playerDataCell.playerExtendedPublicData.credits}";
 
         int xpNeeded = 0;
-        if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(playerDataCell.playerExtendedPublicData.level + 1)) xpNeeded 
+        if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(playerDataCell.playerExtendedPublicData.level + 1)) xpNeeded
                 = PlayerProgressionManager.playerLevelToXpDic[playerDataCell.playerExtendedPublicData.level + 1];
 
         if (xpNeeded > 0) xpText.text += $" / {xpNeeded}";
@@ -148,17 +148,22 @@ public class ServiceRecordMenu : MonoBehaviour
 
         // In Service Record, not nameplate
         {
-            _redWitness.SetActive(!playerDataCell && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("red"));
-            _blueWitness.SetActive(!playerDataCell && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("blue"));
-            _yellowWitness.SetActive(!playerDataCell && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("yellow"));
-            _greenWitness.SetActive(!playerDataCell && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("green"));
-            _orangeWitness.SetActive(!playerDataCell && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("orange"));
-            _whiteWitness.SetActive(!playerDataCell && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("white"));
-            _blackWitness.SetActive(!playerDataCell && CurrentRoomManager.instance.playerDataCells[0].cardsFound.Contains("black"));
+           
 
 
             if (GameManager.instance.connection == GameManager.NetworkType.Internet && playerDataCell && !playerDataCell.local) _allCardsWitness.SetActive(false);
-            else _allCardsWitness.SetActive(true);
+            else
+            {
+                _redWitness.SetActive(playerDataCell && playerDataCell.cardsFound.Contains("red"));
+                _blueWitness.SetActive(playerDataCell && playerDataCell.cardsFound.Contains("blue"));
+                _yellowWitness.SetActive(playerDataCell && playerDataCell.cardsFound.Contains("yellow"));
+                _greenWitness.SetActive(playerDataCell && playerDataCell.cardsFound.Contains("green"));
+                _orangeWitness.SetActive(playerDataCell && playerDataCell.cardsFound.Contains("orange"));
+                _whiteWitness.SetActive(playerDataCell && playerDataCell.cardsFound.Contains("white"));
+                _blackWitness.SetActive(playerDataCell && playerDataCell.cardsFound.Contains("black"));
+
+                _allCardsWitness.SetActive(true);
+            }
         }
     }
 

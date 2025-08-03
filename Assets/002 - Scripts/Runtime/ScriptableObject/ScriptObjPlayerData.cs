@@ -70,6 +70,7 @@ public class ScriptObjPlayerData : ScriptableObject
         _steamId = -999; _steamName = "";
         _playerCurrentGameScore = new PlayerCurrentGameScore();
         _playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
+        _playerCurrentGameScore = new PlayerCurrentGameScore();
         _photonRoomIndex = -999;
         _occupied = _local = false;
         _rewiredIndex = _startingSpawnPosInd = 0;
