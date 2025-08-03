@@ -279,7 +279,7 @@ public class PlayerCamera : MonoBehaviour
         }
         else
         {
-            if (player.playerController.cameraIsFloating)
+            if (player.playerController.cameraIsFloating && !pController.pauseMenuOpen)
             {
                 //player.transform.rotation = Quaternion.Euler(0, mainCam.transform.rotation.eulerAngles.y, 0);
 

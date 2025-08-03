@@ -97,6 +97,8 @@ public class FloatingCamera : MonoBehaviour
 
     private void Awake()
     {
+        if (GameManager.instance.flyingCameraMode == GameManager.FlyingCamera.Disabled) this.enabled = false;
+
         _changeCameraCd = 0.5f;
         _cam = GetComponent<Camera>();
         _maximumMovementSpeed = 0.05f;
@@ -179,14 +181,14 @@ public class FloatingCamera : MonoBehaviour
 
         //applying mouse rotation
         // always rotate Y in global world space to avoid gimbal lock
-        transform.Rotate(Vector3.up * rotationHorizontal, Space.World);
+        if (!playerController.pauseMenuOpen) transform.Rotate(Vector3.up * rotationHorizontal, Space.World);
 
         var rotationY = transform.localEulerAngles.y;
 
         _rotationX += rotationVertical;
         _rotationX = Mathf.Clamp(_rotationX, -MaxXAngle, MaxXAngle);
 
-        transform.localEulerAngles = new Vector3(-_rotationX, rotationY, 0);
+        if (!playerController.pauseMenuOpen) transform.localEulerAngles = new Vector3(-_rotationX, rotationY, 0);
     }
 
     private void HandleDeceleration(Vector3 acceleration)

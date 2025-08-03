@@ -76,7 +76,7 @@ public class CollectibleCard : MonoBehaviour
                 if (_type == Type.Card)
                     CurrentRoomManager.instance.playerDataCells[0].AddFoundCard(_name);
                 else if (_type == Type.Toy)
-                    CurrentRoomManager.instance.playerDataCells[0].AddFoundToy(SceneManager.GetActiveScene().buildIndex.ToString());
+                    CurrentRoomManager.instance.playerDataCells[0].AddFoundToy(_name);
 
                 _foundFx.SetActive(true);
                 foreach (var card in _cards)
