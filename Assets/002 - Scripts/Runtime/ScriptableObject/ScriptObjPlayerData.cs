@@ -52,6 +52,7 @@ public class ScriptObjPlayerData : ScriptableObject
     }
 
     public string cardsFound { get { return _cardsFound; } }
+    public string toysFound { get { return _toysFound; } }
 
     public bool occupied { get { return _occupied; } set { Debug.Log($"occupied {value}"); _occupied = value; } }
     public bool local { get { return _local; } set { _local = value; } }
@@ -130,7 +131,13 @@ public class ScriptObjPlayerData : ScriptableObject
 
     bool AllToysFound()
     {
-        if (_toysFound.Length == 12)
+        if (_toysFound.Contains("one") &&
+                 _toysFound.Contains("two") &&
+                 _toysFound.Contains("three") &&
+                 _toysFound.Contains("four") &&
+                 _toysFound.Contains("five") &&
+                 _toysFound.Contains("six") &&
+                 _toysFound.Contains("seven"))
         {
             return true;
         }

@@ -70,7 +70,7 @@ public class ServiceRecordMenu : MonoBehaviour
 
     [SerializeField] Image _rankImage;
     [SerializeField] GameObject _allCardsWitness, _redWitness, _blueWitness, _yellowWitness, _greenWitness, _orangeWitness, _whiteWitness, _blackWitness;
-
+    [SerializeField] GameObject _allToysWitnessesHolder, _firstToyWitness, _secondToyWitness, _thirdToWitness, _fourthToyWitness, _fifthToyWitness, _sixthToyWitness, _seventhToyWitness;
 
 
     ServiceRecordMenu _srm;
@@ -148,10 +148,14 @@ public class ServiceRecordMenu : MonoBehaviour
 
         // In Service Record, not nameplate
         {
-           
 
 
-            if (GameManager.instance.connection == GameManager.NetworkType.Internet && playerDataCell && !playerDataCell.local) _allCardsWitness.SetActive(false);
+
+            if (GameManager.instance.connection == GameManager.NetworkType.Internet && playerDataCell && !playerDataCell.local)
+            {
+                _allCardsWitness.SetActive(false);
+                _allToysWitnessesHolder.SetActive(false);
+            }
             else
             {
                 _redWitness.SetActive(playerDataCell && playerDataCell.cardsFound.Contains("red"));
@@ -162,7 +166,18 @@ public class ServiceRecordMenu : MonoBehaviour
                 _whiteWitness.SetActive(playerDataCell && playerDataCell.cardsFound.Contains("white"));
                 _blackWitness.SetActive(playerDataCell && playerDataCell.cardsFound.Contains("black"));
 
+
+                _firstToyWitness.SetActive(playerDataCell && playerDataCell.toysFound.Contains("one"));
+                _secondToyWitness.SetActive(playerDataCell && playerDataCell.toysFound.Contains("two"));
+                _thirdToWitness.SetActive(playerDataCell && playerDataCell.toysFound.Contains("three"));
+                _fourthToyWitness.SetActive(playerDataCell && playerDataCell.toysFound.Contains("four"));
+                _fifthToyWitness.SetActive(playerDataCell && playerDataCell.toysFound.Contains("five"));
+                _sixthToyWitness.SetActive(playerDataCell && playerDataCell.toysFound.Contains("six"));
+                _seventhToyWitness.SetActive(playerDataCell && playerDataCell.toysFound.Contains("seven"));
+
+
                 _allCardsWitness.SetActive(true);
+                _allToysWitnessesHolder.SetActive(true);
             }
         }
     }

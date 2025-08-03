@@ -17,10 +17,20 @@ public class CollectibleCard : MonoBehaviour
 
     private void Awake()
     {
-        if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
+        if (_type == Type.Card &&
+            GameManager.instance.flyingCameraMode == GameManager.FlyingCamera.Disabled &&
+            GameManager.instance.gameMode == GameManager.GameMode.Coop)
+        {
             gameObject.SetActive(true);
-        else if (GameManager.instance.flyingCameraMode == GameManager.FlyingCamera.Enabled && GameManager.instance.gameMode == GameManager.GameMode.Coop)
+        }
+        else if (_type == Type.Toy && GameManager.instance.gameMode == GameManager.GameMode.Versus)
+        {
+            gameObject.SetActive(true);
+        }
+        else
+        {
             gameObject.SetActive(false);
+        }
     }
 
     // Start is called before the first frame update

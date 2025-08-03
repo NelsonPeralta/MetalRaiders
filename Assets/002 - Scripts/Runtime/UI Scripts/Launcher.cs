@@ -1396,16 +1396,15 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         for (int i = 0; i < GameManager.instance.nbLocalPlayersPreset; i++)
         {
+            CurrentRoomManager.GetLocalPlayerData(i).steamId = i;
+            CurrentRoomManager.GetLocalPlayerData(i).steamName = $"Player {i + 1}";
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
             CurrentRoomManager.GetLocalPlayerData(i).occupied = true;
             CurrentRoomManager.GetLocalPlayerData(i).local = true;
             CurrentRoomManager.GetLocalPlayerData(i).photonRoomIndex = i + 1;
             CurrentRoomManager.GetLocalPlayerData(i).rewiredId = i;
-            CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.player_id = i;
-            CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.username = $"player{i + 1}";
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorDataString = "helmet1";
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorColorPalette = "grey";
-            CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.level = 1;
 
 
             if (i == 1)
