@@ -23,7 +23,7 @@ public class CollectibleCard : MonoBehaviour
         {
             gameObject.SetActive(true);
         }
-        else if (_type == Type.Toy && GameManager.instance.gameMode == GameManager.GameMode.Versus)
+        else if (_type == Type.Toy && GameManager.instance.gameMode == GameManager.GameMode.Versus && GameManager.instance.nbLocalPlayersPreset == 1)
         {
             gameObject.SetActive(true);
         }

@@ -704,7 +704,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             ActorAddonsPool.instance = null;
 
             instantiation_position_Biped_Dict.Clear();
-            gameplayRecorderPoints.Clear();
+            gameplayRecorderPoints.Clear(); gameplayRecorderPoints.Add(null);
             Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
 
 
