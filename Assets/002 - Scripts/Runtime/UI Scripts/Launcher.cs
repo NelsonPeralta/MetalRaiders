@@ -1248,6 +1248,10 @@ public class Launcher : MonoBehaviourPunCallbacks
                 {
                     CurrentRoomManager.instance.playerDataCells[0].photonRoomIndex = entry.trueRoomIndex;
                 }
+                else if (CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(entry.steamIdd, 0))
+                {
+                    CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(entry.steamIdd, 0).photonRoomIndex = entry.trueRoomIndex;
+                }
                 else
                 {
                     int ii = CurrentRoomManager.GetUnoccupiedDataCell();
