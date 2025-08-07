@@ -62,7 +62,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum OneObjMode { Off, On }
     public enum FlyingCamera { Enabled, Disabled }
 
-    public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ReFetchAllPlayerStats, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates, OpenMainMenu, PlayerWasKicked, PlayerQuitGame, ErrorWhileCreatingRoom }
+    public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ReFetchAllPlayerStats, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates, OpenMainMenu, PlayerWasKicked, PlayerQuitGame, ErrorWhileCreatingRoom, OpenMultiplayerRoomOnly }
 
     public List<int> arenaLevelIndexes = new List<int>();
 
@@ -231,6 +231,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
             Launcher.instance.gametypeSelectedText.text = $"Gametype: {_gameType}";
+            if (GameManager.instance.gameType == GameType.Hill) Launcher.instance.gametypeSelectedText.text = $"Gametype: King of the Hill";
 
             if (value == GameType.CTF)
                 Launcher.instance.oneObjMode.text = $"One Flag: {_oneObjMode}";
@@ -703,7 +704,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             ActorAddonsPool.instance = null;
 
             instantiation_position_Biped_Dict.Clear();
-            gameplayRecorderPoints.Clear();
+            gameplayRecorderPoints.Clear(); gameplayRecorderPoints.Add(null);
             Cursor.SetCursor(cursorTexture, Vector2.zero, CursorMode.Auto);
 
 
@@ -771,6 +772,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 MenuManager.Instance.OpenErrorMenu("You were kicked from the game.");
             }
+            CurrentRoomManager.instance.ResetPlayerDataCellsCurrentGameScoreOnly();
 
 
 
@@ -1141,8 +1143,8 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static Player GetPlayerWithSteamIdAndRewId(long steamId, int rewiredId)
     {
-        return instance._allPlayers.Where(item => item != null && 
-        item.playerDataCell.steamId == steamId && 
+        return instance._allPlayers.Where(item => item != null &&
+        item.playerDataCell.steamId == steamId &&
         item.controllerId == rewiredId).FirstOrDefault();
     }
 

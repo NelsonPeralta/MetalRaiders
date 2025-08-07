@@ -84295,8 +84295,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialSpawnPoints: []
-  genericSpawnPointsAlpha: []
-  genericSpawnPointsBeta: []
+  genericSpawnPoints: []
   redSpawnPoints: []
   blueSpawnPoints: []
   oddballSpawnPoint: {fileID: 0}

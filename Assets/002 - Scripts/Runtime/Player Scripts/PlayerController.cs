@@ -342,11 +342,8 @@ public class PlayerController : MonoBehaviourPun
 
             if (GameManager.instance.gameStarted)
             {
-                if (!cameraIsFloating)
-                {
-                    Shooting();
-                    LeftShooting();
-                }
+                Shooting();
+                LeftShooting();
                 AutoReloadThirdWeapon();
 
                 if (!isSprinting)
@@ -727,26 +724,52 @@ public class PlayerController : MonoBehaviourPun
 
     void Shooting() //  ***************
     {
-        if (!GetComponent<Player>().isDead && !player.isRespawning)
+        if (!cameraIsFloating)
         {
-            if (player.isMine)
+            if (!GetComponent<Player>().isDead && !player.isRespawning)
             {
-                if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
+                if (player.isMine)
                 {
-                    SendIsHoldingFireWeaponBtn(true, (player.aimAssist.closestHbToCrosshairCenter != null) ? player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero, false);
+                    if ((rewiredPlayer.GetButtonDown("Shoot") || rewiredPlayer.GetButton("Shoot")) && !isHoldingShootBtn)
+                    {
+                        SendIsHoldingFireWeaponBtn(true, (player.aimAssist.closestHbToCrosshairCenter != null) ? player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero, false);
+                    }
+                    else if (player.playerInventory.activeWeapon.loadedAmmo > 0 && player.playerInventory.activeWeapon.targetTracking && player.playerShooting.fireRecovery <= 0 && isHoldingShootBtn)
+                        player.playerShooting.trackingTarget = (player.aimAssist.closestHbToCrosshairCenter != null) ? GameManager.instance.instantiation_position_Biped_Dict[player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition] : null;
                 }
-                else if (player.playerInventory.activeWeapon.loadedAmmo > 0 && player.playerInventory.activeWeapon.targetTracking && player.playerShooting.fireRecovery <= 0 && isHoldingShootBtn)
-                    player.playerShooting.trackingTarget = (player.aimAssist.closestHbToCrosshairCenter != null) ? GameManager.instance.instantiation_position_Biped_Dict[player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition] : null;
-            }
 
 
 
-            if (!player.isDualWielding)
-            {
+                if (!player.isDualWielding)
+                {
 
-                //Process Firing
-                if (pInventory.activeWeapon.killFeedOutput != WeaponProperties.KillFeedOutput.Oddball && pInventory.activeWeapon.killFeedOutput != WeaponProperties.KillFeedOutput.Sword)
-                    if (!isReloading && !isThrowingGrenade && !isMeleeing)
+                    //Process Firing
+                    if (pInventory.activeWeapon.killFeedOutput != WeaponProperties.KillFeedOutput.Oddball && pInventory.activeWeapon.killFeedOutput != WeaponProperties.KillFeedOutput.Sword)
+                        if (!isReloading && !isThrowingGrenade && !isMeleeing)
+                        {
+                            if (player.playerShooting && player.playerInventory)
+                                if (player.playerShooting.fireRecovery <= 0 && player.playerInventory.activeWeapon.loadedAmmo > 0 && isHoldingShootBtn)
+                                {
+
+                                    if (player.playerInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma &&
+                                        player.playerInventory.activeWeapon.plasmaColor != WeaponProperties.PlasmaColor.Shard)
+                                    {
+                                        if (player.playerInventory.activeWeapon.overheatCooldown <= 0)
+                                        {
+                                            player.playerShooting.Shoot(player.playerInventory.activeWeapon);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        player.playerShooting.Shoot(player.playerInventory.activeWeapon);
+
+                                    }
+                                }
+                        }
+                }
+                else
+                {
+                    if (!isReloadingRight && !isThrowingGrenade && !isMeleeing)
                     {
                         if (player.playerShooting && player.playerInventory)
                             if (player.playerShooting.fireRecovery <= 0 && player.playerInventory.activeWeapon.loadedAmmo > 0 && isHoldingShootBtn)
@@ -767,89 +790,90 @@ public class PlayerController : MonoBehaviourPun
                                 }
                             }
                     }
-            }
-            else
-            {
-                if (!isReloadingRight && !isThrowingGrenade && !isMeleeing)
-                {
-                    if (player.playerShooting && player.playerInventory)
-                        if (player.playerShooting.fireRecovery <= 0 && player.playerInventory.activeWeapon.loadedAmmo > 0 && isHoldingShootBtn)
-                        {
-
-                            if (player.playerInventory.activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma &&
-                                player.playerInventory.activeWeapon.plasmaColor != WeaponProperties.PlasmaColor.Shard)
-                            {
-                                if (player.playerInventory.activeWeapon.overheatCooldown <= 0)
-                                {
-                                    player.playerShooting.Shoot(player.playerInventory.activeWeapon);
-                                }
-                            }
-                            else
-                            {
-                                player.playerShooting.Shoot(player.playerInventory.activeWeapon);
-
-                            }
-                        }
                 }
             }
+        }
+        else
+        {
+            if (GameManager.instance.activeControllerType != ControllerType.Joystick)
+            {
+                if (rewiredPlayer.GetButtonDown("Shoot"))
+                {
+                    PV.RPC("IncreaseFloatinCameraCounter_RPC", RpcTarget.All, false);
+                }
+            }
+
         }
     }
 
     void LeftShooting()
     {
-
-        //if (player.isDualWielding)
-        //{
-        //    if (player.playerInventory.thirdWeapon.loadedAmmo > 0 && player.playerInventory.thirdWeapon.targetTracking && player.playerShooting.revo <= 0 && isHoldingShootBtn)
-        //        player.playerShooting.trackingTarget = (player.aimAssist.targetHitbox != null) ? GameManager.instance.instantiation_position_Biped_Dict[player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition] : null;
-        //}
-
-
-
-        if (PV.IsMine && player.isDualWielding && !isHoldingShootDualWieldedWeapon)
-            if (activeControllerType == ControllerType.Joystick)
-            {
-                if (rewiredPlayer.GetButton("Throw Grenade")) SendIsHoldingFireWeaponBtn(true, (player.aimAssist.closestHbToCrosshairCenter != null) ? player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero, true);
-            }
-            else
-            {
-                if (rewiredPlayer.GetButton("Aim")) SendIsHoldingFireWeaponBtn(true, (player.aimAssist.closestHbToCrosshairCenter != null) ? player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero, true);
-            }
-
-
-
-
-
-        if (pInventory.thirdWeapon && player.isAlive /*&& _isCurrentlyShootingReset_thirdWeapon <= 0*/ && pInventory.thirdWeapon.loadedAmmo > 0 && !isDrawingThirdWeapon && !isReloadingLeft)
+        if (!cameraIsFloating)
         {
-            if (isHoldingShootDualWieldedWeapon)
+
+            //if (player.isDualWielding)
+            //{
+            //    if (player.playerInventory.thirdWeapon.loadedAmmo > 0 && player.playerInventory.thirdWeapon.targetTracking && player.playerShooting.revo <= 0 && isHoldingShootBtn)
+            //        player.playerShooting.trackingTarget = (player.aimAssist.targetHitbox != null) ? GameManager.instance.instantiation_position_Biped_Dict[player.aimAssist.targetHitbox.GetComponent<Hitbox>().biped.originalSpawnPosition] : null;
+            //}
+
+
+
+            if (PV.IsMine && player.isDualWielding && !isHoldingShootDualWieldedWeapon)
+                if (activeControllerType == ControllerType.Joystick)
+                {
+                    if (rewiredPlayer.GetButton("Throw Grenade")) SendIsHoldingFireWeaponBtn(true, (player.aimAssist.closestHbToCrosshairCenter != null) ? player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero, true);
+                }
+                else
+                {
+                    if (rewiredPlayer.GetButton("Aim")) SendIsHoldingFireWeaponBtn(true, (player.aimAssist.closestHbToCrosshairCenter != null) ? player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero, true);
+                }
+
+
+
+
+
+            if (pInventory.thirdWeapon && player.isAlive /*&& _isCurrentlyShootingReset_thirdWeapon <= 0*/ && pInventory.thirdWeapon.loadedAmmo > 0 && !isDrawingThirdWeapon && !isReloadingLeft)
             {
-                //_isCurrentlyShootingReset_thirdWeapon = 60f / player.playerInventory.thirdWeapon.fireRate;
+                if (isHoldingShootDualWieldedWeapon)
+                {
+                    //_isCurrentlyShootingReset_thirdWeapon = 60f / player.playerInventory.thirdWeapon.fireRate;
 
-                player.playerShooting.Shoot(pInventory.thirdWeapon);
+                    player.playerShooting.Shoot(pInventory.thirdWeapon);
+                }
+
+
+
+
+                //if (activeControllerType == ControllerType.Joystick)
+                //{
+                //    if (isHoldingShootDualWieldedWeapon)
+                //    {
+                //        _isCurrentlyShootingReset_thirdWeapon = 60f / player.playerInventory.thirdWeapon.fireRate;
+
+                //        player.playerShooting.Shoot(pInventory.thirdWeapon);
+                //    }
+                //}
+                //else
+                //{
+                //    if (isHoldingShootDualWieldedWeapon)
+                //    {
+                //        _isCurrentlyShootingReset_thirdWeapon = 60f / player.playerInventory.thirdWeapon.fireRate;
+
+                //        player.playerShooting.Shoot(pInventory.thirdWeapon);
+                //    }
+                //}
             }
-
-
-
-
-            //if (activeControllerType == ControllerType.Joystick)
-            //{
-            //    if (isHoldingShootDualWieldedWeapon)
-            //    {
-            //        _isCurrentlyShootingReset_thirdWeapon = 60f / player.playerInventory.thirdWeapon.fireRate;
-
-            //        player.playerShooting.Shoot(pInventory.thirdWeapon);
-            //    }
-            //}
-            //else
-            //{
-            //    if (isHoldingShootDualWieldedWeapon)
-            //    {
-            //        _isCurrentlyShootingReset_thirdWeapon = 60f / player.playerInventory.thirdWeapon.fireRate;
-
-            //        player.playerShooting.Shoot(pInventory.thirdWeapon);
-            //    }
-            //}
+        }
+        else
+        {
+            if (GameManager.instance.activeControllerType != ControllerType.Joystick)
+            {
+                if (rewiredPlayer.GetButtonDown("Aim"))
+                {
+                    PV.RPC("IncreaseFloatinCameraCounter_RPC", RpcTarget.All, true);
+                }
+            }
         }
     }
 
@@ -1245,18 +1269,19 @@ public class PlayerController : MonoBehaviourPun
 
     void Crouch()
     {
-        if (player.playerInventory.isHoldingHeavy)
-        {
-            if (isCrouching)
-                DisableCrouch();
-        }
-        else
-        {
-            if (rewiredPlayer.GetButtonDown("Crouch"))
-                EnableCrouch();
-            else if (rewiredPlayer.GetButtonUp("Crouch"))
-                DisableCrouch();
-        }
+        if (!cameraIsFloating)
+            if (player.playerInventory.isHoldingHeavy)
+            {
+                if (isCrouching)
+                    DisableCrouch();
+            }
+            else
+            {
+                if (rewiredPlayer.GetButtonDown("Crouch"))
+                    EnableCrouch();
+                else if (rewiredPlayer.GetButtonUp("Crouch"))
+                    DisableCrouch();
+            }
     }
 
     float _crouchForceTime;
@@ -1387,7 +1412,10 @@ public class PlayerController : MonoBehaviourPun
 
     void ThrowGrenade()
     {
-        if (pInventory.fragGrenades > 0 && !isThrowingGrenade && !player.playerInventory.holdingObjective)
+        if (pInventory.fragGrenades > 0
+            && !isThrowingGrenade
+            && !player.playerInventory.holdingObjective
+            && !cameraIsFloating)
         {
             print($"Grenade 1");
             CancelReloadCoroutine();
@@ -1847,21 +1875,32 @@ public class PlayerController : MonoBehaviourPun
 
     void FloatingCamera()
     {
-        if (GameManager.instance.flyingCameraMode == GameManager.FlyingCamera.Enabled)
+        if (PV.IsMine
+            && GameManager.instance.flyingCameraMode == GameManager.FlyingCamera.Enabled
+            && GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
         {
-            if (GameManager.instance.nbLocalPlayersPreset == 1 && activeControllerType != ControllerType.Joystick)
+            if (GameManager.instance.nbLocalPlayersPreset == 1)
             {
-                if (rewiredPlayer.GetButtonLongPressDown("floatingcamera") && PV.IsMine)
+                if (GameManager.instance.activeControllerType != ControllerType.Joystick &&
+                    rewiredPlayer.GetButtonLongPressDown("activatefloatingcamera"))
                 {
                     ToggleFloatingCamera();
                 }
-                else if (rewiredPlayer.GetButtonDown("floatingcamera_plus") && PV.IsMine && cameraIsFloating)
+                else if (GameManager.instance.activeControllerType == ControllerType.Joystick &&
+                    rewiredPlayer.GetButtonLongPressDown("Switch Grenades"))
                 {
-                    PV.RPC("IncreaseFloatinCameraCounter_RPC", RpcTarget.All, false);
+                    ToggleFloatingCamera();
                 }
-                else if (rewiredPlayer.GetButtonDown("floatingcamera_minus") && PV.IsMine && cameraIsFloating)
+                else if (GameManager.instance.activeControllerType == ControllerType.Joystick)
                 {
-                    PV.RPC("IncreaseFloatinCameraCounter_RPC", RpcTarget.All, true);
+                    if (rewiredPlayer.GetButtonDown("floatingcamera_plus") && PV.IsMine && cameraIsFloating)
+                    {
+                        PV.RPC("IncreaseFloatinCameraCounter_RPC", RpcTarget.All, false);
+                    }
+                    else if (rewiredPlayer.GetButtonDown("floatingcamera_minus") && PV.IsMine && cameraIsFloating)
+                    {
+                        PV.RPC("IncreaseFloatinCameraCounter_RPC", RpcTarget.All, true);
+                    }
                 }
             }
         }
@@ -1900,6 +1939,9 @@ public class PlayerController : MonoBehaviourPun
             player.GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.None;
             player.GetComponent<Rigidbody>().useGravity = false;
             player.GetComponent<Rigidbody>().isKinematic = true;
+
+            StartCoroutine(StopShoot_Coroutine(true));
+            StartCoroutine(StopShoot_Coroutine(false));
         }
         else
         {
@@ -1920,6 +1962,7 @@ public class PlayerController : MonoBehaviourPun
 
             //player.transform.position = _posBeforeTogglingFloatingCamera;
             player.transform.position = mainCam.transform.position;
+            player.transform.rotation = Quaternion.Euler(0, mainCam.transform.rotation.eulerAngles.y, 0); // does not work
             //player.GetComponent<Rigidbody>().interpolation = RigidbodyInterpolation.Interpolate;
             player.GetComponent<Rigidbody>().useGravity = true;
             player.GetComponent<Rigidbody>().isKinematic = false;

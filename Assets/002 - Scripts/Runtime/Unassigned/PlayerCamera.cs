@@ -277,7 +277,40 @@ public class PlayerCamera : MonoBehaviour
                 }
             }
         }
+        else
+        {
+            if (player.playerController.cameraIsFloating && !pController.pauseMenuOpen)
+            {
+                //player.transform.rotation = Quaternion.Euler(0, mainCam.transform.rotation.eulerAngles.y, 0);
+
+
+                xAxisInput = rewiredPlayer.GetAxis("Mouse X");
+                yAxisInput = rewiredPlayer.GetAxis("Mouse Y");
+
+                _correctedXAxisInput = xAxisInput; _correctedYAxisInput = yAxisInput;
+
+                if (_controllerType == ControllerType.Joystick) // stick drift
+                {
+                    if (Mathf.Abs(xAxisInput) <= 0.1f) _correctedXAxisInput = 0;
+                    if (Mathf.Abs(yAxisInput) <= 0.1f) _correctedYAxisInput = 0;
+                    _correctedYAxisInput *= 0.75f;
+                }
+
+                // turning
+                if (Mathf.Abs(xAxisInput) >= xExtremeDeadzone) _correctedXAxisInput *= 1.6f;
+                if (Mathf.Abs(yAxisInput) >= yExtremeDeadzone) _correctedYAxisInput *= 1.6f;
+
+                mouseX = _correctedXAxisInput * backEndMouseSens * Time.deltaTime;
+                mouseY = _correctedYAxisInput * backEndMouseSens * 0.75f * Time.deltaTime;
+
+
+                leftRightRotation += mouseX;
+                upDownRotation -= mouseY;
+                upDownRotation = Mathf.Clamp(upDownRotation, minXClamp, maxXClamp);
+            }
+        }
     }
+
 
     public void RotateCameraToRotation(Vector3 dirr)
     {

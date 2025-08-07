@@ -142,7 +142,9 @@ public class Explosion : MonoBehaviour
             if (rb != null && !rb.isKinematic) // does not actually detect rb in player root, grenade jumping is handled in player script
             {
                 print($"Explosion force added to: {rb.name} {rb.transform.root.name}");
-                if (!rb.transform.root.GetComponent<PlayerRagdoll>())
+                if (rb.GetComponent<LootableWeapon>())
+                    rb.AddExplosionForce(calculatedPower * 2, transform.position, radius, 3.0F);
+                else if (!rb.transform.root.GetComponent<PlayerRagdoll>())
                     rb.AddExplosionForce(calculatedPower, transform.position, radius, 3.0F);
                 else
                     rb.AddExplosionForce(calculatedPower * 3.3f, transform.position, radius, 4.0F);

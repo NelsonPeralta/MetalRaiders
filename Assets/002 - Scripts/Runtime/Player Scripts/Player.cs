@@ -2099,7 +2099,7 @@ public class Player : Biped
         print($"OnPlayerIdAssigned_Delegate {_playerSteamId}");
         print($"OnPlayerIdAssigned_Delegate {rid}");
         playerDataCell = CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(_playerSteamId, rid);
-        username = PV.Owner.CustomProperties["username"].ToString();
+        username = playerDataCell.steamName;
         foreach (PlayerWorldUIMarker pw in allPlayerScripts.worldUis) pw.text.text = playerDataCell.steamName;
 
         playerUI.SetScoreWitnesses();
