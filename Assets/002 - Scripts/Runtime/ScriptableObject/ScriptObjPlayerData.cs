@@ -25,7 +25,7 @@ public class ScriptObjPlayerData : ScriptableObject
 
     public long steamId { get { return _steamId; } set { _steamId = value; } }
     public string steamName { get { return _steamName; } set { _steamName = value; } }
-    public int photonRoomIndex { set { _photonRoomIndex = value; Debug.Log($"photonRoomIndex {value}"); } get { return _photonRoomIndex; } }
+    public int photonRoomIndex { set { _photonRoomIndex = value; Debug.Log($"{steamName} photonRoomIndex {value}"); } get { return _photonRoomIndex; } }
     public PlayerDatabaseAdaptor.PlayerExtendedPublicData playerExtendedPublicData
     {
         get { return _playerExtendedPublicData; }
