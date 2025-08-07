@@ -780,7 +780,7 @@ public class CurrentRoomManager : MonoBehaviour
                     AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
                 if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("warden_ca"))
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(instance._playerDataCells[0], "-warden_ca-"));
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-warden_ca-"));
             }
 
 
@@ -796,7 +796,7 @@ public class CurrentRoomManager : MonoBehaviour
                 }
 
                 if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("burning_helmet"))
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(instance._playerDataCells[0], "-burning_helmet-"));
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-burning_helmet-"));
             }
 
 
@@ -825,10 +825,10 @@ public class CurrentRoomManager : MonoBehaviour
                 }
 
                 if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("security_lsa"))
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(instance._playerDataCells[0], "-security_lsa-"));
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-security_lsa-"));
 
                 if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("security_rsa"))
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(instance._playerDataCells[0], "-security_rsa-"));
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-security_rsa-"));
             }
 
 
@@ -843,7 +843,7 @@ public class CurrentRoomManager : MonoBehaviour
                     AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
                 if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("haunted_hc"))
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(instance._playerDataCells[0], "-haunted_hc-"));
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-haunted_hc-"));
             }
 
 

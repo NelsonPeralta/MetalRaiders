@@ -38609,7 +38609,6 @@ Transform:
   - {fileID: 337360177}
   - {fileID: 2039407431}
   - {fileID: 1557934664}
-  - {fileID: 2141916115}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1274587011 stripped
@@ -66977,85 +66976,6 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 2141880366}
   m_PrefabAsset: {fileID: 0}
---- !u!1001 &2141916114
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 1268422585}
-    m_Modifications:
-    - target: {fileID: 346482702369382972, guid: db38c12ab269bf04db871e2601519ef7,
-        type: 3}
-      propertyPath: _name
-      value: seven
-      objectReference: {fileID: 0}
-    - target: {fileID: 3140865037920821318, guid: db38c12ab269bf04db871e2601519ef7,
-        type: 3}
-      propertyPath: m_Name
-      value: Collectible Card
-      objectReference: {fileID: 0}
-    - target: {fileID: 4109246425196014924, guid: db38c12ab269bf04db871e2601519ef7,
-        type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -24.498
-      objectReference: {fileID: 0}
-    - target: {fileID: 4109246425196014924, guid: db38c12ab269bf04db871e2601519ef7,
-        type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 8.837
-      objectReference: {fileID: 0}
-    - target: {fileID: 4109246425196014924, guid: db38c12ab269bf04db871e2601519ef7,
-        type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -22.112
-      objectReference: {fileID: 0}
-    - target: {fileID: 4109246425196014924, guid: db38c12ab269bf04db871e2601519ef7,
-        type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4109246425196014924, guid: db38c12ab269bf04db871e2601519ef7,
-        type: 3}
-      propertyPath: m_LocalRotation.x
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4109246425196014924, guid: db38c12ab269bf04db871e2601519ef7,
-        type: 3}
-      propertyPath: m_LocalRotation.y
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4109246425196014924, guid: db38c12ab269bf04db871e2601519ef7,
-        type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4109246425196014924, guid: db38c12ab269bf04db871e2601519ef7,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4109246425196014924, guid: db38c12ab269bf04db871e2601519ef7,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4109246425196014924, guid: db38c12ab269bf04db871e2601519ef7,
-        type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: db38c12ab269bf04db871e2601519ef7, type: 3}
---- !u!4 &2141916115 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4109246425196014924, guid: db38c12ab269bf04db871e2601519ef7,
-    type: 3}
-  m_PrefabInstance: {fileID: 2141916114}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2144560523
 GameObject:
   m_ObjectHideFlags: 0
@@ -68691,7 +68611,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialSpawnPoints: []
-  genericSpawnPoints: []
+  genericSpawnPointsAlpha: []
+  genericSpawnPointsBeta: []
   redSpawnPoints: []
   blueSpawnPoints: []
   oddballSpawnPoint: {fileID: 0}

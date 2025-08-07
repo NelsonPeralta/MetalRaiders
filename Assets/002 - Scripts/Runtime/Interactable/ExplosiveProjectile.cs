@@ -53,7 +53,6 @@ public class ExplosiveProjectile : MonoBehaviour
     private void OnEnable()
     {
         _stuckPlayerPhotonId = -999;
-        _stuck = false; // old but needed to avoid fake positives
         if (_defaultTtl <= 0) { _defaultTtl = 10; }
 
 
@@ -293,7 +292,6 @@ public class ExplosiveProjectile : MonoBehaviour
 
     void Explosion()
     {
-        print($"Explosion {_stuckPlayerPhotonId}");
         if (PhotonNetwork.IsMasterClient && _stuckPlayerPhotonId > 0)
         {
             GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).Damage(damage: 999, headshot: false, source_pid: _player.photonId, impactPos: transform.position,

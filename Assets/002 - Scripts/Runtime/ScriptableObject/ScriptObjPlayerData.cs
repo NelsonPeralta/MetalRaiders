@@ -52,7 +52,6 @@ public class ScriptObjPlayerData : ScriptableObject
     }
 
     public string cardsFound { get { return _cardsFound; } }
-    public string toysFound { get { return _toysFound; } }
 
     public bool occupied { get { return _occupied; } set { Debug.Log($"occupied {value}"); _occupied = value; } }
     public bool local { get { return _local; } set { _local = value; } }
@@ -71,7 +70,6 @@ public class ScriptObjPlayerData : ScriptableObject
         _steamId = -999; _steamName = "";
         _playerCurrentGameScore = new PlayerCurrentGameScore();
         _playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
-        _playerCurrentGameScore = new PlayerCurrentGameScore();
         _photonRoomIndex = -999;
         _occupied = _local = false;
         _rewiredIndex = _startingSpawnPosInd = 0;
@@ -131,13 +129,7 @@ public class ScriptObjPlayerData : ScriptableObject
 
     bool AllToysFound()
     {
-        if (_toysFound.Contains("one") &&
-                 _toysFound.Contains("two") &&
-                 _toysFound.Contains("three") &&
-                 _toysFound.Contains("four") &&
-                 _toysFound.Contains("five") &&
-                 _toysFound.Contains("six") &&
-                 _toysFound.Contains("seven"))
+        if (_toysFound.Length == 12)
         {
             return true;
         }
@@ -154,7 +146,7 @@ public class ScriptObjPlayerData : ScriptableObject
 
             if (rewiredId == 0)
                 if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("sword1_ca"))
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(CurrentRoomManager.instance.playerDataCells[0], "-sword1_ca-"));
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-sword1_ca-"));
         }
     }
 

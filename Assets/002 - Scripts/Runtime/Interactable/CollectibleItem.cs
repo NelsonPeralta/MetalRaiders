@@ -17,20 +17,10 @@ public class CollectibleCard : MonoBehaviour
 
     private void Awake()
     {
-        if (_type == Type.Card &&
-            GameManager.instance.flyingCameraMode == GameManager.FlyingCamera.Disabled &&
-            GameManager.instance.gameMode == GameManager.GameMode.Coop)
-        {
+        if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
             gameObject.SetActive(true);
-        }
-        else if (_type == Type.Toy && GameManager.instance.gameMode == GameManager.GameMode.Versus && GameManager.instance.nbLocalPlayersPreset == 1)
-        {
-            gameObject.SetActive(true);
-        }
-        else
-        {
+        else if (GameManager.instance.flyingCameraMode == GameManager.FlyingCamera.Enabled && GameManager.instance.gameMode == GameManager.GameMode.Coop)
             gameObject.SetActive(false);
-        }
     }
 
     // Start is called before the first frame update
@@ -76,7 +66,7 @@ public class CollectibleCard : MonoBehaviour
                 if (_type == Type.Card)
                     CurrentRoomManager.instance.playerDataCells[0].AddFoundCard(_name);
                 else if (_type == Type.Toy)
-                    CurrentRoomManager.instance.playerDataCells[0].AddFoundToy(_name);
+                    CurrentRoomManager.instance.playerDataCells[0].AddFoundToy(SceneManager.GetActiveScene().buildIndex.ToString());
 
                 _foundFx.SetActive(true);
                 foreach (var card in _cards)

@@ -255,33 +255,24 @@ public class MenuManager : MonoBehaviour
 
         if (GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates))
         {
-            print("CloseCarnageReportMenu 1");
             GameManager.instance.RemoveFromPreviousScenePayload(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates);
             Launcher.instance.TriggerOnJoinedRoomBehaviour();
             //MenuManager.Instance.OpenMenu("multiplayer_room");
             //Launcher.instance.DestroyNameplates();
             //Launcher.instance.CreateNameplates();
         }
-        else if (GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.OpenMultiplayerRoomOnly))
-        {
-            print("CloseCarnageReportMenu 2");
-            GameManager.instance.RemoveFromPreviousScenePayload(GameManager.PreviousScenePayload.OpenMultiplayerRoomOnly);
-            CloseMenu(GetMenu("carnage report"));
-        }
         else
         {
             OpenMainMenu();
         }
+
+        CurrentRoomManager.instance.ResetPlayerDataCellsCurrentGameScoreOnly();
     }
 
-    public void OpenCarnageReportMenu(Menu m) // used from Credits menu
+    public void OpenCarnageReportMenu()
     {
-        OpenMenu(m);
-    }
-    public void OpenCarnageReportMenuBtn()
-    {
-        GameManager.instance.AddToPreviousScenePayload(PreviousScenePayload.OpenMultiplayerRoomOnly);
-        OpenPopUpMenu("carnage report");
+        print("OpenCarnageReportMenu");
+        OpenMenu("carnage report");
     }
 
     public void OpenArmoryMenu(ScriptObjPlayerData scriptObjPlayerData)

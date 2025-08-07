@@ -1,10 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
-[Serializable]
 public struct CarnageReportStruc
 {
     public string playerName { get { return _playerName; } }

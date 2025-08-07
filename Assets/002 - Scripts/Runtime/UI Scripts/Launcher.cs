@@ -1087,8 +1087,6 @@ public class Launcher : MonoBehaviourPunCallbacks
         if (GameManager.instance.gameMode == GameMode.Versus)
         {
             _mapPreviewText.text = $"{GameManager.instance.gameType} on {GameManager.instance.mapDataCells.Where(obj => obj.sceneBuildIndex.Equals(levelToLoadIndex)).SingleOrDefault().mapName}";
-            if (GameManager.instance.gameType == GameType.Hill)
-                _mapPreviewText.text = $"King of the Hill on {GameManager.instance.mapDataCells.Where(obj => obj.sceneBuildIndex.Equals(levelToLoadIndex)).SingleOrDefault().mapName}";
 
             if (GameManager.instance.teamMode == TeamMode.Classic)
                 _mapPreviewText.text = "Team " + _mapPreviewText.text;
@@ -1396,15 +1394,16 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         for (int i = 0; i < GameManager.instance.nbLocalPlayersPreset; i++)
         {
-            CurrentRoomManager.GetLocalPlayerData(i).steamId = i;
-            CurrentRoomManager.GetLocalPlayerData(i).steamName = $"Player {i + 1}";
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
             CurrentRoomManager.GetLocalPlayerData(i).occupied = true;
             CurrentRoomManager.GetLocalPlayerData(i).local = true;
             CurrentRoomManager.GetLocalPlayerData(i).photonRoomIndex = i + 1;
             CurrentRoomManager.GetLocalPlayerData(i).rewiredId = i;
+            CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.player_id = i;
+            CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.username = $"player{i + 1}";
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorDataString = "helmet1";
             CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorColorPalette = "grey";
+            CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.level = 1;
 
 
             if (i == 1)

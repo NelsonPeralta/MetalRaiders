@@ -1034,7 +1034,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
                 AchievementManager.UnlockAchievement("ENDURE");
 
                 if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("geiger-lfa"))
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(CurrentRoomManager.instance.playerDataCells[0], "-geiger-lfa-"));
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine("-geiger-lfa-"));
             }
             
 

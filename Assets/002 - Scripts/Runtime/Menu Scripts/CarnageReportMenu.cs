@@ -7,14 +7,14 @@ using UnityEngine;
 public class CarnageReportMenu : MonoBehaviour
 {
     public static GameManager.Team winningTeam = GameManager.Team.None;
-
-    public List<CarnageReportStruc> carnageReportStrucs { get { return _carnageReportStrucs; } }
-
-
-
     [SerializeField] CarnageReportRow[] carnageReportRowArray;
     [SerializeField] GameObject _backBtn;
-    [SerializeField] List<CarnageReportStruc> _carnageReportStrucs = new List<CarnageReportStruc>();
+
+
+
+
+
+    List<CarnageReportStruc> _carnageReportStrucs = new List<CarnageReportStruc>();
 
 
 
@@ -143,7 +143,7 @@ public class CarnageReportMenu : MonoBehaviour
 
     IEnumerator EnableBackBtn_Coroutine()
     {
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(1);
 
         //if (PhotonNetwork.InRoom) Launcher.instance.TriggerOnJoinedRoomBehaviour();
 

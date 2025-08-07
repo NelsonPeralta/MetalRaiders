@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.ProBuilder.MeshOperations;
 
 
 // REFERENCE: https://stackoverflow.com/questions/58328209/how-to-make-a-free-fly-camera-script-in-unity-with-acceleration-and-decceleratio
@@ -13,32 +12,50 @@ public class FloatingCamera : MonoBehaviour
         get { return _counter; }
         set
         {
-            // 0 is always null and is initialised in GameManager on scene 0 loaded
-            _counter = value;
-
-            if (_counter == -1)
-            {
-                _counter = GameManager.instance.gameplayRecorderPoints.Count - 1;
-            }
-            else if (_counter >= GameManager.instance.gameplayRecorderPoints.Count)
+            if (_counter == 99)
             {
                 _counter = 0;
-            }
 
-            if (_counter == 0)
-            {
-                transform.parent = null;
-            }
-            else
-            {
                 transform.parent = GameManager.instance.gameplayRecorderPoints[_counter].transform;
                 transform.localPosition = Vector3.zero;
                 transform.localRotation = Quaternion.identity;
+            }
+            else
+            {
+                _counter = value;
+
+                if (_counter > GameManager.instance.gameplayRecorderPoints.Count - 1)
+                {
+                    _counter = 99;
+                    transform.parent = null;
+                }
+                else if (_counter == -1)
+                {
+                    _counter = GameManager.instance.gameplayRecorderPoints.Count - 1;
+
+                    transform.parent = GameManager.instance.gameplayRecorderPoints[_counter].transform;
+                    transform.localPosition = Vector3.zero;
+                    transform.localRotation = Quaternion.identity;
+                }
+                else
+                {
+                    transform.parent = GameManager.instance.gameplayRecorderPoints[_counter].transform;
+                    transform.localPosition = Vector3.zero;
+                    transform.localRotation = Quaternion.identity;
+                }
             }
         }
     }
 
 
+    private int zoomCounter
+    {
+        get { return _zoomCounter; }
+        set
+        {
+            _zoomCounter = Mathf.Clamp(value, 0, GameManager.DEFAULT_FRAMERATE / 2);
+        }
+    }
 
     public float MaximumMovementSpeed
     {
@@ -97,8 +114,6 @@ public class FloatingCamera : MonoBehaviour
 
     private void Awake()
     {
-        if (GameManager.instance.flyingCameraMode == GameManager.FlyingCamera.Disabled) this.enabled = false;
-
         _changeCameraCd = 0.5f;
         _cam = GetComponent<Camera>();
         _maximumMovementSpeed = 0.05f;
@@ -115,46 +130,46 @@ public class FloatingCamera : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
-        if (GameManager.instance.flyingCameraMode == GameManager.FlyingCamera.Enabled)
+        if (!playerController.cameraIsFloating || !playerController.player.isMine) return;
+
+        if (playerController.rewiredPlayer.GetButton("Aim")) { zoomCounter += 2; } else zoomCounter -= 2;
+
+        _cam.fieldOfView = 60 - zoomCounter;
+        //var acceleration = HandleKeyInput();
+        _acceleration = Vector3.zero;
+
+        _acceleration.z = playerController.rewiredPlayer.GetAxis("Move Vertical");
+        _acceleration.x = playerController.rewiredPlayer.GetAxis("Move Horizontal");
+        _acceleration.y = 0;
+
+        if (playerController.activeControllerType != Rewired.ControllerType.Joystick)
         {
-            HandleMouseRotation();
+            if (playerController.rewiredPlayer.GetButton("Melee")) _acceleration.y = -0.5f;
+            else if (playerController.rewiredPlayer.GetButton("Interact")) _acceleration.y = 0.5f;
 
-            if (!playerController.cameraIsFloating || !playerController.player.isMine) return;
-
-            _acceleration = Vector3.zero;
-
-            _acceleration.z = playerController.rewiredPlayer.GetAxis("Move Vertical");
-            _acceleration.x = playerController.rewiredPlayer.GetAxis("Move Horizontal");
-            _acceleration.y = 0;
-
-            if (playerController.activeControllerType != Rewired.ControllerType.Joystick)
-            {
-                if (playerController.rewiredPlayer.GetButton("Melee")) _acceleration.y = -0.5f;
-                else if (playerController.rewiredPlayer.GetButton("Interact")) _acceleration.y = 0.5f;
-
-                if (playerController.rewiredPlayer.GetButton("Sprint")) _acceleration *= 3;
-            }
-            else
-            {
-                if (playerController.rewiredPlayer.GetButton("Jump")) _acceleration.y = -0.5f;
-                else if (playerController.rewiredPlayer.GetButton("Melee")) _acceleration.y = 0.5f;
-
-                if (playerController.rewiredPlayer.GetButton("Shoot")) _acceleration *= 3;
-            }
-
-
-            if (!playerController.cameraIsFloating || counter != 0) return;
-
-
-            _moveSpeed += _acceleration;
-
-            HandleDeceleration(_acceleration);
-
-            // clamp the move speed
-            if (_moveSpeed.magnitude > MaximumMovementSpeed) _moveSpeed = _moveSpeed.normalized * MaximumMovementSpeed;
-
-            transform.Translate(_moveSpeed);
+            if (playerController.rewiredPlayer.GetButton("Sprint")) _acceleration *= 3;
         }
+        else
+        {
+            if (playerController.rewiredPlayer.GetButton("Jump")) _acceleration.y = -0.5f;
+            else if (playerController.rewiredPlayer.GetButton("Melee")) _acceleration.y = 0.5f;
+
+            if (playerController.rewiredPlayer.GetButton("Shoot")) _acceleration *= 3;
+        }
+
+
+        if (!playerController.cameraIsFloating || counter != 99) return;
+
+        HandleMouseRotation();
+
+        _moveSpeed += _acceleration;
+
+        HandleDeceleration(_acceleration);
+
+        // clamp the move speed
+        if (_moveSpeed.magnitude > MaximumMovementSpeed) _moveSpeed = _moveSpeed.normalized * MaximumMovementSpeed;
+
+        transform.Translate(_moveSpeed);
     }
 
 
@@ -181,14 +196,14 @@ public class FloatingCamera : MonoBehaviour
 
         //applying mouse rotation
         // always rotate Y in global world space to avoid gimbal lock
-        if (!playerController.pauseMenuOpen) transform.Rotate(Vector3.up * rotationHorizontal, Space.World);
+        transform.Rotate(Vector3.up * rotationHorizontal, Space.World);
 
         var rotationY = transform.localEulerAngles.y;
 
         _rotationX += rotationVertical;
         _rotationX = Mathf.Clamp(_rotationX, -MaxXAngle, MaxXAngle);
 
-        if (!playerController.pauseMenuOpen) transform.localEulerAngles = new Vector3(-_rotationX, rotationY, 0);
+        transform.localEulerAngles = new Vector3(-_rotationX, rotationY, 0);
     }
 
     private void HandleDeceleration(Vector3 acceleration)

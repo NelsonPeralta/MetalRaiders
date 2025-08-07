@@ -180,28 +180,6 @@ public class MenuGamePadCursor : MonoBehaviour
                 }
             }
         }
-
-
-        if (GameManager.instance.activeControllerType != ControllerType.Joystick)
-        {
-            if (rewiredPlayer.GetButtonDown("Escape"))
-            {
-                print($"{FindObjectsByType<EscapeButtonTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Length}");
-
-                if (FindObjectsByType<EscapeButtonTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Length > 0)
-                    FindObjectsByType<EscapeButtonTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)[0].GetComponent<Button>().onClick.Invoke();
-            }
-        }
-        else
-        {
-            if (rewiredPlayer.GetButtonDown("Crouch"))
-            {
-                print($"{FindObjectsByType<EscapeButtonTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Length}");
-
-                if (FindObjectsByType<EscapeButtonTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Length > 0)
-                    FindObjectsByType<EscapeButtonTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)[0].GetComponent<Button>().onClick.Invoke();
-            }
-        }
     }
 
     // Update is called once per frame
@@ -285,24 +263,24 @@ public class MenuGamePadCursor : MonoBehaviour
             for (int i = _preEentSystemRaycastResults.Count - 1; i >= 0; i--)
             {
                 if (_preEentSystemRaycastResults[i].gameObject != null)
-                    if (_preEentSystemRaycastResults[i].gameObject.GetComponent<Button>() && _preEentSystemRaycastResults[i].gameObject.GetComponent<Button>().transition == Selectable.Transition.SpriteSwap)
-                    {
+                if (_preEentSystemRaycastResults[i].gameObject.GetComponent<Button>() && _preEentSystemRaycastResults[i].gameObject.GetComponent<Button>().transition == Selectable.Transition.SpriteSwap)
+                {
                         _preEentSystemRaycastResults[i].gameObject.GetComponent<Image>().sprite = _buttonUnderCursorUnselectedSprite;
-                        if (_preEentSystemRaycastResults[i].gameObject.GetComponent<EventTrigger>())
+                    if (_preEentSystemRaycastResults[i].gameObject.GetComponent<EventTrigger>())
+                    {
+                        //print($"MenuGamePadCursor OnPointerExit {r.gameObject.name} {r.gameObject.activeSelf}");
+
+                        if (SceneManager.GetActiveScene().buildIndex == 0 && MenuManager.Instance.GetOpenMenu().Equals("armory") && !_preEentSystemRaycastResults[i].gameObject.activeSelf)
                         {
-                            //print($"MenuGamePadCursor OnPointerExit {r.gameObject.name} {r.gameObject.activeSelf}");
-
-                            if (SceneManager.GetActiveScene().buildIndex == 0 && MenuManager.Instance.GetOpenMenu().Equals("armory") && !_preEentSystemRaycastResults[i].gameObject.activeSelf)
-                            {
-                                // do nothing
-                            }
-                            else
-                            {
-                                _preEentSystemRaycastResults[i].gameObject.GetComponent<EventTrigger>().OnPointerExit(pointerData);
-                            }
-
+                            // do nothing
                         }
+                        else
+                        {
+                            _preEentSystemRaycastResults[i].gameObject.GetComponent<EventTrigger>().OnPointerExit(pointerData);
+                        }
+
                     }
+                }
             }
 
 

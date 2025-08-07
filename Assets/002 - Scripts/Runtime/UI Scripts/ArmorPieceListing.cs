@@ -118,7 +118,7 @@ public class ArmorPieceListing : MonoBehaviour
     {
         print("BuyArmorPiece");
         GameManager.PlayClickSound();
-        StartCoroutine(WebManager.webManagerInstance.SaveUnlockedArmorStringData_Coroutine(MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell,playerArmorPiece));
+        StartCoroutine(WebManager.webManagerInstance.SaveUnlockedArmorStringData_Coroutine(playerArmorPiece));
 
         ArmoryManager.instance.creditsText.text = $"{MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.credits.ToString()}cb";
         ArmoryManager.instance.OnArmorBuy_Delegate();

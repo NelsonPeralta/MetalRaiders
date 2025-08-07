@@ -33,7 +33,7 @@ public class SpawnPoint : MonoBehaviour
         }
     }
 
-    public int blockingLevel { get { return _blockingLevel; } }
+    public int dangerLevel { get { return _dangerLevel; } }
 
     public GameManager.Team team { get { return _team; } }
 
@@ -47,8 +47,8 @@ public class SpawnPoint : MonoBehaviour
 
     [SerializeField] bool /*_seen,*/ _reserved;
     //[SerializeField] float _seenReset;
-    [SerializeField] int _blockingLevel;
-    [SerializeField] List<BlockingLevelEntry> _blockingLevelEntries = new List<BlockingLevelEntry>();
+    [SerializeField] int _dangerLevel;
+    [SerializeField] List<DangerEntry> _dangerEntries = new List<DangerEntry>();
 
     float _reservedReset;
     float _evaluateDangerCooldown;
@@ -109,10 +109,10 @@ public class SpawnPoint : MonoBehaviour
 
     private void Update()
     {
-        for (int i = _blockingLevelEntries.Count - 1; i >= 0; i--)
+        for (int i = _dangerEntries.Count - 1; i >= 0; i--)
         {
-            if (_blockingLevelEntries[i].ttl > 0) _blockingLevelEntries[i].ttl -= Time.deltaTime;
-            if (_blockingLevelEntries[i].ttl <= 0) _blockingLevelEntries.RemoveAt(i);
+            if (_dangerEntries[i].ttl > 0) _dangerEntries[i].ttl -= Time.deltaTime;
+            if (_dangerEntries[i].ttl <= 0) _dangerEntries.RemoveAt(i);
         }
 
         if (_evaluateDangerCooldown > 0)
@@ -121,12 +121,12 @@ public class SpawnPoint : MonoBehaviour
 
             if (_evaluateDangerCooldown <= 0)
             {
-                _blockingLevel = 0;
+                _dangerLevel = 0;
 
-                if (_blockingLevelEntries.Count > 0)
+                if (_dangerEntries.Count > 0)
                 {
-                    for (int i = _blockingLevelEntries.Count - 1; i >= 0; i--)
-                        _blockingLevel += _blockingLevelEntries[i].dangerLevel;
+                    for (int i = _dangerEntries.Count - 1; i >= 0; i--)
+                        _dangerLevel += _dangerEntries[i].dangerLevel;
 
                     _evaluateDangerCooldown = SeenResetTime * 0.3f;
                 }
@@ -160,31 +160,31 @@ public class SpawnPoint : MonoBehaviour
         //}
     }
 
-    public void AddBlockingLevelEntry(int idd, int levl, int ttll)
+    public void AddDanger(int idd, int levl, int ttll)
     {
-        if (_blockingLevelEntries.Count == 0) _evaluateDangerCooldown = SeenResetTime * 0.3f;
+        if (_dangerEntries.Count == 0) _evaluateDangerCooldown = SeenResetTime * 0.3f;
 
-        for (int i = 0; i < _blockingLevelEntries.Count; i++)
+        for (int i = 0; i < _dangerEntries.Count; i++)
         {
-            if (_blockingLevelEntries[i].id == idd)
+            if (_dangerEntries[i].id == idd)
             {
-                _blockingLevelEntries[i].ttl = SeenResetTime;
+                _dangerEntries[i].ttl = SeenResetTime;
                 return;
             }
         }
 
-        _blockingLevelEntries.Add(new BlockingLevelEntry(idd, levl, ttll));
+        _dangerEntries.Add(new DangerEntry(idd, levl, ttll));
     }
 
 
     [Serializable]
-    class BlockingLevelEntry
+    class DangerEntry
     {
         public int id;
         public int dangerLevel;
         public float ttl;
 
-        public BlockingLevelEntry(int idd, int lvl, int tt)
+        public DangerEntry(int idd, int lvl, int tt)
         {
             id = idd;
             dangerLevel = lvl;
