@@ -779,8 +779,8 @@ public class CurrentRoomManager : MonoBehaviour
                     Debug.Log($"Unlocked Achivement {_tempAchievementName}");
                     AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
-                if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("warden_ca"))
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(instance._playerDataCells[0], "-warden_ca-"));
+                if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("tacpad-lfa"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(instance._playerDataCells[0], "-tacpad-lfa-"));
             }
 
 
@@ -795,8 +795,8 @@ public class CurrentRoomManager : MonoBehaviour
                     AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
 
-                if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("burning_helmet"))
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(instance._playerDataCells[0], "-burning_helmet-"));
+                if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("flaming_helmet"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(instance._playerDataCells[0], "-flaming_helmet-"));
             }
 
 
@@ -824,11 +824,8 @@ public class CurrentRoomManager : MonoBehaviour
                     AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
 
-                if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("security_lsa"))
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(instance._playerDataCells[0], "-security_lsa-"));
-
-                if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("security_rsa"))
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(instance._playerDataCells[0], "-security_rsa-"));
+                if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("sword1_ca"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(instance._playerDataCells[0], "-sword1_ca-"));
             }
 
 

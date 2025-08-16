@@ -16,10 +16,10 @@ MonoBehaviour:
   _local: 1
   _steamId: 76561199568926242
   _steamName: ptsm1
-  _photonRoomIndex: 1
+  _photonRoomIndex: -999
   _rewiredIndex: 0
   _startingSpawnPosInd: 0
-  _invites: 4
+  _invites: 0
   _team: 0
   _playerExtendedPublicData:
     username: ptsm1
@@ -30,33 +30,33 @@ MonoBehaviour:
     xp: 0
     rank: 1
     honor: 0
-    credits: 0
-    unlocked_armor_data_string: helmet1---katana--
-    armor_data_string: helmet1--katana-
-    armor_color_palette: purple
-    kills: 9
-    deaths: 0
-    headshots: 2
-    melee_kills: 0
-    grenade_kills: 0
+    credits: 78349
+    unlocked_armor_data_string: helmet1---katana---vanguard_hc--operator_lsa-zenkai-infiltrator_hc-
+    armor_data_string: --katana--zenkai-
+    armor_color_palette: red
+    kills: 72
+    deaths: 62
+    headshots: 24
+    melee_kills: 10
+    grenade_kills: 2
     pve_kills: 0
     pve_deaths: 0
     pve_headshots: 0
     highest_points: 0
   _playerCurrentGameScore:
     deaths: 0
-    damage: 500
+    damage: 0
     headshots: 0
     nutshots: 0
     meleeKills: 0
     grenadeKills: 0
     stickyKills: 0
     kd: 0
-    _score: 2
-    _kills: 2
+    _score: 0
+    _kills: 0
     _points: 0
     _totalPoints: 0
   _cardsFound: green-black-red-blue-orange-white-yellow-
-  _toysFound: 1183
-  _armorPiecesPurchased: 1
+  _toysFound: 1183twoone
+  _armorPiecesPurchased: 5
   sens: 3

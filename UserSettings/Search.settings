@@ -1,4 +1,6 @@
 trackSelection = true
+refreshSearchWindowsInPlayMode = false
+pickerAdvancedUI = false
 fetchPreview = true
 defaultFlags = 0
 keepOpen = false
@@ -28,6 +30,9 @@ scopes = {
 	"last_search.3BE40471" = "light"
 	"OpenInspectorPreview.3BE40471" = "0"
 	"currentGroup.3BE40471" = "all"
+	"last_search.66F56946" = ""
+	"OpenInspectorPreview.66F56946" = "0"
+	"currentGroup.66F56946" = null
 }
 providers = {
 	asset = {
@@ -75,6 +80,16 @@ providers = {
 		priority = 100
 		defaultAction = null
 	}
+	presets_provider = {
+		active = false
+		priority = -10
+		defaultAction = null
+	}
+	profilermarkers = {
+		active = false
+		priority = 100
+		defaultAction = null
+	}
 }
 objectSelectors = {
 }
@@ -103,3 +118,5 @@ queryBuilder = false
 ignoredProperties = "id;name;classname;imagecontentshash"
 helperWidgetCurrentArea = "all"
 disabledIndexers = ""
+minIndexVariations = 2
+findProviderIndexHelper = true

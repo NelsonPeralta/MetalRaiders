@@ -153,8 +153,8 @@ public class ScriptObjPlayerData : ScriptableObject
                 AchievementManager.UnlockAchievement("COLLECTOR");
 
             if (rewiredId == 0)
-                if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("sword1_ca"))
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(CurrentRoomManager.instance.playerDataCells[0], "-sword1_ca-"));
+                if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("burning_helmet"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(CurrentRoomManager.instance.playerDataCells[0], "-burning_helmet-"));
         }
     }
 
