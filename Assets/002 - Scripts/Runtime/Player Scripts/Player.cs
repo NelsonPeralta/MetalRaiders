@@ -1091,6 +1091,7 @@ public class Player : Biped
 
     public void PlayHurtSound()
     {
+        return;
         //if (hitPoints > 15)
         if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
@@ -1110,6 +1111,7 @@ public class Player : Biped
 
     public void PlayShootingEnemyClip()
     {
+        return;
         if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             ranClipChance = _ranClipChanceOdds;
@@ -1130,6 +1132,7 @@ public class Player : Biped
 
     public void PlayReloadingClip()
     {
+        return;
         if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             ranClipChance = _ranClipChanceOdds;
@@ -1150,6 +1153,7 @@ public class Player : Biped
 
     void PlayAllyDownClip(Player p)
     {
+        return;
         if (p != this)
             if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
             {
@@ -1171,6 +1175,7 @@ public class Player : Biped
 
     public void PlayThrowingGrenadeClip()
     {
+        return;
         if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             ranClipChance = _ranClipChanceOdds;
@@ -1191,6 +1196,7 @@ public class Player : Biped
 
     public void PlayEnemyDownClip()
     {
+        return;
         if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             ranClipChance = _ranClipChanceOdds;
@@ -1211,6 +1217,7 @@ public class Player : Biped
 
     public void PlayOutOfAmmoClip()
     {
+        return;
         if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
         {
             ranClipChance = _ranClipChanceOdds;
@@ -1260,7 +1267,7 @@ public class Player : Biped
 
     void SpawnRagdoll()
     {
-        var ragdoll = RagdollPool.instance.GetPooledPlayerRagdoll(Array.IndexOf(CurrentRoomManager.instance.playerDataCells.ToArray(), playerDataCell), isMine);
+        var ragdoll = RagdollPool.instance.GetPooledPlayerRagdoll(playerDataCell.photonRoomIndex, isMine);
         //var ragdoll = RagdollPool.instance.GetRa
         ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
         ragdoll.transform.rotation = transform.rotation;

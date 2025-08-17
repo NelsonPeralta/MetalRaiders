@@ -1,3 +1,4 @@
+using MathNet.Numerics;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,16 +13,20 @@ public class RagdollPool : MonoBehaviour
     public List<GameObject> ragdollPoolList = new List<GameObject>();
 
 
+    static int RAGDOLLS_PER_PLAYER = 3;
+
+
     private void Awake()
     {
         instance = this;
 
-        for (int j = 0; j < CurrentRoomManager.instance.expectedNbPlayers; j++)
+        for (int j = 0; j < CurrentRoomManager.instance.expectedNbPlayers * RAGDOLLS_PER_PLAYER; j++)
         {
             GameObject obj = Instantiate(ragdollPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
             ragdollPoolList.Add(obj);
             obj.transform.parent = gameObject.transform;
+            obj.name += obj.name + $" {j}";
         }
     }
 
@@ -49,16 +54,50 @@ public class RagdollPool : MonoBehaviour
     }
 
 
-    public GameObject GetPooledPlayerRagdoll(int pDataCellInd, bool isMine)
+
+    public GameObject GetPooledPlayerRagdoll(int photonRoomIndex, bool isMine)
     {
-        GameObject obj = ragdollPoolList[pDataCellInd];
+        GameObject obj = null;
+
+        for (int i = (photonRoomIndex - 1) * RAGDOLLS_PER_PLAYER; i < (photonRoomIndex * RAGDOLLS_PER_PLAYER); i++)
+        {
+            print($"GetPooledPlayerRagdoll {i} is active:{ragdollPoolList[i].activeSelf} {ragdollPoolList[i].name}");
+
+            if (!ragdollPoolList[i].activeSelf)
+            {
+                print($"GetPooledPlayerRagdoll returnin {i}");
+                obj = ragdollPoolList[i];
+                break;
+            }
+        }
+
+        if (!obj)
+        {
+            obj = ragdollPoolList[(photonRoomIndex - 1) * RAGDOLLS_PER_PLAYER];
+            obj.SetActive(false);
+        }
+
+        if (obj.GetComponent<PlayerRagdoll>().changeLayerCoroutine != null) StopCoroutine(obj.GetComponent<PlayerRagdoll>().changeLayerCoroutine);
+        if (obj.GetComponent<PlayerRagdoll>().disableRagdollCoroutine != null) StopCoroutine(obj.GetComponent<PlayerRagdoll>().disableRagdollCoroutine);
 
         obj.transform.parent = null;
         SceneManager.MoveGameObjectToScene(obj, SceneManager.GetActiveScene()); // Undos DontDestroyOnLoad
-        StartCoroutine(ChangeRagdollLayer(obj, Player.RESPAWN_TIME * 0.95f));
-        StartCoroutine(DisableRagdollAfterTime(obj, Player.RESPAWN_TIME));
+        obj.GetComponent<PlayerRagdoll>().changeLayerCoroutine = StartCoroutine(ChangeRagdollLayer(obj, 30 * 0.95f));
+        obj.GetComponent<PlayerRagdoll>().disableRagdollCoroutine = StartCoroutine(DisableRagdollAfterTime(obj, 30));
         obj.GetComponent<PlayerRagdoll>().isMine = isMine;
+
         return obj;
+
+
+
+        //GameObject obj = ragdollPoolList[pDataCellInd];
+
+        //obj.transform.parent = null;
+        //SceneManager.MoveGameObjectToScene(obj, SceneManager.GetActiveScene()); // Undos DontDestroyOnLoad
+        //StartCoroutine(ChangeRagdollLayer(obj, Player.RESPAWN_TIME * 0.95f));
+        //StartCoroutine(DisableRagdollAfterTime(obj, 30));
+        //obj.GetComponent<PlayerRagdoll>().isMine = isMine;
+        //return obj;
 
 
 

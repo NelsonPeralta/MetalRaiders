@@ -269,26 +269,29 @@ public class ReticuleMagnetism : MonoBehaviour
 
     void Magnetism()
     {
-        // Increase yFact and xFact in Inspector to weaken magnetism
-        _distanceFact = Mathf.Clamp(_distFromMagTrans / raycastRange, 1, 0);
-
-
-        //if (Mathf.Abs(yDiff) > 1f) // Prevents from working if there is the minimal movement in Y axis when moving horizontally
-        if (Mathf.Abs(yMagDir) > 0) // Prevents from working if there is the minimal movement in Y axis when moving horizontally
+        if (player.playerInventory.activeWeapon.killFeedOutput != WeaponProperties.KillFeedOutput.Sniper)
         {
-            yMag = Mathf.Clamp((Mathf.Abs(yMagDir) / (yFact * _distanceFact)) * -Mathf.Sign(yMagDir), -0.9f, 0.9f);
-            //player.playerCamera.verticalAxisTarget.Rotate(Vector3.right * yMag);
+            // Increase yFact and xFact in Inspector to weaken magnetism
+            _distanceFact = Mathf.Clamp(_distFromMagTrans / raycastRange, 1, 0);
 
-            player.playerCamera.AddToUpDownRotation(yMag);
-        }
 
-        //if (Mathf.Abs(xDiff) > 0.5f)
-        if (Mathf.Abs(xMagDir) > 0)
-        {
-            xMag = Mathf.Clamp((Mathf.Abs(xMagDir) / (xFact * _distanceFact)) * Mathf.Sign(xMagDir), -0.9f, 0.9f);
-            //player.playerCamera.horizontalAxisTarget.Rotate(Vector3.up * xMag);
+            //if (Mathf.Abs(yDiff) > 1f) // Prevents from working if there is the minimal movement in Y axis when moving horizontally
+            if (Mathf.Abs(yMagDir) > 0) // Prevents from working if there is the minimal movement in Y axis when moving horizontally
+            {
+                yMag = Mathf.Clamp((Mathf.Abs(yMagDir) / (yFact * _distanceFact)) * -Mathf.Sign(yMagDir), -0.9f, 0.9f);
+                //player.playerCamera.verticalAxisTarget.Rotate(Vector3.right * yMag);
 
-            player.playerCamera.AddToLeftRightRotation(xMag);
+                player.playerCamera.AddToUpDownRotation(yMag);
+            }
+
+            //if (Mathf.Abs(xDiff) > 0.5f)
+            if (Mathf.Abs(xMagDir) > 0)
+            {
+                xMag = Mathf.Clamp((Mathf.Abs(xMagDir) / (xFact * _distanceFact)) * Mathf.Sign(xMagDir), -0.9f, 0.9f);
+                //player.playerCamera.horizontalAxisTarget.Rotate(Vector3.up * xMag);
+
+                player.playerCamera.AddToLeftRightRotation(xMag);
+            }
         }
     }
 }

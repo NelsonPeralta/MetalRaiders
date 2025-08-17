@@ -8,6 +8,8 @@ public class PlayerRagdoll : Ragdoll
     public bool isMine;
     public AudioSource respawnBeepAudioSource;
 
+    public Coroutine changeLayerCoroutine, disableRagdollCoroutine;
+
 
     [SerializeField] Transform _cameraHolder;
     [SerializeField] Transform _cameraAnchor;
