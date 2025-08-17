@@ -303,7 +303,8 @@ public partial class WebManager
 
 
 
-            Debug.Log($"SaveBasicOnlineStats_Coroutine. Xp: {pda.playerBasicOnlineStats.xp} -> {pda.playerBasicOnlineStats.xp + xpAndCreditGain}");
+            Debug.Log($"SaveBasicOnlineStats_Coroutine. Xp: {CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.xp} -> " +
+                $"{CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.xp + xpAndCreditGain}");
 
             ScriptObjPlayerData playerData = CurrentRoomManager.instance.playerDataCells[0];
             
@@ -400,7 +401,8 @@ public partial class WebManager
         if (onlinePlayerSwarmScript.GetTotalPoints() > newHighestScore)
             newHighestScore = onlinePlayerSwarmScript.GetTotalPoints();
 
-        Debug.Log("bababooey " + pda.GetPvEHighestPoints() + " " + onlinePlayerSwarmScript.GetTotalPoints() + " " + newHighestScore + "\nXp to Level: ");
+        Debug.Log("bababooey " + CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.highest_points 
+            + " " + onlinePlayerSwarmScript.GetTotalPoints() + " " + newHighestScore + "\nXp to Level: ");
 
         //GameManager.instance.GetMyPlayer().GetComponent<PlayerUI>().killFeedManager.EnterNewFeed("Saving");
 
