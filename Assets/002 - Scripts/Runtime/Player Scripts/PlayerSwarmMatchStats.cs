@@ -49,12 +49,6 @@ public class PlayerSwarmMatchStats : MonoBehaviourPunCallbacks
                 {
                     _achvCheck = true;
                     AchievementManager.UnlockAchievement("OMA");
-
-                    if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("yoroi_lsa"))
-                        WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(CurrentRoomManager.instance.playerDataCells[0], "-yoroi_lsa-"));
-
-                    if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("yoroi_rsa"))
-                        WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(CurrentRoomManager.instance.playerDataCells[0], "-yoroi_rsa-"));
                 }
             }
         }

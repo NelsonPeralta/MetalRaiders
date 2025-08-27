@@ -307,7 +307,7 @@ public partial class WebManager
                 $"{CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.xp + xpAndCreditGain}");
 
             ScriptObjPlayerData playerData = CurrentRoomManager.instance.playerDataCells[0];
-            
+
             int playerId = playerData.playerExtendedPublicData.player_id;
             int newLevel = playerData.playerExtendedPublicData.level;
             int newXp = playerData.playerExtendedPublicData.xp + xpAndCreditGain;
@@ -331,13 +331,13 @@ public partial class WebManager
                 Debug.Log("LEVEL UP");
                 newLevel = playerData.playerExtendedPublicData.level + 1;
             }
-            GameManager.instance.carnageReport = 
-                new CarnageReport(rank, 
+            GameManager.instance.carnageReport =
+                new CarnageReport(rank,
                 playerData.playerExtendedPublicData.level,
-                playerData.playerExtendedPublicData.xp, 
+                playerData.playerExtendedPublicData.xp,
                 xpAndCreditGain,
-                playerData.playerExtendedPublicData.honor, 
-                honorGained, 
+                playerData.playerExtendedPublicData.honor,
+                honorGained,
                 newXp >= minXpToLevelUp && playerData.playerExtendedPublicData.level < 50, newLevel);
 
             WWWForm form = new WWWForm();
@@ -401,7 +401,7 @@ public partial class WebManager
         if (onlinePlayerSwarmScript.GetTotalPoints() > newHighestScore)
             newHighestScore = onlinePlayerSwarmScript.GetTotalPoints();
 
-        Debug.Log("bababooey " + CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.highest_points 
+        Debug.Log("bababooey " + CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.highest_points
             + " " + onlinePlayerSwarmScript.GetTotalPoints() + " " + newHighestScore + "\nXp to Level: ");
 
         //GameManager.instance.GetMyPlayer().GetComponent<PlayerUI>().killFeedManager.EnterNewFeed("Saving");
@@ -668,7 +668,7 @@ public partial class WebManager
 
 
     // Armory
-    public IEnumerator SaveUnlockedArmorStringData_Coroutine(ScriptObjPlayerData playerDataCell,  PlayerArmorPiece playerArmorPiece)
+    public IEnumerator SaveUnlockedArmorStringData_Coroutine(ScriptObjPlayerData playerDataCell, PlayerArmorPiece playerArmorPiece)
     {
         playerDataCell.playerExtendedPublicData.unlocked_armor_data_string += $"-{playerArmorPiece.entity}-";
         //pda.unlockedArmorDataString.Replace("\n\n", "\n");
@@ -712,7 +712,7 @@ public partial class WebManager
     [Tooltip("FOR ACHIEVEMENTS ONLY")]
     public static IEnumerator UnlockArmorPiece_Coroutine(ScriptObjPlayerData playerDataCell, string _armorPieceCodename)
     {
-        Debug.Log("UnlockArmorPiece_Coroutine");
+        Debug.Log($"UnlockArmorPiece_Coroutine: {_armorPieceCodename}");
         playerDataCell.playerExtendedPublicData.unlocked_armor_data_string += $"-{_armorPieceCodename}-";
         //pda.unlockedArmorDataString.Replace("\n\n", "\n");
 

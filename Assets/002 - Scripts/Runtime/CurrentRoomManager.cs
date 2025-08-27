@@ -844,9 +844,26 @@ public class CurrentRoomManager : MonoBehaviour
             }
 
 
+            if (instance._playerDataCells[0].playerExtendedPublicData.highest_points > 999999
+                || Steamworks.SteamUserStats.GetAchievement("OMA", out _achievementUnlocked))
+            {
+                print("unlocking armor: zenkai shoulders");
+                if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("zenkai_lsa"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(CurrentRoomManager.instance.playerDataCells[0], "-zenkai_lsa-"));
+
+                if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("zenkai_rsa"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(CurrentRoomManager.instance.playerDataCells[0], "-zenkai_rsa-"));
+            }
+
+            if (Steamworks.SteamUserStats.GetAchievement("ENDURE", out _achievementUnlocked))
+            {
+                if (!instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("warden_ca"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(CurrentRoomManager.instance.playerDataCells[0], "-warden_ca-"));
+            }
 
 
 
+            instance._playerDataCells[0].CheckIfAllItemsHaveBeenFound();
         }
         else
         {

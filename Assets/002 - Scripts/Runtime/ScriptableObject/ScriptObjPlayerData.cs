@@ -144,7 +144,7 @@ public class ScriptObjPlayerData : ScriptableObject
         return false;
     }
 
-    void CheckIfAllItemsHaveBeenFound()
+    public void CheckIfAllItemsHaveBeenFound()
     {
         if (AllCardsFound() && AllToysFound())
         {
