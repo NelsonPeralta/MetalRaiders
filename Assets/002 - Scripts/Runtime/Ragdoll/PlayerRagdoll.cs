@@ -79,7 +79,7 @@ public class PlayerRagdoll : Ragdoll
 
     private void OnDisable()
     {
-        GetComponent<Animator>().enabled = true;
+        //GetComponent<Animator>().enabled = true;
         ResetRigidbodieVelocities();
     }
 
@@ -105,7 +105,11 @@ public class PlayerRagdoll : Ragdoll
     {
         foreach (Rigidbody rb in GetComponentsInChildren<Rigidbody>(true).Where(item => item.GetComponent<RagdollLimb>() != null))
         {
-            rb.linearVelocity = Vector3.zero; rb.angularVelocity = Vector3.zero;
+            if (!rb.isKinematic)
+            {
+                rb.linearVelocity = Vector3.zero;
+                rb.angularVelocity = Vector3.zero;
+            }
         }
     }
 

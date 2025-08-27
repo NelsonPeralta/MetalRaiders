@@ -1269,7 +1269,7 @@ public class Player : Biped
     {
         var ragdoll = RagdollPool.instance.GetPooledPlayerRagdoll(playerDataCell.photonRoomIndex, isMine);
         //var ragdoll = RagdollPool.instance.GetRa
-        ragdoll.transform.position = transform.position + new Vector3(0, -1, 0);
+        ragdoll.transform.position = transform.position + new Vector3(0, -1.3f, -0.27f);
         ragdoll.transform.rotation = transform.rotation;
         ragdoll.GetComponent<PlayerArmorManager>().player = this;
 
@@ -1286,51 +1286,119 @@ public class Player : Biped
         ragdoll.GetComponent<PlayerRagdoll>().SetPlayerCamera(playerCamera, mainCamera);
         ragdoll.GetComponent<PlayerRagdoll>().ToggleAllRigidbodiesToKinetmatic(true);
         ragdoll.SetActive(true);
-        //ragdoll.GetComponent<PlayerRagdoll>().ResetRigidbodieVelocities();
-        //Debug.Break();
+        ragdoll.GetComponent<PlayerRagdoll>().ResetRigidbodieVelocities();
+
+        print("SpawnRagdoll_Coroutine_Frame_-1");
+
+        StartCoroutine(SpawnRagdoll_Coroutine_Frame_0((Vector3)impactDir, _ragdollPropulsion, ragdoll.GetComponent<PlayerRagdoll>()));
 
 
 
-        //ragdoll.GetComponent<Animator>().enabled = false;
-
-        impactDir = Vector3.Normalize((Vector3)impactDir);
-        Debug.Log($"PLAYER RAGDOLL {ragdoll.name} {deathNature} {impactDir} {impactPos}");
-        StartCoroutine(GiveRagdollPush_Coroutine((Vector3)impactDir, _ragdollPropulsion, ragdoll.GetComponent<PlayerRagdoll>()));
-
-        //if (deathByHeadshot)
-        //    ragdoll.GetComponent<PlayerRagdoll>().head.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 6000);
-        //else if (deathNature == DeathNature.Grenade || deathNature == DeathNature.Stuck || deathNature == DeathNature.RPG
-        //    || deathNature == DeathNature.Barrel || deathNature == DeathNature.UltraBind)
-        //    ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 9000);
-        //else if (deathNature == DeathNature.Melee)
-        //    ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 8000);
-        //else/* if (!deathByHeadshot || deathNature == DeathNature.None)*/
-        //    ragdoll.GetComponent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddForce((Vector3)impactDir * 5000);
+        //impactDir = Vector3.Normalize((Vector3)impactDir);
+        //Debug.Log($"PLAYER RAGDOLL {ragdoll.name} {deathNature} {impactDir} {impactPos}");
+        //StartCoroutine(GiveRagdollPush_Coroutine_Fram_0((Vector3)impactDir, _ragdollPropulsion, ragdoll.GetComponent<PlayerRagdoll>()));
     }
 
 
-    IEnumerator GiveRagdollPush_Coroutine(Vector3 imdir, DeathNature dn, PlayerRagdoll playerRagdoll)
+    IEnumerator GiveRagdollPush_Coroutine_Fram_0(Vector3 imdir, DeathNature dn, PlayerRagdoll playerRagdoll)
     {
         yield return new WaitForEndOfFrame();
 
+        //StartCoroutine(SpawnRagdoll_Coroutine_Frame_1());
 
         playerRagdoll.GetComponent<Animator>().enabled = false;
+
+
         playerRagdoll.GetComponent<PlayerRagdoll>().ToggleAllRigidbodiesToKinetmatic(false);
 
         //playerRagdoll.GetComponent<PlayerRagdoll>().ResetRigidbodieVelocities();
 
         if (dn == DeathNature.Headshot || dn == DeathNature.Sniped)
-            playerRagdoll.head.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 6000);
+            playerRagdoll.head.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 60);
         else if (dn.ToString().Contains("renade") || dn == DeathNature.Stuck || dn == DeathNature.RPG
             || dn == DeathNature.Barrel || dn == DeathNature.UltraBind)
-            playerRagdoll.hips.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 9000);
+            playerRagdoll.hips.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 90);
         else if (dn == DeathNature.Melee)
-            playerRagdoll.hips.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 8000);
+            playerRagdoll.hips.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 80);
         else/* if (!deathByHeadshot || deathNature == DeathNature.None)*/
-            playerRagdoll.hips.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 5000);
+            playerRagdoll.hips.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 50);
 
     }
 
+
+
+    IEnumerator SpawnRagdoll_Coroutine_Frame_0(Vector3 imdir, DeathNature dn, PlayerRagdoll playerRagdoll)
+    {
+        yield return new WaitForEndOfFrame();
+        print("SpawnRagdoll_Coroutine_Frame_0");
+        playerRagdoll.GetComponent<PlayerRagdoll>().ToggleAllRigidbodiesToKinetmatic(true);
+        playerRagdoll.ResetRigidbodieVelocities();
+        StartCoroutine(SpawnRagdoll_Coroutine_Frame_1((Vector3)impactDir, _ragdollPropulsion, playerRagdoll));
+        print("SpawnRagdoll_Coroutine_Frame_0 ran");
+    }
+
+    IEnumerator SpawnRagdoll_Coroutine_Frame_1(Vector3 imdir, DeathNature dn, PlayerRagdoll playerRagdoll)
+    {
+        yield return new WaitForEndOfFrame();
+        print("SpawnRagdoll_Coroutine_Frame_1");
+        playerRagdoll.GetComponent<Animator>().enabled = true; // called here, but will run next frame
+        StartCoroutine(SpawnRagdoll_Coroutine_Frame_2((Vector3)impactDir, _ragdollPropulsion, playerRagdoll));
+        print("SpawnRagdoll_Coroutine_Frame_1 ran");
+    }
+
+    IEnumerator SpawnRagdoll_Coroutine_Frame_2(Vector3 imdir, DeathNature dn, PlayerRagdoll playerRagdoll)
+    {
+        yield return new WaitForEndOfFrame();
+        print("SpawnRagdoll_Coroutine_Frame_2");
+        StartCoroutine(SpawnRagdoll_Coroutine_Frame_3((Vector3)impactDir, _ragdollPropulsion, playerRagdoll));
+        print("SpawnRagdoll_Coroutine_Frame_2 ran");
+    }
+
+    IEnumerator SpawnRagdoll_Coroutine_Frame_3(Vector3 imdir, DeathNature dn, PlayerRagdoll playerRagdoll)
+    {
+        yield return new WaitForEndOfFrame();
+        playerRagdoll.GetComponent<Animator>().enabled = false; // called here, but will run next frame
+        print("SpawnRagdoll_Coroutine_Frame_3");
+        StartCoroutine(SpawnRagdoll_Coroutine_Frame_4((Vector3)impactDir, _ragdollPropulsion, playerRagdoll));
+    }
+
+    IEnumerator SpawnRagdoll_Coroutine_Frame_4(Vector3 imdir, DeathNature dn, PlayerRagdoll playerRagdoll)
+    {
+        yield return new WaitForEndOfFrame();
+        print("SpawnRagdoll_Coroutine_Frame_4");
+        StartCoroutine(SpawnRagdoll_Coroutine_Frame_5((Vector3)impactDir, _ragdollPropulsion, playerRagdoll));
+    }
+
+    IEnumerator SpawnRagdoll_Coroutine_Frame_5(Vector3 imdir, DeathNature dn, PlayerRagdoll playerRagdoll)
+    {
+        yield return new WaitForEndOfFrame();
+        print($"SpawnRagdoll_Coroutine_Frame_5: {dn} {imdir}");
+        playerRagdoll.GetComponent<PlayerRagdoll>().ToggleAllRigidbodiesToKinetmatic(false);
+        playerRagdoll.ResetRigidbodieVelocities();
+
+        if (dn == DeathNature.Headshot || dn == DeathNature.Sniped)
+        {
+            if (imdir.y < 1 && imdir.y > 0) imdir.y = 1;
+            playerRagdoll.head.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 1200);
+            print($"SpawnRagdoll_Coroutine_Frame_5: Force 1");
+        }
+        else if (dn.ToString().Contains("renade") || dn == DeathNature.Stuck || dn == DeathNature.RPG
+            || dn == DeathNature.Barrel || dn == DeathNature.UltraBind)
+        {
+            playerRagdoll.hips.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 1800);
+            print($"SpawnRagdoll_Coroutine_Frame_5: Force 2");
+        }
+        else if (dn == DeathNature.Melee)
+        {
+            playerRagdoll.hips.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 1600);
+            print($"SpawnRagdoll_Coroutine_Frame_5: Force 3");
+        }
+        else
+        {
+            playerRagdoll.hips.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 1000);
+            print($"SpawnRagdoll_Coroutine_Frame_5: Force 4");
+        }
+    }
 
 
     void HitPointsRecharge()
