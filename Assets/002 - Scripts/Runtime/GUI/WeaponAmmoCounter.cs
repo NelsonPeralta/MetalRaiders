@@ -12,14 +12,7 @@ public class WeaponAmmoCounter : MonoBehaviour
 
     private void Start()
     {
-        try
-        {
-            _weaponProperties = GetComponent<WeaponProperties>();
-            _lootableWeapon = GetComponent<LootableWeapon>();
-        }
-        catch
-        {
-        }
+       
     }
 
     // Update is called once per frame
