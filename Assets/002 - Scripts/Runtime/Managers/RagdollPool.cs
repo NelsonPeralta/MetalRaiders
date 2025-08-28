@@ -133,6 +133,7 @@ public class RagdollPool : MonoBehaviour
         obj.GetComponent<PlayerRagdoll>().resetInUseCoroutine = StartCoroutine(ResetInUse_Coroutine(ragdollPoolList.IndexOf(obj.GetComponent<PlayerRagdoll>()), RAGDOLL_RESET_TIME + 2));
 
         obj.GetComponent<PlayerRagdoll>().isMine = isMine;
+        obj.GetComponent<PlayerRagdoll>().TriggerOnEnable();
 
         return obj;
     }

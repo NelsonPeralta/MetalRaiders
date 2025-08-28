@@ -36,16 +36,19 @@ public class PlayerRagdoll : Ragdoll
                 if (_respawnCountdown <= 3 && _respawnBeepCount == 0)
                 {
                     _respawnBeepCount++;
+                    print("beep");
                     respawnBeepAudioSource.Play();
                 }
                 else if (_respawnCountdown <= 2 && _respawnBeepCount == 1)
                 {
                     _respawnBeepCount++;
+                    print("beep");
                     respawnBeepAudioSource.Play();
                 }
                 else if (_respawnCountdown <= 1 && _respawnBeepCount == 2)
                 {
                     _respawnBeepCount++;
+                    print("beep");
                     respawnBeepAudioSource.Play();
                 }
         }
