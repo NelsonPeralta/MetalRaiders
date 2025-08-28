@@ -74,8 +74,11 @@ public class ScoreboardManager : MonoBehaviour
         {
             if (!MultiplayerManager.instance.isADraw)
             {
-                _winnerWitness.SetActive(CurrentRoomManager.instance.gameOver && MultiplayerManager.instance.winningPlayers.Contains(_player) && !CurrentRoomManager.instance.leftRoomManually);
-                _loserWitness.SetActive(CurrentRoomManager.instance.gameOver && !MultiplayerManager.instance.winningPlayers.Contains(_player) && !CurrentRoomManager.instance.leftRoomManually);
+                List<long> steamIds = CurrentRoomManager.instance.winningPlayerStructs.Select(player => player.steamId).ToList();
+
+
+                _winnerWitness.SetActive(CurrentRoomManager.instance.gameOver && steamIds.Contains(_player.playerSteamId) && !CurrentRoomManager.instance.leftRoomManually);
+                _loserWitness.SetActive(CurrentRoomManager.instance.gameOver && !steamIds.Contains(_player.playerSteamId) && !CurrentRoomManager.instance.leftRoomManually);
             }
             else
             {
@@ -86,7 +89,7 @@ public class ScoreboardManager : MonoBehaviour
             }
         }
 
-        if(triggerEndGameBehaviour)_player.playerUI.ShowBlackScreenForEndOfGame();
+        if (triggerEndGameBehaviour) _player.playerUI.ShowBlackScreenForEndOfGame();
     }
 
     public void CloseScoreboard()
