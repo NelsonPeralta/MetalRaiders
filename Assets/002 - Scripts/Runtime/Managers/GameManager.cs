@@ -1222,8 +1222,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         Debug.Log("SenErrorEmailReport Sent");
     }
 
-    public void EnableCameraMaskLayer(Camera camera, string layerName) { camera.cullingMask |= 1 << LayerMask.NameToLayer($"{layerName}"); }
-    public void DisableCameraMaskLayer(Camera camera, string layerName) { camera.cullingMask &= ~(1 << LayerMask.NameToLayer($"{layerName}")); }
+    public void EnableCameraMaskLayer(Camera camera, string layerName) { print("PlayerCamera: EnableCameraMaskLayer"); camera.cullingMask |= 1 << LayerMask.NameToLayer($"{layerName}"); }
+    public void DisableCameraMaskLayer(Camera camera, string layerName) { print("PlayerCamera: DisableCameraMaskLayer"); camera.cullingMask &= ~(1 << LayerMask.NameToLayer($"{layerName}")); }
     public void ToggleCameraMaskLayer(Camera camera, string layerName) { camera.cullingMask ^= 1 << LayerMask.NameToLayer("SomeLayer"); }
     public void LeaveCurrentRoomAndLoadLevelZero()
     {

@@ -486,6 +486,7 @@ public class PlayerCamera : MonoBehaviour
         print("SetupThirdPersonCamera");
         _thirdPersonCameraPivot.transform.parent = null;
         _thirdPersonAimingComponentsOffset.transform.localPosition = new Vector3(0, 0, 2.4f);
+        EnableThirdPersonLayerMask();
     }
 
     public void DisableThirdPersonCameraMode()

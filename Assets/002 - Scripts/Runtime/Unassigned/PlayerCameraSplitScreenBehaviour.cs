@@ -110,45 +110,48 @@ public class PlayerCameraSplitScreenBehaviour : MonoBehaviour
 
     public void SetupCameraLayerMask_FirstPerson(int playerRewiredId)
     {
-        if (cameraType == CameraType.Main)
+        if (GameManager.instance.thirdPersonMode != GameManager.ThirdPersonMode.On)
         {
-            GameManager.instance.EnableCameraMaskLayer(_camera, "Player 1 TPS Models (LOS Ray)");
-            GameManager.instance.EnableCameraMaskLayer(_camera, "Player 2 TPS Models");
-            GameManager.instance.EnableCameraMaskLayer(_camera, "Player 3 TPS Models");
-            GameManager.instance.EnableCameraMaskLayer(_camera, "Player 4 TPS Models");
+            if (cameraType == CameraType.Main)
+            {
+                GameManager.instance.EnableCameraMaskLayer(_camera, "Player 1 TPS Models (LOS Ray)");
+                GameManager.instance.EnableCameraMaskLayer(_camera, "Player 2 TPS Models");
+                GameManager.instance.EnableCameraMaskLayer(_camera, "Player 3 TPS Models");
+                GameManager.instance.EnableCameraMaskLayer(_camera, "Player 4 TPS Models");
 
 
 
-            if (playerRewiredId == 0)
-                GameManager.instance.DisableCameraMaskLayer(_camera, "Player 1 TPS Models (LOS Ray)");
-            else if (playerRewiredId == 1)
-                GameManager.instance.DisableCameraMaskLayer(_camera, "Player 2 TPS Models");
-            else if (playerRewiredId == 2)
-                GameManager.instance.DisableCameraMaskLayer(_camera, "Player 3 TPS Models");
-            else if (playerRewiredId == 3)
-                GameManager.instance.DisableCameraMaskLayer(_camera, "Player 4 TPS Models");
-        }
-        else if (cameraType == CameraType.Gun)
-        {
-            if (playerRewiredId == 0)
-                GameManager.instance.EnableCameraMaskLayer(_camera, "Player 1 FPS Models (Physical Loot)");
-            else if (playerRewiredId == 1)
-                GameManager.instance.EnableCameraMaskLayer(_camera, "Player 2 FPS Models");
-            else if (playerRewiredId == 2)
-                GameManager.instance.EnableCameraMaskLayer(_camera, "Player 3 FPS Models");
-            else if (playerRewiredId == 3)
-                GameManager.instance.EnableCameraMaskLayer(_camera, "Player 4 FPS Models");
-        }
-        else if (cameraType == CameraType.UI)
-        {
-            if (playerRewiredId == 0)
-                GameManager.instance.EnableCameraMaskLayer(_camera, "Player 1 UI (Motion Tracker)");
-            else if (playerRewiredId == 1)
-                GameManager.instance.EnableCameraMaskLayer(_camera, "Player 2 UI (Reticule Friction)");
-            else if (playerRewiredId == 2)
-                GameManager.instance.EnableCameraMaskLayer(_camera, "Player 3 UI (Frag Grenade)");
-            else if (playerRewiredId == 3)
-                GameManager.instance.EnableCameraMaskLayer(_camera, "Player 4 UI (PlayerMelee)");
+                if (playerRewiredId == 0)
+                    GameManager.instance.DisableCameraMaskLayer(_camera, "Player 1 TPS Models (LOS Ray)");
+                else if (playerRewiredId == 1)
+                    GameManager.instance.DisableCameraMaskLayer(_camera, "Player 2 TPS Models");
+                else if (playerRewiredId == 2)
+                    GameManager.instance.DisableCameraMaskLayer(_camera, "Player 3 TPS Models");
+                else if (playerRewiredId == 3)
+                    GameManager.instance.DisableCameraMaskLayer(_camera, "Player 4 TPS Models");
+            }
+            else if (cameraType == CameraType.Gun)
+            {
+                if (playerRewiredId == 0)
+                    GameManager.instance.EnableCameraMaskLayer(_camera, "Player 1 FPS Models (Physical Loot)");
+                else if (playerRewiredId == 1)
+                    GameManager.instance.EnableCameraMaskLayer(_camera, "Player 2 FPS Models");
+                else if (playerRewiredId == 2)
+                    GameManager.instance.EnableCameraMaskLayer(_camera, "Player 3 FPS Models");
+                else if (playerRewiredId == 3)
+                    GameManager.instance.EnableCameraMaskLayer(_camera, "Player 4 FPS Models");
+            }
+            else if (cameraType == CameraType.UI)
+            {
+                if (playerRewiredId == 0)
+                    GameManager.instance.EnableCameraMaskLayer(_camera, "Player 1 UI (Motion Tracker)");
+                else if (playerRewiredId == 1)
+                    GameManager.instance.EnableCameraMaskLayer(_camera, "Player 2 UI (Reticule Friction)");
+                else if (playerRewiredId == 2)
+                    GameManager.instance.EnableCameraMaskLayer(_camera, "Player 3 UI (Frag Grenade)");
+                else if (playerRewiredId == 3)
+                    GameManager.instance.EnableCameraMaskLayer(_camera, "Player 4 UI (PlayerMelee)");
+            }
         }
     }
 }

@@ -323,6 +323,10 @@ public class Melee : MonoBehaviour
                     {
                         hit.transform.gameObject.GetComponent<ExplosiveBarrel>().Damage((int)player.meleeDamage, false, player.photonId);
                     }
+                    else if (hit.transform.gameObject.GetComponent<IceChunk>())
+                    {
+                        hit.transform.gameObject.GetComponent<IceChunk>().Damage((int)player.meleeDamage, false, player.photonId);
+                    }
 
 
                     return true;
