@@ -6,24 +6,6 @@ using UnityEngine;
 public class PlayerProgressionManager : MonoBehaviour
 {
     public static PlayerProgressionManager instance;
-    public static int xpGainPerMatch
-    {
-        get
-        {
-            int r = UnityEngine.Random.Range(170, 230); // 500 games
-
-            return r;
-        }
-    }
-
-    public static int honorGainPerMatch // 500 games
-    {
-        get
-        {
-            if (CurrentRoomManager.instance.nbPlayersSpawned == 1) return 0;
-            return 2;
-        }
-    }
     public List<Sprite> rankSprites { get { return _rankImages; } }
     public List<Rank> ranks { get { return _ranks; } }
 

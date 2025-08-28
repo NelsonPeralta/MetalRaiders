@@ -437,10 +437,10 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                     if (CurrentRoomManager.instance.youHaveInvites)
                     {
                         if (CurrentRoomManager.instance.halfOfPlayersInRoomAreRandos)
-                            WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), this.winningPlayersId);
+                            WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), this.winningPlayersId, isADraw);
                     }
                     else
-                        WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), this.winningPlayersId);
+                        WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), this.winningPlayersId, isADraw);
 
                     {
 
@@ -460,7 +460,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                         GameManager.instance.carnageReport = new CarnageReport(
                             rank,
                             pp.playerDataCell.playerExtendedPublicData.level,
-                            pp.playerDataCell.playerExtendedPublicData.xp, 0, 
+                            pp.playerDataCell.playerExtendedPublicData.xp, 0,
                             pp.playerDataCell.playerExtendedPublicData.honor, 0, false, 0);
                     }
                 }
@@ -493,6 +493,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 {
                     if (pms.score >= highestScore)
                     {
+                        CurrentRoomManager.instance.winningPlayerStructs.Add(new WinningPlayerStruct(pms.player, pms.player.playerSteamId, pms.player.username));
                         this.winningPlayers.Add(pms.player);
                         this.winningPlayersId.Add(pms.player.playerSteamId);
                     }
@@ -503,6 +504,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                 {
                     if (pms.player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Plasma_Pistol)
                     {
+                        CurrentRoomManager.instance.winningPlayerStructs.Add(new WinningPlayerStruct(pms.player, pms.player.playerSteamId, pms.player.username));
                         this.winningPlayers.Add(pms.player);
                         this.winningPlayersId.Add(pms.player.playerSteamId);
                         break;
@@ -532,6 +534,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                     foreach (PlayerMultiplayerMatchStats pms in GameManager.instance.GetAllPhotonPlayers().Select(item => item.GetComponent<PlayerMultiplayerMatchStats>()))
                         if (pms.player.team == GameManager.Team.Red)
                         {
+                            CurrentRoomManager.instance.winningPlayerStructs.Add(new WinningPlayerStruct(pms.player, pms.player.playerSteamId, pms.player.username));
                             this.winningPlayers.Add(pms.player);
                             this.winningPlayersId.Add(pms.player.playerSteamId);
                         }
@@ -543,6 +546,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                     foreach (PlayerMultiplayerMatchStats pms in GameManager.instance.GetAllPhotonPlayers().Select(item => item.GetComponent<PlayerMultiplayerMatchStats>()))
                         if (pms.player.team == GameManager.Team.Blue)
                         {
+                            CurrentRoomManager.instance.winningPlayerStructs.Add(new WinningPlayerStruct(pms.player, pms.player.playerSteamId, pms.player.username));
                             this.winningPlayers.Add(pms.player);
                             this.winningPlayersId.Add(pms.player.playerSteamId);
                         }

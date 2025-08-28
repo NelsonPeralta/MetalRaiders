@@ -263,127 +263,153 @@ public partial class WebManager
     //    StartCoroutine(Login_Coroutine_Set_PvE_Stats(playerId));
     //}
 
-    IEnumerator SaveXp_Coroutine(PlayerSwarmMatchStats onlinePlayerSwarmScript = null, PlayerMultiplayerMatchStats playerMultiplayerStats = null, List<long> winPlayers = null, bool swarmGameWon = false)
+
+    public enum GameEndType { Game_Complete_Or_Resolved, Game_Incomplete_Draw, Game_Incomplete_Swarm_Loss }
+
+    int honorGainedForWinningPlayer = 2; // based on 500 games
+    int honorGainedForLosingPlayer = 1;
+    int defaultRandomXpGain
     {
+        get
         {
-            int xpAndCreditGain = PlayerProgressionManager.xpGainPerMatch;
-            int honorGained = PlayerProgressionManager.honorGainPerMatch;
+            return UnityEngine.Random.Range(170, 230); // based on 500 games
+        }
+    }
 
-            if (swarmGameWon)
+    IEnumerator SaveXp_Coroutine(GameManager.GameMode gm, GameEndType gameEndType, List<long> winPlayers)
+    {
+        foreach (var player in winPlayers) { print($"SaveXp_Coroutine {player}"); }
+
+        int xpAndCreditGain = 0;
+        int honorGained = 0;
+
+
+        if (gm == GameManager.GameMode.Coop && gameEndType == GameEndType.Game_Complete_Or_Resolved)
+        {
+            honorGained = honorGainedForWinningPlayer;
+            xpAndCreditGain = defaultRandomXpGain;
+            print($"SaveXp_Coroutine 9");
+        }
+        else if (gm == GameManager.GameMode.Versus)
+        {
+            if (gameEndType == GameEndType.Game_Incomplete_Draw)
             {
-                honorGained = 1;
-
+                honorGained = honorGainedForLosingPlayer;
+                xpAndCreditGain = defaultRandomXpGain;
+                print($"SaveXp_Coroutine 1");
             }
-            else if (winPlayers != null)
+            else if (gameEndType == GameEndType.Game_Complete_Or_Resolved)
             {
-                if (winPlayers.Contains(CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.player_id))
-                    xpAndCreditGain = (int)(1.15f * xpAndCreditGain);
-                else
-                    honorGained--;
-
-                if (GameManager.instance.gameMode != GameManager.GameMode.Versus)
-                    honorGained = 0;
-
-                if (honorGained < 0) honorGained = 0;
-            }
-
-
-            DateTime today = DateTime.Now;
-            if (today.DayOfWeek == DayOfWeek.Saturday || today.DayOfWeek == DayOfWeek.Sunday)
-            {
-                honorGained++;
-                xpAndCreditGain *= 2;
-            }
-
-
-
-
-
-
-
-
-
-            Debug.Log($"SaveBasicOnlineStats_Coroutine. Xp: {CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.xp} -> " +
-                $"{CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.xp + xpAndCreditGain}");
-
-            ScriptObjPlayerData playerData = CurrentRoomManager.instance.playerDataCells[0];
-
-            int playerId = playerData.playerExtendedPublicData.player_id;
-            int newLevel = playerData.playerExtendedPublicData.level;
-            int newXp = playerData.playerExtendedPublicData.xp + xpAndCreditGain;
-            int newCredits = playerData.playerExtendedPublicData.credits + xpAndCreditGain;
-            int newHonor = playerData.playerExtendedPublicData.honor;
-            int minXpToLevelUp = 999999999;
-
-            if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(playerData.playerExtendedPublicData.level + 1))
-                minXpToLevelUp = PlayerProgressionManager.playerLevelToXpDic[playerData.playerExtendedPublicData.level + 1];
-
-
-            newHonor += honorGained;
-
-
-            PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestAndNextRank(playerData.playerExtendedPublicData.honor)[0];
-
-
-
-            if (newXp >= minXpToLevelUp)
-            {
-                Debug.Log("LEVEL UP");
-                newLevel = playerData.playerExtendedPublicData.level + 1;
-            }
-            GameManager.instance.carnageReport =
-                new CarnageReport(rank,
-                playerData.playerExtendedPublicData.level,
-                playerData.playerExtendedPublicData.xp,
-                xpAndCreditGain,
-                playerData.playerExtendedPublicData.honor,
-                honorGained,
-                newXp >= minXpToLevelUp && playerData.playerExtendedPublicData.level < 50, newLevel);
-
-            WWWForm form = new WWWForm();
-            form.AddField("service", "SaveBasicOnlineStats");
-
-            form.AddField("playerId", playerId.ToString());
-            form.AddField("newLevel", newLevel);
-            form.AddField("newXp", newXp);
-            form.AddField("newCredits", newCredits);
-            form.AddField("newHonor", newHonor);
-
-
-            using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
-            {
-                yield return www.SendWebRequest();
-
-                if (www.result != UnityWebRequest.Result.Success)
+                if (winPlayers.Contains(CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.steamid))
                 {
-                    Debug.LogError(www.error);
+                    xpAndCreditGain = (int)(1.3f * defaultRandomXpGain);
+                    print($"SaveXp_Coroutine 2");
                 }
                 else
                 {
-                    Debug.Log("SaveBasicOnlineStats_Coroutine");
-                    Debug.Log(www.result);
-                    Debug.Log(www.downloadHandler.text);
-
-                    if (www.result.ToString().Contains("uccess"))
-                        if (xpAndCreditGain > 0)
-                            //GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">Gained {xpAndCreditGain} Xp and Cuckbucks");
-                            //else
-                            //    GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"{www.result}");
-                            if (newXp >= minXpToLevelUp)
-                            {
-                                //GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">LEVEL UP! ({newLevel})");
-                            }
+                    honorGained = honorGainedForLosingPlayer;
+                    xpAndCreditGain = defaultRandomXpGain;
+                    print($"SaveXp_Coroutine 3");
+                }
+            }
+        }
 
 
-                    if (www.downloadHandler.text.Contains("Could not save swarm stats"))
-                    {
-                        Debug.LogError("Could not save swarm stats");
+        DateTime today = DateTime.Now;
+        if (today.DayOfWeek == DayOfWeek.Saturday || today.DayOfWeek == DayOfWeek.Sunday)
+        {
+            if (honorGained > 0) honorGained++;
+            if (xpAndCreditGain > 0) xpAndCreditGain *= 2;
+        }
 
-                    }
-                    else if (www.downloadHandler.text.Contains("Swarm stats saved"))
-                    {
-                        Debug.Log("Swarm stats saved successfully");
-                    }
+
+
+
+
+
+
+
+
+        Debug.Log($"SaveBasicOnlineStats_Coroutine. Xp: {CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.xp} -> " +
+            $"{CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.xp + xpAndCreditGain}");
+
+        ScriptObjPlayerData playerData = CurrentRoomManager.instance.playerDataCells[0];
+
+        int playerId = playerData.playerExtendedPublicData.player_id;
+        int newLevel = playerData.playerExtendedPublicData.level;
+        int newXp = playerData.playerExtendedPublicData.xp + xpAndCreditGain;
+        int newCredits = playerData.playerExtendedPublicData.credits + xpAndCreditGain;
+        int newHonor = playerData.playerExtendedPublicData.honor;
+        int minXpToLevelUp = 999999999;
+
+        if (PlayerProgressionManager.playerLevelToXpDic.ContainsKey(playerData.playerExtendedPublicData.level + 1))
+            minXpToLevelUp = PlayerProgressionManager.playerLevelToXpDic[playerData.playerExtendedPublicData.level + 1];
+
+
+        newHonor += honorGained;
+
+
+        PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestAndNextRank(playerData.playerExtendedPublicData.honor)[0];
+
+
+
+        if (newXp >= minXpToLevelUp)
+        {
+            Debug.Log("LEVEL UP");
+            newLevel = playerData.playerExtendedPublicData.level + 1;
+        }
+        GameManager.instance.carnageReport =
+            new CarnageReport(rank,
+            playerData.playerExtendedPublicData.level,
+            playerData.playerExtendedPublicData.xp,
+            xpAndCreditGain,
+            playerData.playerExtendedPublicData.honor,
+            honorGained,
+            newXp >= minXpToLevelUp && playerData.playerExtendedPublicData.level < 50, newLevel);
+
+        WWWForm form = new WWWForm();
+        form.AddField("service", "SaveBasicOnlineStats");
+
+        form.AddField("playerId", playerId.ToString());
+        form.AddField("newLevel", newLevel);
+        form.AddField("newXp", newXp);
+        form.AddField("newCredits", newCredits);
+        form.AddField("newHonor", newHonor);
+
+
+        using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
+        {
+            yield return www.SendWebRequest();
+
+            if (www.result != UnityWebRequest.Result.Success)
+            {
+                Debug.LogError(www.error);
+            }
+            else
+            {
+                Debug.Log("SaveBasicOnlineStats_Coroutine");
+                Debug.Log(www.result);
+                Debug.Log(www.downloadHandler.text);
+
+                if (www.result.ToString().Contains("uccess"))
+                    if (xpAndCreditGain > 0)
+                        //GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">Gained {xpAndCreditGain} Xp and Cuckbucks");
+                        //else
+                        //    GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"{www.result}");
+                        if (newXp >= minXpToLevelUp)
+                        {
+                            //GameManager.GetRootPlayer().GetComponent<KillFeedManager>().EnterNewFeed($"<color=\"yellow\">LEVEL UP! ({newLevel})");
+                        }
+
+
+                if (www.downloadHandler.text.Contains("Could not save swarm stats"))
+                {
+                    Debug.LogError("Could not save swarm stats");
+
+                }
+                else if (www.downloadHandler.text.Contains("Swarm stats saved"))
+                {
+                    Debug.Log("Swarm stats saved successfully");
                 }
             }
         }

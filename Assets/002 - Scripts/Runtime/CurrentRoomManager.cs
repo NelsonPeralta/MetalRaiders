@@ -368,6 +368,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     public List<ScriptObjPlayerData> playerDataCells { get { return _playerDataCells; } }
     public List<ScriptObjBipedTeam> teamsData { get { return _bipedTeams; } }
+    public List<WinningPlayerStruct> winningPlayerStructs { get {  return _winningPlayerStructs; } }
     public List<Transform> mapAddOns { get { return _mapAddonsList; } }
     public bool matchSettingsSet { get { return _matchSettingsSet; } set { _matchSettingsSet = value; } }
 
@@ -390,6 +391,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     [SerializeField] List<ScriptObjPlayerData> _playerDataCells = new List<ScriptObjPlayerData>();
     [SerializeField] List<ScriptObjBipedTeam> _bipedTeams;
+    [SerializeField] List<WinningPlayerStruct> _winningPlayerStructs = new List<WinningPlayerStruct>();
 
 
     int ran, _minH;
@@ -564,6 +566,12 @@ public class CurrentRoomManager : MonoBehaviour
 
             _vetoedGameType = GameManager.GameType.Unassgined; _vetoedMapIndex = 0;
             _roomGameStartCountdown = Launcher.DEFAULT_ROOM_COUNTDOWN;
+
+            if (_winningPlayerStructs.Count > 0)
+            {
+                MenuManager.Instance.GetMenu("carnage report").GetComponent<CarnageReportMenu>().winningPlayerStructs = new List<WinningPlayerStruct>(_winningPlayerStructs);
+                _winningPlayerStructs.Clear();
+            }
         }
         else
         {

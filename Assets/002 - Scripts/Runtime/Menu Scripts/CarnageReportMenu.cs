@@ -9,12 +9,21 @@ public class CarnageReportMenu : MonoBehaviour
     public static GameManager.Team winningTeam = GameManager.Team.None;
 
     public List<CarnageReportStruc> carnageReportStrucs { get { return _carnageReportStrucs; } }
+    public List<WinningPlayerStruct> winningPlayerStructs
+    {
+        get { return _winningPlayerStructs; }
+        set { _winningPlayerStructs = value; }
+    }
 
 
-
-    [SerializeField] CarnageReportRow[] carnageReportRowArray;
-    [SerializeField] GameObject _backBtn;
-    [SerializeField] List<CarnageReportStruc> _carnageReportStrucs = new List<CarnageReportStruc>();
+    [SerializeField]
+    CarnageReportRow[]
+    carnageReportRowArray;
+    [SerializeField]
+    GameObject _backBtn;
+    [SerializeField]
+    List<CarnageReportStruc> _carnageReportStrucs = new List<CarnageReportStruc>();
+    [SerializeField] List<WinningPlayerStruct> _winningPlayerStructs = new List<WinningPlayerStruct>();
 
 
 

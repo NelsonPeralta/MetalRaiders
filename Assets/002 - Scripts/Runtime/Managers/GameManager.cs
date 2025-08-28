@@ -1609,6 +1609,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         return _allPlayers.Where(item => item != null).ToList();
     }
 
+    public List<Player> GetAllNonInvitePlayers()
+    {
+        return _allPlayers.Where(item => item != null && item.controllerId == 0).ToList();
+    }
+
     public void ClearPhotonIdToPlayerDict()
     {
         _allPlayers.Clear();

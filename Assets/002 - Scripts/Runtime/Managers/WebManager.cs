@@ -67,23 +67,29 @@ public partial class WebManager : MonoBehaviour
 
 
 
-    public void SaveSwarmStats(PlayerSwarmMatchStats onlinePlayerSwarmScript, bool sgw)
+    public void SaveSwarmStats(PlayerSwarmMatchStats onlinePlayerSwarmScript, bool swarmGameWon)
     {
         if (GameManager.instance.connection == GameManager.NetworkType.Internet
             && GameManager.instance.flyingCameraMode == GameManager.FlyingCamera.Disabled)
         {
+            List<long> _tempWin = new List<long>(); foreach (Player p in GameManager.instance.GetAllNonInvitePlayers()) _tempWin.Add(p.playerSteamId);
+
             StartCoroutine(SaveSwarmStats_Coroutine(onlinePlayerSwarmScript));
-            StartCoroutine(SaveXp_Coroutine(onlinePlayerSwarmScript, swarmGameWon: sgw));
+            StartCoroutine(SaveXp_Coroutine(GameManager.GameMode.Coop,
+                swarmGameWon == true ? GameEndType.Game_Complete_Or_Resolved : GameEndType.Game_Incomplete_Swarm_Loss,
+                _tempWin));
         }
     }
 
-    public void SaveMultiplayerStats(PlayerMultiplayerMatchStats playerMultiplayerStats, List<long> winPlayers)
+    public void SaveMultiplayerStats(PlayerMultiplayerMatchStats playerMultiplayerStats, List<long> winPlayers, bool isDraw)
     {
         if (GameManager.instance.connection == GameManager.NetworkType.Internet
             && GameManager.instance.flyingCameraMode == GameManager.FlyingCamera.Disabled)
         {
             StartCoroutine(SaveMultiplayerStats_Coroutine(playerMultiplayerStats));
-            StartCoroutine(SaveXp_Coroutine(playerMultiplayerStats: playerMultiplayerStats, winPlayers: winPlayers));
+            StartCoroutine(SaveXp_Coroutine(GameManager.GameMode.Versus,
+                isDraw == true ? GameEndType.Game_Incomplete_Draw : GameEndType.Game_Complete_Or_Resolved,
+                winPlayers));
         }
     }
 
