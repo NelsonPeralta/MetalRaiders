@@ -302,6 +302,7 @@ public partial class WebManager
             {
                 if (winPlayers.Contains(CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.steamid))
                 {
+                    honorGained = honorGainedForWinningPlayer;
                     xpAndCreditGain = (int)(1.3f * defaultRandomXpGain);
                     print($"SaveXp_Coroutine 2");
                 }
