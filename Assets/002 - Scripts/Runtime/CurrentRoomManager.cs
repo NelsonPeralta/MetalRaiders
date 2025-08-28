@@ -368,7 +368,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     public List<ScriptObjPlayerData> playerDataCells { get { return _playerDataCells; } }
     public List<ScriptObjBipedTeam> teamsData { get { return _bipedTeams; } }
-    public List<WinningPlayerStruct> winningPlayerStructs { get {  return _winningPlayerStructs; } }
+    public List<WinningPlayerStruct> winningPlayerStructs { get { return _winningPlayerStructs; } }
     public List<Transform> mapAddOns { get { return _mapAddonsList; } }
     public bool matchSettingsSet { get { return _matchSettingsSet; } set { _matchSettingsSet = value; } }
 
@@ -572,6 +572,7 @@ public class CurrentRoomManager : MonoBehaviour
                 MenuManager.Instance.GetMenu("carnage report").GetComponent<CarnageReportMenu>().winningPlayerStructs = new List<WinningPlayerStruct>(_winningPlayerStructs);
                 _winningPlayerStructs.Clear();
             }
+            OnGameIsReady = null;
         }
         else
         {
@@ -1079,5 +1080,10 @@ public class CurrentRoomManager : MonoBehaviour
         }
 
         return -1;
+    }
+
+    public static ScriptObjPlayerData GetDataCellWithPhotonRoomIndex(int _id)
+    {
+        return CurrentRoomManager.instance.playerDataCells.FirstOrDefault(item => item.photonRoomIndex == _id);
     }
 }

@@ -1280,12 +1280,36 @@ public class Launcher : MonoBehaviourPunCallbacks
                         s.playerExtendedPublicData = new PlayerDatabaseAdaptor.PlayerExtendedPublicData();
                         s.occupied = true;
                         s.rewiredId = i;
-                        s.photonRoomIndex = entry.trueRoomIndex;
 
                         s.local = (PhotonNetwork.NickName == entry.steamIdd.ToString());
                     }
                 }
             }
+
+
+
+            // Now we fix the PhotonRoomIndex for the Invited users
+            GameManager.instance.RecalculateExpectedNbPlayersUsingPlayerCustomProperties();
+            int _count = CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied && item.rewiredId == 0).ToList().Count;
+            for (int i = 1; i <= CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied && item.rewiredId == 0).ToList().Count; i++)
+            {
+                print($"Launcher {CurrentRoomManager.GetDataCellWithPhotonRoomIndex(i).nbLocalPlayers}");
+                if (CurrentRoomManager.GetDataCellWithPhotonRoomIndex(i).nbLocalPlayers > 1)
+                {
+                    List<ScriptObjPlayerData> _inviteDataCells = CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied &&
+                    item.rewiredId > 0 &&
+                       item.steamId == CurrentRoomManager.GetDataCellWithPhotonRoomIndex(i).steamId).ToList();
+
+                    print($"Launcher {_inviteDataCells.Count}");
+                    for (int j = 0; j < _inviteDataCells.Count; j++)
+                    {
+                        _count++;
+                        _inviteDataCells[j].photonRoomIndex = _count;
+                    }
+                }
+            }
+
+
 
             FetchExtendedPlayerStats();
         }

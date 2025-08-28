@@ -72,7 +72,7 @@ public partial class WebManager : MonoBehaviour
         if (GameManager.instance.connection == GameManager.NetworkType.Internet
             && GameManager.instance.flyingCameraMode == GameManager.FlyingCamera.Disabled)
         {
-            List<long> _tempWin = new List<long>(); foreach (Player p in GameManager.instance.GetAllNonInvitePlayers()) _tempWin.Add(p.playerSteamId);
+            List<(long, int)> _tempWin = new List<(long, int)>(); foreach (Player p in GameManager.instance.GetAllNonInvitePlayers()) _tempWin.Add((p.playerSteamId, 0));
 
             StartCoroutine(SaveSwarmStats_Coroutine(onlinePlayerSwarmScript));
             StartCoroutine(SaveXp_Coroutine(GameManager.GameMode.Coop,
@@ -81,7 +81,7 @@ public partial class WebManager : MonoBehaviour
         }
     }
 
-    public void SaveMultiplayerStats(PlayerMultiplayerMatchStats playerMultiplayerStats, List<long> winPlayers, bool isDraw)
+    public void SaveMultiplayerStats(PlayerMultiplayerMatchStats playerMultiplayerStats, List<(long, int)> winPlayers, bool isDraw)
     {
         if (GameManager.instance.connection == GameManager.NetworkType.Internet
             && GameManager.instance.flyingCameraMode == GameManager.FlyingCamera.Disabled)

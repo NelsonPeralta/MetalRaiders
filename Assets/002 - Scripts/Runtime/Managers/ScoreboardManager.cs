@@ -74,11 +74,14 @@ public class ScoreboardManager : MonoBehaviour
         {
             if (!MultiplayerManager.instance.isADraw)
             {
-                List<long> steamIds = CurrentRoomManager.instance.winningPlayerStructs.Select(player => player.steamId).ToList();
+                List<(long, int)> steamIdRewiredIdList = CurrentRoomManager.instance.winningPlayerStructs
+    .Select(player => (player.steamId, player.rewiredId))
+    .ToList();
 
 
-                _winnerWitness.SetActive(CurrentRoomManager.instance.gameOver && steamIds.Contains(_player.playerSteamId) && !CurrentRoomManager.instance.leftRoomManually);
-                _loserWitness.SetActive(CurrentRoomManager.instance.gameOver && !steamIds.Contains(_player.playerSteamId) && !CurrentRoomManager.instance.leftRoomManually);
+
+                _winnerWitness.SetActive(CurrentRoomManager.instance.gameOver && steamIdRewiredIdList.Contains((_player.playerSteamId, _player.controllerId)) && !CurrentRoomManager.instance.leftRoomManually);
+                _loserWitness.SetActive(CurrentRoomManager.instance.gameOver && !steamIdRewiredIdList.Contains((_player.playerSteamId, _player.controllerId)) && !CurrentRoomManager.instance.leftRoomManually);
             }
             else
             {

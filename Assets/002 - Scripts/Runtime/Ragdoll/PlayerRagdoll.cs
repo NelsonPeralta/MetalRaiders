@@ -5,10 +5,10 @@ using UnityEngine;
 
 public class PlayerRagdoll : Ragdoll
 {
-    public bool isMine;
+    public bool isMine, inUse;
     public AudioSource respawnBeepAudioSource;
 
-    public Coroutine changeLayerCoroutine, disableRagdollCoroutine;
+    public Coroutine changeLayerCoroutine, resetRagdollCoroutine, resetInUseCoroutine;
 
 
     [SerializeField] Transform _cameraHolder;

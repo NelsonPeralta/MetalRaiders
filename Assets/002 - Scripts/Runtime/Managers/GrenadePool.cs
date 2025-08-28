@@ -9,6 +9,7 @@ public class GrenadePool : MonoBehaviour
 {
     public static GrenadePool instance { get { return _instance; } }
 
+    static int GRENADE_INC = 15;
     static int ROCKET_INC = 10;
     static int GL_INC = 24;
 
@@ -33,7 +34,7 @@ public class GrenadePool : MonoBehaviour
 
 
 
-        for (int i = 0; i < 200; i++)
+        for (int i = 0; i < CurrentRoomManager.instance.expectedNbPlayers * GRENADE_INC; i++)
         {
             _fragGrenadePool.Add(Instantiate(_fragGrenadePrefab, transform));
             _stickyGrenadePool.Add(Instantiate(_stickyGrenadePrefab, transform));
@@ -83,7 +84,7 @@ public class GrenadePool : MonoBehaviour
     {
         print($"GetAvailableGrenadeIndex {photonRoomIndex}");
 
-        for (int i = (photonRoomIndex - 1) * 10; i < (photonRoomIndex * 10) - 1; i++)
+        for (int i = (photonRoomIndex - 1) * GRENADE_INC; i < (photonRoomIndex * GRENADE_INC) - 1; i++)
         {
             print($"GetAvailableGrenadeIndex {i}");
             print($"GetAvailableGrenadeIndex {photonRoomIndex}   {i}   {_instance._fragGrenadePool[i].name}");

@@ -38,6 +38,13 @@ public class GameManager : MonoBehaviourPunCallbacks
     public static int MAX_NB_OF_ROUNDS = 4;
     public static int END_OF_GAME_DELAY_BEFORE_LEAVING_ROOM = 5;
 
+
+
+    // hiding positions
+    public static Vector3 RAGDOLL_HIDING_POSITION = new Vector3(0, -1111, 0); // use x to place stuff
+
+
+
     // Events
     public delegate void GameManagerEvent();
     public GameManagerEvent OnGameManagerFinishedLoadingScene_Late, OnCameraSensitivityChanged, OnOneObjRoundOverLocalEvent, OnOneObjRoundReset,
@@ -1148,6 +1155,11 @@ public class GameManager : MonoBehaviourPunCallbacks
         item.controllerId == rewiredId).FirstOrDefault();
     }
 
+    public static Player GetPlayerWithPhotonRoomIndex(int roomIndex)
+    {
+        return instance._allPlayers.Where(item => item != null &&
+        item.playerDataCell.photonRoomIndex == roomIndex).FirstOrDefault();
+    }
 
 
 
@@ -1835,7 +1847,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
                     try
                     {
-                        CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(long.Parse(p.NickName), 0).invites = (int)p.CustomProperties["localPlayerCount"];
+                        CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(long.Parse(p.NickName), 0).nbLocalPlayers = (int)p.CustomProperties["localPlayerCount"];
                     }
                     catch
                     {

@@ -50,7 +50,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             {
 #if (UNITY_EDITOR)
                 // your code here
-                return 3;
+                //return 3;
 #endif
 
 
@@ -435,14 +435,20 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                     {
                         if (CurrentRoomManager.instance.halfOfPlayersInRoomAreRandos)
                         {
-                            List<long> steamIds = CurrentRoomManager.instance.winningPlayerStructs.Select(player => player.steamId).ToList();
-                            WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), steamIds, isADraw);
+                            List<(long, int)> steamIdRewiredIdList = CurrentRoomManager.instance.winningPlayerStructs
+    .Select(player => (player.steamId, player.rewiredId))
+    .ToList();
+
+
+                            WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), steamIdRewiredIdList, isADraw);
                         }
                     }
                     else
                     {
-                        List<long> steamIds = CurrentRoomManager.instance.winningPlayerStructs.Select(player => player.steamId).ToList();
-                        WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), steamIds, isADraw);
+                        List<(long, int)> steamIdRewiredIdList = CurrentRoomManager.instance.winningPlayerStructs
+    .Select(player => (player.steamId, player.rewiredId))
+    .ToList();
+                        WebManager.webManagerInstance.SaveMultiplayerStats(pp.GetComponent<PlayerMultiplayerMatchStats>(), steamIdRewiredIdList, isADraw);
                     }
 
                     {
@@ -497,7 +503,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                     {
                         CurrentRoomManager.instance.winningPlayerStructs.Add(new WinningPlayerStruct(pms.player,
                             pms.player.playerSteamId,
-                            pms.player.username,
+                            pms.player.username, pms.player.controllerId,
                             $"score: {pms.score}"));
                     }
                 }
@@ -505,7 +511,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             {
                 CurrentRoomManager.instance.winningPlayerStructs.Add(new WinningPlayerStruct(_gunGameWinner,
                     _gunGameWinner.playerSteamId,
-                    _gunGameWinner.username,
+                    _gunGameWinner.username, _gunGameWinner.controllerId,
                     "Gun Game winner."));
             }
 
@@ -533,7 +539,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                         {
                             CurrentRoomManager.instance.winningPlayerStructs.Add(new WinningPlayerStruct(pms.player,
                                 pms.player.playerSteamId,
-                                pms.player.username,
+                                pms.player.username, pms.player.controllerId,
                                 ""));
                         }
                 }
@@ -546,7 +552,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                         {
                             CurrentRoomManager.instance.winningPlayerStructs.Add(new WinningPlayerStruct(pms.player,
                                 pms.player.playerSteamId,
-                                pms.player.username,
+                                pms.player.username, pms.player.controllerId,
                                 ""));
                         }
                 }

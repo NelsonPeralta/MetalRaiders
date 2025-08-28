@@ -194,13 +194,10 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
         if (GameManager.instance)
         {
             if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
-                if (GameManager.instance.gameType == GameManager.GameType.Slayer)
+                if (GameManager.instance.gameType == GameManager.GameType.Slayer || GameManager.instance.gameType == GameManager.GameType.Hill)
                 {
                     if (codeName == "br")
-                        codeName = "ar";
-
-                    if (codeName == "pb")
-                        codeName = "pr";
+                        codeName = "pb";
                 }
                 else if (GameManager.instance.gameType == GameManager.GameType.Swat)
                 {

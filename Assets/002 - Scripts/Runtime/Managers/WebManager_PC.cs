@@ -276,7 +276,7 @@ public partial class WebManager
         }
     }
 
-    IEnumerator SaveXp_Coroutine(GameManager.GameMode gm, GameEndType gameEndType, List<long> winPlayers)
+    IEnumerator SaveXp_Coroutine(GameManager.GameMode gm, GameEndType gameEndType, List<(long, int)> winPlayers)
     {
         foreach (var player in winPlayers) { print($"SaveXp_Coroutine {player}"); }
 
@@ -300,7 +300,7 @@ public partial class WebManager
             }
             else if (gameEndType == GameEndType.Game_Complete_Or_Resolved)
             {
-                if (winPlayers.Contains(CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.steamid))
+                if (winPlayers.Contains((CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.steamid, 0)))
                 {
                     honorGained = honorGainedForWinningPlayer;
                     xpAndCreditGain = (int)(1.3f * defaultRandomXpGain);
