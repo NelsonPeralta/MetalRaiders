@@ -22,7 +22,6 @@ abstract public class Ragdoll : MonoBehaviour
 
         _ran = Random.Range(0, _deathClips.Count);
 
-        print("Ragdoll OnEnable");
         _deathClipAudioSource.clip = _deathClips[_ran];
         _deathClipAudioSource.Play();
     }
