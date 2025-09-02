@@ -126,7 +126,7 @@ public class SpawnPoint : MonoBehaviour
                 if (_blockingLevelEntries.Count > 0)
                 {
                     for (int i = _blockingLevelEntries.Count - 1; i >= 0; i--)
-                        _blockingLevel += _blockingLevelEntries[i].dangerLevel;
+                        _blockingLevel += _blockingLevelEntries[i].blockingLevel;
 
                     _evaluateDangerCooldown = SeenResetTime * 0.3f;
                 }
@@ -160,7 +160,9 @@ public class SpawnPoint : MonoBehaviour
         //}
     }
 
-    public void AddBlockingLevelEntry(int idd, int levl, int ttll)
+
+    int MAX_BLOCKING_ENTRIES = 5;
+    public void AddBlockingLevelEntry(int idd, int levl, float ttll)
     {
         if (_blockingLevelEntries.Count == 0) _evaluateDangerCooldown = SeenResetTime * 0.3f;
 
@@ -173,7 +175,27 @@ public class SpawnPoint : MonoBehaviour
             }
         }
 
-        _blockingLevelEntries.Add(new BlockingLevelEntry(idd, levl, ttll));
+
+        if (_blockingLevelEntries.Count < MAX_BLOCKING_ENTRIES)
+        {
+            _blockingLevelEntries.Add(new BlockingLevelEntry(idd, levl, ttll));
+            _blockingLevelEntries.Sort((a, b) => b.blockingLevel.CompareTo(a.blockingLevel));
+        }
+        else
+        {
+            if (_blockingLevelEntries[MAX_BLOCKING_ENTRIES - 1].blockingLevel < levl)
+            {
+                _blockingLevelEntries[MAX_BLOCKING_ENTRIES - 1].id = idd;
+                _blockingLevelEntries[MAX_BLOCKING_ENTRIES - 1].blockingLevel = levl;
+                _blockingLevelEntries[MAX_BLOCKING_ENTRIES - 1].ttl = ttll;
+
+                _blockingLevelEntries.Sort((a, b) => b.blockingLevel.CompareTo(a.blockingLevel));
+            }
+            else
+            {
+                // do nothing
+            }
+        }
     }
 
 
@@ -181,13 +203,13 @@ public class SpawnPoint : MonoBehaviour
     class BlockingLevelEntry
     {
         public int id;
-        public int dangerLevel;
+        public int blockingLevel;
         public float ttl;
 
-        public BlockingLevelEntry(int idd, int lvl, int tt)
+        public BlockingLevelEntry(int idd, int lvl, float tt)
         {
             id = idd;
-            dangerLevel = lvl;
+            blockingLevel = lvl;
             ttl = tt;
         }
     }

@@ -1788,13 +1788,25 @@ public class Player : Biped
         if (PV.IsMine)
         {
             if (playerController.rid == 0)
-                GameManager.SetLayerRecursively(_bloodHit, 24);
+            {
+                _bloodHit.layer = 25; _bloodHit.transform.GetChild(0).gameObject.layer = 25; _bloodHit.transform.GetChild(1).gameObject.layer = 25;
+                //GameManager.SetLayerRecursively(_bloodHit, 24);
+            }
             else if (playerController.rid == 1)
-                GameManager.SetLayerRecursively(_bloodHit, 26);
+            {
+                _bloodHit.layer = 27; _bloodHit.transform.GetChild(0).gameObject.layer = 27; _bloodHit.transform.GetChild(1).gameObject.layer = 27;
+                //GameManager.SetLayerRecursively(_bloodHit, 26);
+            }
             else if (playerController.rid == 2)
-                GameManager.SetLayerRecursively(_bloodHit, 28);
+            {
+                _bloodHit.layer = 29; _bloodHit.transform.GetChild(0).gameObject.layer = 29; _bloodHit.transform.GetChild(1).gameObject.layer = 29;
+                //GameManager.SetLayerRecursively(_bloodHit, 28);
+            }
             else if (playerController.rid == 3)
-                GameManager.SetLayerRecursively(_bloodHit, 30);
+            {
+                _bloodHit.layer = 31; _bloodHit.transform.GetChild(0).gameObject.layer = 31; _bloodHit.transform.GetChild(1).gameObject.layer = 31;
+                //GameManager.SetLayerRecursively(_bloodHit, 30);
+            }
         }
 
         _bloodHit.transform.position = _impactPos;
