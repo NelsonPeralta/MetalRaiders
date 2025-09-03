@@ -69,8 +69,10 @@ public class ScoreboardRowRuntime : MonoBehaviour
                 _playerScoreText.text = pss.playerCurrentGameScore.totalPoints.ToString();
             }
 
-            if (GameManager.GetPlayerWithSteamIdAndRewId(pss.steamId, pss.rewiredId)) 
+            if (GameManager.GetPlayerWithSteamIdAndRewId(pss.steamId, pss.rewiredId))
                 _deadWitness.gameObject.SetActive(!GameManager.GetPlayerWithSteamIdAndRewId(pss.steamId, pss.rewiredId).isAlive);
+            else
+                _deadWitness.gameObject.SetActive(true);
         }
     }
 }

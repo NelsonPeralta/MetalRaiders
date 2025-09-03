@@ -190,7 +190,8 @@ public class PlayerCamera : MonoBehaviour
 
             if (player.isMine && !pController.pauseMenuOpen)
             {
-                if (player.allPlayerScripts.scoreboardManager.scoreboardOpen && !CurrentRoomManager.instance.gameOver) return;
+                if ((GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off && player.allPlayerScripts.scoreboardManager.scoreboardOpen)
+                    && !CurrentRoomManager.instance.gameOver) return;
 
                 if (_blockTime <= 0)
                 {

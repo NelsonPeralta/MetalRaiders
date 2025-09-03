@@ -28,19 +28,13 @@ public class ScoreboardManager : MonoBehaviour
     int _bc, _c;
 
 
-
     private void Awake()
     {
-        //print($"ScoreboardManager Awake {GetComponentsInChildren<ScoreboardRowRuntime>(includeInactive: true).Length}");
-        //scoreboardRows.Clear();
-        //scoreboardRows = GetComponentsInChildren<ScoreboardRowRuntime>(includeInactive: true).ToList(); // this gets 40 instead of 8
+        _scoreboardHolder.SetActive(true); // we let Awake() functions iterate for children
     }
 
     private void Start()
     {
-        DisableAllRows();
-
-
         _winnerWitness.SetActive(false);
         _loserWitness.SetActive(false);
         _drawWitness.SetActive(false);

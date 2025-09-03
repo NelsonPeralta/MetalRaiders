@@ -5,31 +5,32 @@ using UnityEngine;
 
 public class KickPlayerBtn : MonoBehaviour
 {
+    /// <summary>
+    /// /////////// WARNING. This script is used as a child for Name Plate and Scoreboard Row
+    /// </summary>
+    public ScriptObjPlayerData playerData { get { return _playerData; } }
+
     [SerializeField] ScriptObjPlayerData _playerData;
 
-
-    private void Awake()
-    {
-        gameObject.SetActive(false);
-    }
 
     public void SetPlayerDataCell(ScriptObjPlayerData sopd)
     {
         print("SetPlayerDataCell");
         if (GameManager.instance.connection == GameManager.NetworkType.Internet && PhotonNetwork.IsMasterClient)
         {
-            _playerData = sopd;
-
-            foreach (ScriptObjPlayerData s in CurrentRoomManager.instance.playerDataCells)
+            if (!sopd.local && sopd.rewiredId == 0)
             {
-                if (s.occupied && !s.local && sopd == s && s.rewiredId == 0)
-                {
-                    gameObject.SetActive(true);
-                }
+                _playerData = sopd;
+                print($"KickPlayerBtn {name} show");
+            }
+            else
+            {
+                gameObject.SetActive(false);
             }
         }
         else
         {
+            print($"KickPlayerBtn {name} hide");
             gameObject.SetActive(false);
         }
     }
@@ -41,6 +42,17 @@ public class KickPlayerBtn : MonoBehaviour
             print($"Kick Player: {_playerData.playerExtendedPublicData.player_id}");
 
             NetworkGameManager.instance.KickPlayerWithDatabaseId(_playerData.playerExtendedPublicData.player_id);
+        }
+    }
+
+    private void Update()
+    {
+        if (_playerData)
+        {
+            if (!GameManager.GetPlayerWithSteamIdAndRewId(_playerData.steamId, _playerData.rewiredId)) // we check if the player left of was kicked
+            {
+                gameObject.SetActive(false);
+            }
         }
     }
 }
