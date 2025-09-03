@@ -1482,37 +1482,54 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         if (namePlatesParent.childCount > 0)
         {
-            namePlatesParent.transform.GetChild(0).GetComponent<PlayerNamePlate>().ToggleLeaderIcon(true);
-
-            foreach (var player in PhotonNetwork.CurrentRoom.Players.Values)
+            foreach (Transform child in namePlatesParent)
             {
-                //print($"FindMasterClientAndToggleIcon: {player.NickName} {player.IsMasterClient}");
-                if (player.IsMasterClient)
+                try
                 {
-                    foreach (Transform child in namePlatesParent)
+                    if (GameManager.instance.connection == NetworkType.Internet)
                     {
-                        try
+
+                        if (child.GetComponent<PlayerNamePlate>())
                         {
-                            if (child.GetComponent<PlayerNamePlate>())
+                            //print($"FindMasterClientAndToggleIcon: {child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id}");
+                            if (child.GetComponent<PlayerNamePlate>().playerDataCell)
                             {
-                                //print($"FindMasterClientAndToggleIcon: {child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id}");
-                                if (child.GetComponent<PlayerNamePlate>().playerDataCell)
-                                {
-                                    if (child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id == int.Parse(player.NickName)
-                                        && child.GetComponent<PlayerNamePlate>().playerDataCell.rewiredId == 0)
-                                        child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(true);
-                                    else
-                                        child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(false);
-                                }
+                                print($"FindMasterClientAndToggleIcon: {child.GetComponent<PlayerNamePlate>().playerDataCell.steamId} " +
+                                    $"VS {PhotonNetwork.MasterClient.NickName}");
+                                print(child.GetComponent<PlayerNamePlate>().playerDataCell.steamId == long.Parse(PhotonNetwork.MasterClient.NickName));
+                                print(child.GetComponent<PlayerNamePlate>().playerDataCell.rewiredId == 0);
+
+                                if (child.GetComponent<PlayerNamePlate>().playerDataCell.steamId == long.Parse(PhotonNetwork.MasterClient.NickName)
+                                    && child.GetComponent<PlayerNamePlate>().playerDataCell.rewiredId == 0)
+                                    child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(true);
                                 else
-                                {
                                     child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(false);
-                                }
+                            }
+                            else
+                            {
+                                child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(false);
                             }
                         }
-                        catch { }
+                    }
+                    else
+                    {
+                        if (child.GetComponent<PlayerNamePlate>())
+                        {
+                            if (child.GetComponent<PlayerNamePlate>().playerDataCell)
+                            {
+                                if (child.GetComponent<PlayerNamePlate>().playerDataCell.rewiredId == 0)
+                                    child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(true);
+                                else
+                                    child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(false);
+                            }
+                            else
+                            {
+                                child.GetComponent<PlayerNamePlate>().ToggleLeaderIcon(false);
+                            }
+                        }
                     }
                 }
+                catch (System.Exception e) { Debug.LogError(e); }
             }
         }
     }

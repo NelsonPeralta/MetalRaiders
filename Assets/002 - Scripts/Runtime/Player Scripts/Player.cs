@@ -983,35 +983,6 @@ public class Player : Biped
             if (_spawnProtectionTime > 0) damage /= 2;
         }
 
-        {
-            //try
-            //{ // Hit Marker Handling
-            //    lastPID = playerWhoShotThisPlayerPhotonId;
-            //    Player p = GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId);
-
-            //    if (_isInvincible)
-            //        healthDamage = 0;
-            //    if (overshieldPoints > 0)
-            //        healthDamage -= (int)_overshieldPoints;
-
-            //    if (hitPoints <= healthDamage)
-            //        p.GetComponent<PlayerUI>().SpawnHitMarker(PlayerUI.HitMarkerType.Kill);
-            //    else
-            //        p.GetComponent<PlayerUI>().SpawnHitMarker();
-            //}
-            //catch (System.Exception e) { Debug.LogWarning(e); }
-        }
-
-        //PV.RPC("Damage_RPC", RpcTarget.All, damage, headshot, source_pid,
-        //    impactPos, impactDir, damageSource,
-        //    isGroin);
-
-
-        //try { this.impactPos = impactPos; this.impactDir = impactDir; } catch { }
-        //this.impactPos = impactPos; this.impactDir = impactDir;
-
-        //if ((GameManager.PlayerDictContainsPhotonId(source_pid) && GameManager.GetPlayerWithPhotonView(source_pid).isMine) ||
-        //    PhotonView.Find(source_pid).GetComponent<Actor>())
         if ((GameManager.GetPlayerWithPhotonView(source_pid) && GameManager.GetPlayerWithPhotonView(source_pid).isMine) ||
         PhotonView.Find(source_pid).GetComponent<Actor>())
         {
@@ -1040,18 +1011,37 @@ public class Player : Biped
                     dsn = DeathNature.Barrel;
                 else if (damageSourceCleanName.Contains("ltra"))
                     dsn = DeathNature.UltraBind;
-                //else
-                //    //Debug.LogError($"UNHANDLEDED DEATH NATURE: {dsn}");
-
-                //    bytes = Encoding.UTF8.GetBytes(damageSourceCleanName);
             }
-            //Debug.LogError($"EMPTY DEATH NATURE");
 
             if (kfo == WeaponProperties.KillFeedOutput.Stuck)
                 dsn = DeathNature.Stuck;
 
+            if (kfo != WeaponProperties.KillFeedOutput.Plasma_Pistol_Overcharged)
+            {
+                if (kfo == WeaponProperties.KillFeedOutput.Plasma_Rifle || kfo == WeaponProperties.KillFeedOutput.Plasma_Pistol)
+                {
+                    print($"Damage: decreasing plasma damage");
+                    if (shieldPoints > 0)
+                        damage = (int)Mathf.Clamp(damage, 1, shieldPoints);
+                    else
+                        damage = (int)(damage * 0.25f);
+                }
+            }
+            else
+            {
+                if (shieldPoints > 0)
+                {
+                    kfo = WeaponProperties.KillFeedOutput.Plasma_Pistol;
+                    print($"Damage: kept overcharged damage ({damage})");
+                }
+                else
+                {
+                    damage = damage / 2;
+                    print($"Damage: decreasing overcharged plasma damage");
+                }
+            }
 
-
+            print($"Damage: {damage} (final)");
             int newHealth = (int)hitPoints - damage;
 
             if (kfo == WeaponProperties.KillFeedOutput.Killbox) newHealth = 0;

@@ -476,9 +476,9 @@ public class Bullet : MonoBehaviourPunCallbacks
 
 
                             if (weaponProperties.codeName != null)
-                                finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir: spawnDir, weaponProperties.cleanName, isGroin: wasNutshot, weaponIndx: weaponProperties.index, kfo: weaponProperties.killFeedOutput);
+                                finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, impactDir: spawnDir, weaponProperties.cleanName, isGroin: wasNutshot, weaponIndx: weaponProperties.index, kfo: (overcharged == false) ? weaponProperties.killFeedOutput : WeaponProperties.KillFeedOutput.Plasma_Pistol_Overcharged);
                             else
-                                finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot, weaponIndx: weaponProperties.index, kfo: weaponProperties.killFeedOutput);
+                                finalHitDamageable.Damage(damage, wasHeadshot, sourcePlayer.GetComponent<PhotonView>().ViewID, finalHitPoint, isGroin: wasNutshot, weaponIndx: weaponProperties.index, kfo: (overcharged == false) ? weaponProperties.killFeedOutput : WeaponProperties.KillFeedOutput.Plasma_Pistol_Overcharged);
                         }
 
                         damageDealt = true;
