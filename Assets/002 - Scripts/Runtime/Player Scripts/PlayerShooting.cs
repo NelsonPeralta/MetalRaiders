@@ -439,6 +439,7 @@ public class PlayerShooting : MonoBehaviourPun
         //}
 
         shoooo(isLeftWeapon, overcharge);
+        if (weap.killFeedOutput == WeaponProperties.KillFeedOutput.Plasma_Blaster) shoooo(isLeftWeapon, overcharge, true);
         //Shoot_RPC();
         return;
         PV.RPC("Shoot_RPC", RpcTarget.All);
@@ -454,7 +455,7 @@ public class PlayerShooting : MonoBehaviourPun
     int _ignoreShootCounter;
     List<RaycastHit> fakeBulletTrailRaycasthits = new List<RaycastHit>();
 
-    void shoooo(bool isLeftWeapon = false, bool overcharge = false)
+    void shoooo(bool isLeftWeapon = false, bool overcharge = false, bool fakeBulForPB = false)
     {
         playerController.GetComponent<GeneralWeapProperties>().ResetLocalTransform();
 
@@ -631,12 +632,26 @@ public class PlayerShooting : MonoBehaviourPun
                     Debug.Log($"Shooting Plasma bullet {overcharge} {weaponToShoot.targetTracking}");
                     var bullet = GameObjectPool.instance.SpawnPooledBullet();
                     bullet.transform.localScale = Vector3.one;
+                    try { bullet.gameObject.GetComponent<Bullet>().weaponProperties = weaponToShoot; } catch { }
+
+                    if (fakeBulForPB)
+                    {
+                        print("Shooting fake plasma blast");
+                        bullet.GetComponent<Bullet>().damage = 0;
+                        bullet.GetComponent<Bullet>().speed = 150;
+                        bullet.GetComponent<Bullet>().redPlasma.SetActive(true);
+                        bullet.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
+                        bullet.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
+
+                        bullet.SetActive(true);
+
+                        return;
+                    }
 
                     if (overcharge) bullet.transform.localScale = Vector3.one * 5;
 
                     bullet.GetComponent<Bullet>().overcharged = false;
                     bullet.GetComponent<Bullet>().trackingTarget = null;
-                    try { bullet.gameObject.GetComponent<Bullet>().weaponProperties = weaponToShoot; } catch { }
 
 
                     if (weaponToShoot.targetTracking)
@@ -664,7 +679,8 @@ public class PlayerShooting : MonoBehaviourPun
 
                         if (bullet.GetComponent<DisableAfterXSeconds>()) bullet.GetComponent<DisableAfterXSeconds>().enabled = false;
                         bullet.GetComponent<Bullet>().bluePlasma.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Blue && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
-                        bullet.GetComponent<Bullet>().redPlasma.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Red && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                        //bullet.GetComponent<Bullet>().redPlasma.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Red && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                        bullet.GetComponent<Bullet>().redPlasma.SetActive(false);
                         bullet.GetComponent<Bullet>().greenPlasma.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Green && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
                         bullet.GetComponent<Bullet>().shard.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Shard && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
                     }

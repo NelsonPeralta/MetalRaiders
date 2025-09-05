@@ -252,6 +252,7 @@ public class WeaponProperties : MonoBehaviour
         set
         {
             _currentOverheat = value;
+            print($"Overheat {_currentOverheat} -> {value}");
 
             if (_currentOverheat >= 100 && overheatCooldown <= 0 && player.isMine)
                 StartCoroutine(TriggerOverheat_Coroutine(this)); // Allow time for networking purposes
