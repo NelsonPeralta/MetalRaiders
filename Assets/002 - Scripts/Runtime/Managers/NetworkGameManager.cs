@@ -964,7 +964,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         Debug.Log($"Spawning Overshiled in {t} seconds");
         yield return new WaitForSeconds(t);
-        overshield.gameObject.SetActive(true);
+        if (SceneManager.GetActiveScene().buildIndex > 0)
+            overshield.gameObject.SetActive(true);
     }
 
 

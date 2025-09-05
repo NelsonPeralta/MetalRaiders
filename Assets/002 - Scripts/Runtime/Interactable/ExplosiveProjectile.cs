@@ -293,19 +293,38 @@ public class ExplosiveProjectile : MonoBehaviour
 
     void Explosion()
     {
-        print($"Explosion {_stuckPlayerPhotonId}");
-        if (PhotonNetwork.IsMasterClient && _stuckPlayerPhotonId > 0)
-        {
-            GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).Damage(damage: 999, headshot: false, source_pid: _player.photonId, impactPos: transform.position,
-              impactDir: GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).targetTrackingCorrectTarget.position - transform.position, kfo: WeaponProperties.KillFeedOutput.Stuck);
-        }
+        print($"Explosion {_stuckPlayerPhotonId} {PhotonNetwork.IsMasterClient == true}");
 
-        if (player.isMine && !_exploded)
+        if (PhotonNetwork.IsMasterClient)
         {
-            _exploded = true;
-            NetworkGameManager.instance.DisableAndExplodeProjectile((int)_killFeedOutput, GrenadePool.instance.GetIndexOfExplosive(_killFeedOutput, gameObject), transform.position);
+            if (_stuckPlayerPhotonId > 0)
+            {
+                print($"Explosion 1");
+                _exploded = true;
+
+                GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).Damage(damage: 999, headshot: false, source_pid: _player.photonId, impactPos: transform.position,
+                  impactDir: GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).targetTrackingCorrectTarget.position - transform.position, kfo: WeaponProperties.KillFeedOutput.Stuck);
+
+                StartCoroutine(ExplosionCoroutine());
+            }
+            else
+            {
+                print($"Explosion 2");
+                _exploded = true;
+                NetworkGameManager.instance.DisableAndExplodeProjectile((int)_killFeedOutput, GrenadePool.instance.GetIndexOfExplosive(_killFeedOutput, gameObject), transform.position);
+            }
         }
     }
+
+    IEnumerator ExplosionCoroutine()
+    {
+        yield return new WaitForEndOfFrame();
+        if (!_exploded)
+            _exploded = true;
+        NetworkGameManager.instance.DisableAndExplodeProjectile((int)_killFeedOutput, GrenadePool.instance.GetIndexOfExplosive(_killFeedOutput, gameObject), transform.position);
+    }
+
+
 
     public void TriggerExplosion(Vector3 pos)
     {

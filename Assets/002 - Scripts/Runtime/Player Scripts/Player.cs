@@ -1029,14 +1029,14 @@ public class Player : Biped
             }
             else
             {
+                kfo = WeaponProperties.KillFeedOutput.Plasma_Pistol;
                 if (shieldPoints > 0)
                 {
-                    kfo = WeaponProperties.KillFeedOutput.Plasma_Pistol;
                     print($"Damage: kept overcharged damage ({damage})");
                 }
                 else
                 {
-                    damage = damage / 2;
+                    damage = 50;
                     print($"Damage: decreasing overcharged plasma damage");
                 }
             }

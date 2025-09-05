@@ -186,8 +186,8 @@ public class Explosion : MonoBehaviour
                     try
                     {
                         Debug.Log($"EXPLOSION {name} DAMAGING PLAYER at {transform.position}");
-                        if (stuck)
-                            _damageSource = "Stuck";
+                        //if (stuck)
+                        //    _damageSource = "Stuck";
                         if (player.isMine)
                             col.GetComponent<PlayerHitbox>().Damage((int)calculatedDamage, false, player.photonId, damageSource: this._damageSource, impactDir: (col.transform.position - transform.position), kfo: killFeedOutput);
                     }

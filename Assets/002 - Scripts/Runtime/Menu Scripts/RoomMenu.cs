@@ -24,7 +24,23 @@ public class RoomMenu : MonoBehaviour
                 FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(false);
 
             FindObjectOfType<Launcher>().swarmMcComponentsHolder.SetActive(false);
-            FindObjectOfType<Launcher>().levelToLoadIndex = 1;
+
+            if (GameManager.instance.connection == NetworkType.Local)
+            {
+                FindObjectOfType<Launcher>().levelToLoadIndex = 1;
+            }
+            else
+            {
+                if (PhotonNetwork.InRoom)
+                {
+                    // do nothing, wait for MasterClient to change this variable
+                }
+                else
+                {
+                    FindObjectOfType<Launcher>().levelToLoadIndex = 1;
+                }
+            }
+
         }
         Launcher.instance.gameModeText.text = $"Game Mode: {GameManager.instance.gameMode}";
 

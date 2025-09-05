@@ -33,8 +33,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
 #if (UNITY_EDITOR)
                 // your code here
-                if (GameManager.instance.gameType == GameManager.GameType.Hill)
-                    return 5;
+                //if (GameManager.instance.gameType == GameManager.GameType.Hill)
+                //    return 5;
 #endif
 
 

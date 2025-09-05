@@ -1104,7 +1104,7 @@ public class PlayerController : MonoBehaviourPun
                             //mainCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
                             //uiCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
                             camScript.backEndMouseSens = camScript.frontEndMouseSens;
-                            gunCam.enabled = true;
+                            gunCam.enabled = true; print("Gun Cam Enabled");
                             //gunCam.fieldOfView = 60;
 
                             allPlayerScripts.aimingScript.playAimSound();
@@ -1161,8 +1161,8 @@ public class PlayerController : MonoBehaviourPun
 
     public void Descope()
     {
-        if (!isAiming && !GetComponent<Player>().isDead)
-            return;
+        if (!isAiming && player.isAlive) return;
+
         Debug.Log("Unscope Script");
         isAiming = false;
         //mainCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
@@ -1173,7 +1173,13 @@ public class PlayerController : MonoBehaviourPun
 
         //if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
         //    mainCam.transform.localRotation = Quaternion.Euler(0, 0, 0);
-        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off && !player.playerInventory.isHoldingHeavy) gunCam.enabled = true;
+        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off &&
+            !player.playerInventory.isHoldingHeavy &&
+            player.isAlive)
+        {
+            print("Gun Cam Enabled");
+            gunCam.enabled = true;
+        }
     }
 
     int _meleeCount = 0;
@@ -1955,7 +1961,7 @@ public class PlayerController : MonoBehaviourPun
 
             if (player.isMine)
             {
-                uiCam.enabled = true;
+                uiCam.enabled = true; print("Gun Cam Enabled");
                 gunCam.enabled = true;
             }
 

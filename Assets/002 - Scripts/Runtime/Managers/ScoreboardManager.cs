@@ -131,8 +131,8 @@ public class ScoreboardManager : MonoBehaviour
         {
             if (CurrentRoomManager.instance.playerDataCells[i].occupied)
             {
-                scoreboardRows[i].playerScoreStruct = CurrentRoomManager.instance.playerDataCells[i];
                 scoreboardRows[i].gameObject.SetActive(true);
+                scoreboardRows[i].playerScoreStruct = CurrentRoomManager.instance.playerDataCells[i];
             }
         }
     }

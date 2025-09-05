@@ -258,6 +258,7 @@ public class GrenadePool : MonoBehaviour
         foreach (Explosion obj in instance._explosions)
             if (!obj.gameObject.activeInHierarchy)
             {
+                print($"SpawnExplosion. KFO: {(WeaponProperties.KillFeedOutput)kfo} damage: {damage} stuck: {stuck}");
                 obj.GetComponent<AudioSource>().clip = ac;
                 obj.player = source;
                 obj.killFeedOutput = kfo;

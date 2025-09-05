@@ -1035,7 +1035,7 @@ public class CurrentRoomManager : MonoBehaviour
             if (p && p.isMine)
             {
                 p.allPlayerScripts.scoreboardManager.SetScoreboardRows();
-                p.SetupMotionTracker();
+                try { p.SetupMotionTracker(); } catch (System.Exception e) { Debug.LogError(e); }
             }
 
         _gameReadyStep = 4;

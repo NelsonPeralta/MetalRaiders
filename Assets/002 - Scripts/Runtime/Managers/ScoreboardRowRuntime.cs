@@ -12,32 +12,36 @@ public class ScoreboardRowRuntime : MonoBehaviour
         get { return pss; }
         set
         {
-            pss = value;
-
-
-            ColorUtility.TryParseHtmlString(GameManager.colorDict[playerScoreStruct.playerExtendedPublicData.armorColorPalette.ToString().ToLower()], out _tCol);
-            _dynamicBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
-
-            if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+            if (value == null) { Debug.LogError("NULL ScriptObjPlayerData"); }
+            else
             {
-                ColorUtility.TryParseHtmlString(GameManager.colorDict[playerScoreStruct.team.ToString().ToLower()], out _tCol);
+                pss = value;
+
+
+                ColorUtility.TryParseHtmlString(GameManager.colorDict[playerScoreStruct.playerExtendedPublicData.armorColorPalette.ToString().ToLower()], out _tCol);
                 _dynamicBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
+
+                if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
+                {
+                    ColorUtility.TryParseHtmlString(GameManager.colorDict[playerScoreStruct.team.ToString().ToLower()], out _tCol);
+                    _dynamicBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
+                }
+
+
+
+                _playerNameText.text = pss.steamName;
+                _playerTagText.text = pss.playerCurrentGameScore.damage.ToString();
+                _playerScoreText.text = pss.playerCurrentGameScore.score.ToString();
+
+
+                if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
+                {
+                    _playerTagText.text = pss.playerCurrentGameScore.points.ToString();
+                    _playerScoreText.text = pss.playerCurrentGameScore.totalPoints.ToString();
+                }
+
+                GetComponentInChildren<KickPlayerBtn>(true).SetPlayerDataCell(value);//ERROR
             }
-
-
-
-            _playerNameText.text = pss.steamName;
-            _playerTagText.text = pss.playerCurrentGameScore.damage.ToString();
-            _playerScoreText.text = pss.playerCurrentGameScore.score.ToString();
-
-
-            if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
-            {
-                _playerTagText.text = pss.playerCurrentGameScore.points.ToString();
-                _playerScoreText.text = pss.playerCurrentGameScore.totalPoints.ToString();
-            }
-
-            GetComponentInChildren<KickPlayerBtn>().SetPlayerDataCell(value);
         }
     }
 
