@@ -95,7 +95,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         originalPos = transform.position;
         timeToDespawn = CalculateTimeToDespawn();
 
-        print($"Bullet OnEnable {damage} {speed}");
+        print($"Bullet OnEnable {damage} {speed} {trackingTarget != null}");
     }
 
     float CalculateTimeToDespawn()

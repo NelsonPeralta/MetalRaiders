@@ -85,9 +85,14 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
-    public bool isDualWielding
+    public bool isDualWielding // DEPRECATED, DO NOT USE AS OF SEPT 2025
     {
         get { return pInventory.leftWeapon; }
+    }
+
+    public bool isDualWielding_Fixed
+    {
+        get { return pInventory.isDualWielding; }
     }
 
     ControllerType _activeControllerType;
@@ -344,6 +349,7 @@ public class PlayerController : MonoBehaviourPun
             {
                 Shooting();
                 LeftShooting();
+                UpdateTrackingTargetInPlayerShootingScript();
                 AutoReloadThirdWeapon();
 
                 if (!isSprinting)
@@ -734,8 +740,17 @@ public class PlayerController : MonoBehaviourPun
                     {
                         SendIsHoldingFireWeaponBtn(true, (player.aimAssist.closestHbToCrosshairCenter != null) ? player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition : Vector3.zero, false);
                     }
-                    else if (player.playerInventory.activeWeapon.loadedAmmo > 0 && player.playerInventory.activeWeapon.targetTracking && player.playerShooting.fireRecovery <= 0 && isHoldingShootBtn)
-                        player.playerShooting.trackingTarget = (player.aimAssist.closestHbToCrosshairCenter != null) ? GameManager.instance.instantiation_position_Biped_Dict[player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition] : null;
+                    else
+                    {
+                        //if (player.playerInventory.activeWeapon.loadedAmmo > 0 &&
+                        //    player.playerInventory.activeWeapon.targetTracking &&
+                        //    player.playerShooting.fireRecovery <= 0 &&
+                        //    isHoldingShootBtn)
+                        //{
+                        //    player.playerShooting.trackingTarget =
+                        //        (player.aimAssist.closestHbToCrosshairCenter != null) ? GameManager.instance.instantiation_position_Biped_Dict[player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition] : null;
+                        //}
+                    }
                 }
 
 
@@ -877,7 +892,73 @@ public class PlayerController : MonoBehaviourPun
         }
     }
 
+    float _deb;
 
+    void UpdateTrackingTargetInPlayerShootingScript()
+    {
+        if (!cameraIsFloating)
+        {
+            if (!player.isDead && !player.isRespawning)
+            {
+                if (player.isMine)
+                {
+                    if (!isDualWielding_Fixed)
+                    {
+                        if (player.playerInventory.activeWeapon.loadedAmmo > 0 &&
+              player.playerInventory.activeWeapon.targetTracking)
+                        {
+                            if (!pInventory.activeWeapon.overcharge && isHoldingShootBtn)
+                            {
+                                player.playerShooting.trackingTarget =
+                             (player.aimAssist.closestHbToCrosshairCenter != null) ? GameManager.instance.instantiation_position_Biped_Dict[player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition] : null;
+
+                            }
+                            else if (pInventory.activeWeapon.overcharge && player.playerShooting.overchargeReady && isHoldingShootBtn)
+                            {
+                                player.playerShooting.trackingTarget =
+                             (player.aimAssist.closestHbToCrosshairCenter != null) ? GameManager.instance.instantiation_position_Biped_Dict[player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition] : null;
+                            }
+                            else
+                                player.playerShooting.trackingTarget = null;
+                        }
+                        else
+                        {
+                            player.playerShooting.trackingTarget = null;
+                        }
+                    }
+                    else
+                    {
+                        if ((player.playerInventory.activeWeapon.loadedAmmo > 0 &&
+         player.playerInventory.activeWeapon.targetTracking &&
+         ((!player.playerInventory.activeWeapon.overcharge &&
+           isHoldingShootBtn) ||
+          (player.playerInventory.activeWeapon.overcharge &&
+           player.playerShooting.overchargeReady &&
+           isHoldingShootBtn))) ||
+
+        (player.playerInventory.thirdWeapon.loadedAmmo > 0 &&
+         player.playerInventory.thirdWeapon.targetTracking &&
+         ((!player.playerInventory.thirdWeapon.overcharge &&
+           isHoldingShootDualWieldedWeapon) ||
+          (player.playerInventory.thirdWeapon.overcharge &&
+           player.playerShooting.overchargeReadyLeftWeapon &&
+           isHoldingShootDualWieldedWeapon))))
+                        {
+                            player.playerShooting.trackingTarget =
+                                (player.aimAssist.closestHbToCrosshairCenter != null)
+                                ? GameManager.instance.instantiation_position_Biped_Dict[
+                                    player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition]
+                                : null;
+                        }
+                        else
+                        {
+                            player.playerShooting.trackingTarget = null;
+                        }
+                    }
+                }
+            }
+        }
+    }
 
 
 
@@ -992,7 +1073,10 @@ public class PlayerController : MonoBehaviourPun
     {
 
         if (isCaller)
+        {
+            print($"SendIsHoldingFireWeaponBtn CALL {isDualWieldedWeapon} {trackingTargetInstantiationPosition}");
             PV.RPC("SendIsHoldingFireWeaponBtn", RpcTarget.All, false, trackingTargetInstantiationPosition, isDualWieldedWeapon);
+        }
         else
         {
             print($"SendIsHoldingFireWeaponBtn received {isDualWieldedWeapon} {trackingTargetInstantiationPosition}");
@@ -1015,9 +1099,21 @@ public class PlayerController : MonoBehaviourPun
             }
             else
             {
-                if (trackingTargetInstantiationPosition != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition]; else player.playerShooting.trackingTarget = null;
+                if (trackingTargetInstantiationPosition != Vector3.zero)
+                {
+                    print($"SendIsHoldingFireWeaponBtn TRACKING TARGET {isDualWieldedWeapon} {trackingTargetInstantiationPosition}");
+
+                    player.playerShooting.trackingTarget = GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition];
+                }
+                else
+                {
+                    print($"SendIsHoldingFireWeaponBtn NO TRACKING {isDualWieldedWeapon} {trackingTargetInstantiationPosition}");
+                    player.playerShooting.trackingTarget = null;
+                }
                 isHoldingShootDualWieldedWeapon = true;
             }
+
+            UpdateTrackingTargetInPlayerShootingScript();
         }
     }
 

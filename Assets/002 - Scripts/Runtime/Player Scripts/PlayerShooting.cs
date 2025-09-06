@@ -19,7 +19,6 @@ public class PlayerShooting : MonoBehaviourPun
             _preTrackingTarget = _trackingTarget;
             _trackingTarget = value;
 
-
             if (_preTrackingTarget != _trackingTarget)
             {
                 if (_trackingTarget != null) print($"{playerController.player.name} updated tracking target to {_trackingTarget.name}");
@@ -32,6 +31,7 @@ public class PlayerShooting : MonoBehaviourPun
     }
 
     public float fireRecovery { get { return _fireRecovery; } }
+    public float leftWeaponFireRecovery { get { return _leftFireRecovery; } }
     public bool overchargeReady { get { return _overchargeFloat >= WeaponProperties.OVERCHARGE_TIME_LOW; } }
     public bool overchargeReadyLeftWeapon { get { return _overchargeFloat_thirdWeapon >= WeaponProperties.OVERCHARGE_TIME_LOW; } }
     public bool fireButtonDown
@@ -89,8 +89,10 @@ public class PlayerShooting : MonoBehaviourPun
         playerController.player.OnPlayerDeath += OnPlayerDeath_Delegate;
     }
 
+
     public void Update()
     {
+
         if (playerController)
         {
             FireCooldown();
@@ -656,12 +658,22 @@ public class PlayerShooting : MonoBehaviourPun
 
                     if (weaponToShoot.targetTracking)
                     {
-                        if (!weaponToShoot.overcharge)
+                        print($"Bullet 1");
+                        if (!weaponToShoot.overcharge) // for Plasma Rifle{
+                        {
+                            print($"Bullet 2");
+
                             bullet.GetComponent<Bullet>().trackingTarget = trackingTarget;
+
+                        }
                         else
                         {
-                            if (overcharge)
+                            print($"Bullet 3");
+
+                            if (overcharge) // For plasma Pistol
                             {
+                                print($"Bullet 4");
+
                                 bullet.GetComponent<Bullet>().trackingTarget = trackingTarget;
                                 bullet.GetComponent<Bullet>().overcharged = overcharge;
                                 bullet.GetComponent<Bullet>().damage = 25;
