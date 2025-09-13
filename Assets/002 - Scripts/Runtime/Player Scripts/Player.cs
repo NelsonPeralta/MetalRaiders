@@ -125,7 +125,7 @@ public class Player : Biped
             }
 
             float newValue = hitPoints - _damage;
-            //print($"damage: {newValue} {hitPoints} {_damage} {overshieldPoints} {_overshieldRecharge} {maxOvershieldPoints}");
+            //PrintOnlyInEditor.Log($"damage: {newValue} {hitPoints} {_damage} {overshieldPoints} {_overshieldRecharge} {maxOvershieldPoints}");
 
             if (overshieldPoints <= 0)
             {
@@ -143,7 +143,7 @@ public class Player : Biped
             {
                 if (newValue == maxHitPoints)
                 {
-                    print("player shield recharged completely");
+                    Log.Print("player shield recharged completely");
                     lastPID = -1;
                 }
             }
@@ -519,7 +519,7 @@ public class Player : Biped
             //if(GameManager.instance.pid_player_Dict.ContainsKey(value)) _lastPID = value;else _lastPID = 0;
             if (_lastPID != value)
             {
-                print($"{name} lastPID change: {_lastPID} -> {value}");
+                Log.Print($"{name} lastPID change: {_lastPID} -> {value}");
                 _lastPID = value;
 
 
@@ -971,7 +971,7 @@ public class Player : Biped
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
     {
-        print($"Damage: ({damage}) {damageSourceCleanName} {(WeaponProperties.KillFeedOutput)kfo} {source_pid}");
+        Log.Print($"Damage: ({damage}) {damageSourceCleanName} {(WeaponProperties.KillFeedOutput)kfo} {source_pid}");
 
 
         if (headshot && GameManager.GetPlayerWithPhotonView(source_pid).playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Sniper)
@@ -1020,7 +1020,7 @@ public class Player : Biped
             {
                 if (kfo == WeaponProperties.KillFeedOutput.Plasma_Rifle || kfo == WeaponProperties.KillFeedOutput.Plasma_Pistol)
                 {
-                    print($"Damage: decreasing plasma damage");
+                    Log.Print($"Damage: decreasing plasma damage");
                     if (shieldPoints > 0)
                         damage = (int)Mathf.Clamp(damage, 1, shieldPoints);
                     else
@@ -1032,16 +1032,16 @@ public class Player : Biped
                 kfo = WeaponProperties.KillFeedOutput.Plasma_Pistol;
                 if (shieldPoints > 0)
                 {
-                    print($"Damage: kept overcharged damage ({damage})");
+                    Log.Print($"Damage: kept overcharged damage ({damage})");
                 }
                 else
                 {
                     damage = 50;
-                    print($"Damage: decreasing overcharged plasma damage");
+                    Log.Print($"Damage: decreasing overcharged plasma damage");
                 }
             }
 
-            print($"Damage: {damage} (final)");
+            Log.Print($"Damage: {damage} (final)");
             int newHealth = (int)hitPoints - damage;
 
             if (kfo == WeaponProperties.KillFeedOutput.Killbox) newHealth = 0;
@@ -1270,7 +1270,7 @@ public class Player : Biped
         ragdoll.SetActive(true);
         ragdoll.GetComponent<PlayerRagdoll>().ResetRigidbodieVelocities();
 
-        print("SpawnRagdoll_Coroutine_Frame_-1");
+        Log.Print("SpawnRagdoll_Coroutine_Frame_-1");
 
         StartCoroutine(SpawnRagdoll_Coroutine_Frame_3((Vector3)impactDir, _ragdollPropulsion, ragdoll.GetComponent<PlayerRagdoll>()));
 
@@ -1312,42 +1312,42 @@ public class Player : Biped
     IEnumerator SpawnRagdoll_Coroutine_Frame_0(Vector3 imdir, DeathNature dn, PlayerRagdoll playerRagdoll)
     {
         yield return new WaitForEndOfFrame();
-        print("SpawnRagdoll_Coroutine_Frame_0");
+        Log.Print("SpawnRagdoll_Coroutine_Frame_0");
         playerRagdoll.GetComponent<PlayerRagdoll>().ToggleAllRigidbodiesToKinetmatic(true);
         playerRagdoll.ResetRigidbodieVelocities();
         StartCoroutine(SpawnRagdoll_Coroutine_Frame_1((Vector3)impactDir, _ragdollPropulsion, playerRagdoll));
-        print("SpawnRagdoll_Coroutine_Frame_0 ran");
+        Log.Print("SpawnRagdoll_Coroutine_Frame_0 ran");
     }
 
     IEnumerator SpawnRagdoll_Coroutine_Frame_1(Vector3 imdir, DeathNature dn, PlayerRagdoll playerRagdoll)
     {
         yield return new WaitForEndOfFrame();
-        print("SpawnRagdoll_Coroutine_Frame_1");
+        Log.Print("SpawnRagdoll_Coroutine_Frame_1");
         playerRagdoll.GetComponent<Animator>().enabled = true; // called here, but will run next frame
         StartCoroutine(SpawnRagdoll_Coroutine_Frame_2((Vector3)impactDir, _ragdollPropulsion, playerRagdoll));
-        print("SpawnRagdoll_Coroutine_Frame_1 ran");
+        Log.Print("SpawnRagdoll_Coroutine_Frame_1 ran");
     }
 
     IEnumerator SpawnRagdoll_Coroutine_Frame_2(Vector3 imdir, DeathNature dn, PlayerRagdoll playerRagdoll)
     {
         yield return new WaitForEndOfFrame();
-        print("SpawnRagdoll_Coroutine_Frame_2");
+        Log.Print("SpawnRagdoll_Coroutine_Frame_2");
         StartCoroutine(SpawnRagdoll_Coroutine_Frame_3((Vector3)impactDir, _ragdollPropulsion, playerRagdoll));
-        print("SpawnRagdoll_Coroutine_Frame_2 ran");
+        Log.Print("SpawnRagdoll_Coroutine_Frame_2 ran");
     }
 
     IEnumerator SpawnRagdoll_Coroutine_Frame_3(Vector3 imdir, DeathNature dn, PlayerRagdoll playerRagdoll)
     {
         yield return new WaitForEndOfFrame();
         playerRagdoll.GetComponent<Animator>().enabled = false; // called here, but will run next frame
-        print("SpawnRagdoll_Coroutine_Frame_3");
+        Log.Print("SpawnRagdoll_Coroutine_Frame_3");
         StartCoroutine(SpawnRagdoll_Coroutine_Frame_4((Vector3)impactDir, _ragdollPropulsion, playerRagdoll));
     }
 
     IEnumerator SpawnRagdoll_Coroutine_Frame_4(Vector3 imdir, DeathNature dn, PlayerRagdoll playerRagdoll)
     {
         yield return new WaitForEndOfFrame();
-        print("SpawnRagdoll_Coroutine_Frame_4");
+        Log.Print("SpawnRagdoll_Coroutine_Frame_4");
         playerRagdoll.ResetRigidbodieVelocities();
         StartCoroutine(SpawnRagdoll_Coroutine_Frame_5((Vector3)impactDir, _ragdollPropulsion, playerRagdoll));
     }
@@ -1356,7 +1356,7 @@ public class Player : Biped
     {
         yield return new WaitForEndOfFrame();
         imdir = imdir.normalized;
-        print($"SpawnRagdoll_Coroutine_Frame_5: {dn} {imdir}");
+        Log.Print($"SpawnRagdoll_Coroutine_Frame_5: {dn} {imdir}");
         playerRagdoll.GetComponent<PlayerRagdoll>().ToggleAllRigidbodiesToKinetmatic(false);
         playerRagdoll.ResetRigidbodieVelocities();
 
@@ -1366,23 +1366,23 @@ public class Player : Biped
         {
             imdir.y = 1.4f;
             playerRagdoll.head.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 800 * mult);
-            print($"SpawnRagdoll_Coroutine_Frame_5: Force 1");
+            Log.Print($"SpawnRagdoll_Coroutine_Frame_5: Force 1");
         }
         else if (dn.ToString().Contains("renade") || dn == DeathNature.Stuck || dn == DeathNature.RPG
             || dn == DeathNature.Barrel || dn == DeathNature.UltraBind)
         {
             playerRagdoll.hips.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 2000 * mult);
-            print($"SpawnRagdoll_Coroutine_Frame_5: Force 2");
+            Log.Print($"SpawnRagdoll_Coroutine_Frame_5: Force 2");
         }
         else if (dn == DeathNature.Melee)
         {
             playerRagdoll.hips.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 1600 * mult);
-            print($"SpawnRagdoll_Coroutine_Frame_5: Force 3");
+            Log.Print($"SpawnRagdoll_Coroutine_Frame_5: Force 3");
         }
         else
         {
             playerRagdoll.hips.GetComponent<Rigidbody>().AddForce((Vector3)imdir * 1200 * mult);
-            print($"SpawnRagdoll_Coroutine_Frame_5: Force 4");
+            Log.Print($"SpawnRagdoll_Coroutine_Frame_5: Force 4");
         }
     }
 
@@ -1619,8 +1619,8 @@ public class Player : Biped
 
     void LateRespawn()
     {
-        print("LateRespawn");
-        print($"oneobjmode {name} spawing at {_reservedSpawnPointTrans.name}");
+        Log.Print("LateRespawn");
+        Log.Print($"oneobjmode {name} spawing at {_reservedSpawnPointTrans.name}");
 
         try { allPlayerScripts.damageIndicatorManager.HideAllIndicators(); } catch { }
 
@@ -1881,12 +1881,12 @@ public class Player : Biped
             return;
 
 
-        print($"Damage_RPC {impPos} {impDir} {sourcePid}");
+        Log.Print($"Damage_RPC {impPos} {impDir} {sourcePid}");
         this.impactPos = transform.position; this.impactDir = Vector3.zero;
         try { this.impactDir = impDir; } catch { }
         try { this.impactPos = impPos; } catch { }
         if (impactPos == Vector3.zero) impactPos = transform.position;
-        print($"Damage_RPC {impPos} {impDir}");
+        Log.Print($"Damage_RPC {impPos} {impDir}");
 
 
 
@@ -1900,7 +1900,7 @@ public class Player : Biped
         {
             _ragdollPropulsion = (DeathNature)dn;
         }
-        try { print($"Damage_RPC {_killFeedOutput} {deathNature} {_ragdollPropulsion} {(DeathNature)dn}"); } catch (System.Exception e) { Debug.LogError(e); }
+        try { Log.Print($"Damage_RPC {_killFeedOutput} {deathNature} {_ragdollPropulsion} {(DeathNature)dn}"); } catch (System.Exception e) { Debug.LogError(e); }
 
 
         try
@@ -2010,7 +2010,7 @@ public class Player : Biped
             }
         }
         catch { }
-        try { print($"Damage_RPC {_killFeedOutput} {deathNature} {_ragdollPropulsion} {(DeathNature)dn}"); } catch (System.Exception e) { Debug.LogError(e); }
+        try { Log.Print($"Damage_RPC {_killFeedOutput} {deathNature} {_ragdollPropulsion} {(DeathNature)dn}"); } catch (System.Exception e) { Debug.LogError(e); }
 
 
         if ((DeathNature)dn == DeathNature.Melee)
@@ -2035,7 +2035,7 @@ public class Player : Biped
         catch { }
         try
         {
-            print($"SpawnNewDamageIndicator {Vector3.Angle(transform.forward, new Vector3((GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).x, transform.position.y, (GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).z))}");
+            Log.Print($"SpawnNewDamageIndicator {Vector3.Angle(transform.forward, new Vector3((GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).x, transform.position.y, (GameManager.GetPlayerWithPhotonView(sourcePid).transform.position - transform.position).z))}");
 
 
             //if (GameManager.instance.hitMarkersMode == GameManager.HitMarkersMode.On)
@@ -2081,7 +2081,7 @@ public class Player : Biped
 
     void GrenadeJumping()
     {
-        print($"Grenade jumping: {_rb.linearVelocity}");
+        Log.Print($"Grenade jumping: {_rb.linearVelocity}");
 
         movement.blockPlayerMoveInput = 0.2f;
         movement.blockedMovementType = PlayerMovement.BlockedMovementType.Other;
@@ -2099,21 +2099,21 @@ public class Player : Biped
         _rb.useGravity = true;
         _rb.linearDamping = 0;
 
-        print($"Grenade jumping: {_rb.linearVelocity} {Vector3.Angle(_impactDir, transform.up)}");
+        Log.Print($"Grenade jumping: {_rb.linearVelocity} {Vector3.Angle(_impactDir, transform.up)}");
         if (Mathf.Sign(_impactDir.y) == 1 && _rb.linearVelocity.y > 2 && Vector3.Angle(_impactDir, transform.up) < 21)
         {
-            print($"Grenade jumping: 1");
+            Log.Print($"Grenade jumping: 1");
             _rb.AddForce(new Vector3(0, 5, 0), ForceMode.Impulse); // grenade jump
         }
         else if (Mathf.Sign(_impactDir.y) == 1 && movement.isGrounded)
         {
-            print($"Grenade jumping: 2");
+            Log.Print($"Grenade jumping: 2");
             _impactDir.y *= 3;
             _rb.AddForce(_impactDir.normalized * 4f, ForceMode.Impulse);
         }
         else
         {
-            print($"Grenade jumping: 3");
+            Log.Print($"Grenade jumping: 3");
             _rb.AddForce(_impactDir.normalized, ForceMode.Impulse);
         }
     }
@@ -2153,10 +2153,10 @@ public class Player : Biped
     {
         //if (GameManager.instance.connection == GameManager.Connection.Local)
         //{
-        //    print("ChangePlayerIdLocalMode 1");
+        //    PrintOnlyInEditor.Log("ChangePlayerIdLocalMode 1");
         //    _playerId = id;
         //    //OnPlayerIdAssigned?.Invoke(this);
-        //    print("ChangePlayerIdLocalMode 2");
+        //    PrintOnlyInEditor.Log("ChangePlayerIdLocalMode 2");
         //}
     }
 
@@ -2168,9 +2168,9 @@ public class Player : Biped
 
     void OnPlayerIdAssigned_Delegate(Player p)
     {
-        print("OnPlayerIdAssigned_Delegate");
-        print($"OnPlayerIdAssigned_Delegate {_playerSteamId}");
-        print($"OnPlayerIdAssigned_Delegate {rid}");
+        Log.Print("OnPlayerIdAssigned_Delegate");
+        Log.Print($"OnPlayerIdAssigned_Delegate {_playerSteamId}");
+        Log.Print($"OnPlayerIdAssigned_Delegate {rid}");
         playerDataCell = CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(_playerSteamId, rid);
         username = playerDataCell.steamName;
         foreach (PlayerWorldUIMarker pw in allPlayerScripts.worldUis) pw.text.text = playerDataCell.steamName;
@@ -2194,8 +2194,8 @@ public class Player : Biped
     [PunRPC]
     void TellPlayerToRespawn()
     {
-        print("SpawnPlayersForNewRound - TellPlayerToRespawn");
-        print($"oneobjmode {name} TellPlayerToRespawn");
+        Log.Print("SpawnPlayersForNewRound - TellPlayerToRespawn");
+        Log.Print($"oneobjmode {name} TellPlayerToRespawn");
         LateRespawn();
         Respawn();
     }
@@ -2342,7 +2342,7 @@ public class Player : Biped
                 PlayerMedals sourcePlayerMedals = playerThatKilledMe._playerMedals;
                 if (sourcePlayerMedals != this._playerMedals && lastPID != this.photonId)
                 {
-                    print($"Spawning medal: {deathByGroin} {deathNature}");
+                    Log.Print($"Spawning medal: {deathByGroin} {deathNature}");
                     if (deathByGroin)
                     {
                         deathNature = DeathNature.Groin;
@@ -2391,14 +2391,14 @@ public class Player : Biped
     {
         _reservedSpawnPointTrans = SpawnManager.spawnManagerInstance.GetSpawnPointAtPos(t);
         _lastSpawnPointIsRandom = isRandom;
-        print($"oneobjmode {name} UpdateReservedSpawnPoint at {_reservedSpawnPointTrans.name}");
+        Log.Print($"oneobjmode {name} UpdateReservedSpawnPoint at {_reservedSpawnPointTrans.name}");
         //transform.position = _reservedSpawnPointTrans.position + new Vector3(0, 2, 0);
     }
 
 
     public void SetupMotionTracker()
     {
-        print("SetupMotionTracker");
+        Log.Print("SetupMotionTracker");
         movement.playerMotionTracker.Setup();
         //List<MotionTrackerDot> l = GetComponentsInChildren<MotionTrackerDot>().ToList();
 
@@ -2412,7 +2412,7 @@ public class Player : Biped
 
     void OnOneObjRoundOverLocalEvent()
     {
-        print("oneobjmode - OnOneObjRoundOverLocalEvent");
+        Log.Print("oneobjmode - OnOneObjRoundOverLocalEvent");
 
         try { StopAllCoroutines(); } catch { }
         try { StopAllCoroutines(); } catch { }
@@ -2426,7 +2426,7 @@ public class Player : Biped
     {
         base.SpawnUltraBindExplosion();
 
-        print("Player SpawnUltraBindExplosion");
+        Log.Print("Player SpawnUltraBindExplosion");
 
         GrenadePool.SpawnExplosion(_lastPlayerSource, damage: 700, radius: 2, GameManager.DEFAULT_EXPLOSION_POWER, damageCleanNameSource: "Ultra Bind", targetTrackingCorrectTarget.position, Explosion.Color.Purple, Explosion.Type.UltraBind, GrenadePool.instance.ultraBindClip, WeaponProperties.KillFeedOutput.Ultra_Bind);
 
@@ -2444,15 +2444,15 @@ public class Player : Biped
         }
         else
         {
-            print($"UpdateRewiredId: player {username} {playerSteamId}");
-            print($"UpdateRewiredId RID changing: {playerController.rid} -> {i}");
+            Log.Print($"UpdateRewiredId: player {username} {playerSteamId}");
+            Log.Print($"UpdateRewiredId RID changing: {playerController.rid} -> {i}");
             playerController.rid = i;
 
             if (playerSteamId != -99999 && playerController.rid != -99999)
             {
-                print($"UpdateRewiredId: OnPlayerIdAssigned");
-                print($"UpdateRewiredId: {playerSteamId}");
-                print($"UpdateRewiredId: {playerController.rid} {i}");
+                Log.Print($"UpdateRewiredId: OnPlayerIdAssigned");
+                Log.Print($"UpdateRewiredId: {playerSteamId}");
+                Log.Print($"UpdateRewiredId: {playerController.rid} {i}");
                 OnPlayerIdAssigned?.Invoke(this);
                 if (PV.IsMine) NetworkGameManager.instance.AddPlayerSetCount();
 

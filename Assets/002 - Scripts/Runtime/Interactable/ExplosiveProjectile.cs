@@ -99,7 +99,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
             if (_ttl <= 0)
             {
-                print($"{name} disabled due to ttl");
+                Log.Print($"{name} disabled due to ttl");
                 gameObject.SetActive(false);
                 transform.SetParent(GrenadePool.instance.transform);
             }
@@ -174,7 +174,7 @@ public class ExplosiveProjectile : MonoBehaviour
                 if (collision.gameObject.transform.root.GetComponent<Player>())
                 {
 
-                    print("Stuck 1");
+                    Log.Print("Stuck 1");
 
                     GetComponent<Rigidbody>().linearVelocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
                     if (player.isMine)
@@ -184,7 +184,7 @@ public class ExplosiveProjectile : MonoBehaviour
                 }
                 else if (collision.gameObject.GetComponent<Rigidbody>())
                 {
-                    print("Stuck 2");
+                    Log.Print("Stuck 2");
                     transform.parent = collision.transform;
 
 
@@ -195,12 +195,12 @@ public class ExplosiveProjectile : MonoBehaviour
                 }
                 else
                 {
-                    //print($"STICK TO WALL {collision.gameObject.name} " +
+                    //PrintOnlyInEditor.Log($"STICK TO WALL {collision.gameObject.name} " +
                     //    $"{transform.position - collision.transform.position}   {collision.transform.InverseTransformDirection(transform.position - collision.transform.position)}");
 
                     //Vector3 vg = transform.position - collision.transform.position;
                     //Vector3 v = collision.transform.InverseTransformDirection(transform.position - collision.transform.position);
-                    //print(v);
+                    //PrintOnlyInEditor.Log(v);
 
                     //if (Mathf.Sign(v.x) != Mathf.Sign(vg.x) && Mathf.Abs(v.x) == Mathf.Abs(vg.x))
                     //    v.x *= -1;
@@ -213,7 +213,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
                     ////v.y *= Mathf.Sign(vg.y);
                     ////v.z *= Mathf.Sign(vg.z);
-                    //print(v);
+                    //PrintOnlyInEditor.Log(v);
 
                     //ConstraintSource cs = new ConstraintSource(); cs.sourceTransform = collision.transform; cs.weight = 1;
                     //GetComponent<ParentConstraint>().AddSource(cs);
@@ -228,7 +228,7 @@ public class ExplosiveProjectile : MonoBehaviour
                     //_fakeParent = collision.transform;
 
 
-                    print("Stuck 3");
+                    Log.Print("Stuck 3");
 
 
                     //transform.parent = collision.transform;
@@ -293,13 +293,13 @@ public class ExplosiveProjectile : MonoBehaviour
 
     void Explosion()
     {
-        print($"Explosion {_stuckPlayerPhotonId} {PhotonNetwork.IsMasterClient == true}");
+        Log.Print($"Explosion {_stuckPlayerPhotonId} {PhotonNetwork.IsMasterClient == true}");
 
         if (PhotonNetwork.IsMasterClient)
         {
             if (_stuckPlayerPhotonId > 0)
             {
-                print($"Explosion 1");
+                Log.Print($"Explosion 1");
                 _exploded = true;
 
                 GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).Damage(damage: 999, headshot: false, source_pid: _player.photonId, impactPos: transform.position,
@@ -309,7 +309,7 @@ public class ExplosiveProjectile : MonoBehaviour
             }
             else
             {
-                print($"Explosion 2");
+                Log.Print($"Explosion 2");
                 _exploded = true;
                 NetworkGameManager.instance.DisableAndExplodeProjectile((int)_killFeedOutput, GrenadePool.instance.GetIndexOfExplosive(_killFeedOutput, gameObject), transform.position);
             }

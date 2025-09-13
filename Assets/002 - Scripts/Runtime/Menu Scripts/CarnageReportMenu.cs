@@ -53,15 +53,15 @@ public class CarnageReportMenu : MonoBehaviour
 
         _carnageReportStrucs = _carnageReportStrucs.ToArray().OrderByDescending(x => x.score).ToList();
 
-        print($"SetupScoreboard {_carnageReportStrucs.Count} {winningTeam}");
+        Log.Print($"SetupScoreboard {_carnageReportStrucs.Count} {winningTeam}");
         if (winningTeam == GameManager.Team.None)
         {
             for (int i = 0; i < _carnageReportStrucs.Count; i++)
             {
-                print($"{_carnageReportStrucs[i].kills} {_carnageReportStrucs[i].deaths}");
+                Log.Print($"{_carnageReportStrucs[i].kills} {_carnageReportStrucs[i].deaths}");
                 ColorUtility.TryParseHtmlString(_carnageReportStrucs[i].colorPalette.ToString().ToLower(), out _tCol);
 
-                print($"Changing carnage report row color to: {_tCol}");
+                Log.Print($"Changing carnage report row color to: {_tCol}");
                 carnageReportRowArray[i].mainColor.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
 
 
@@ -90,9 +90,9 @@ public class CarnageReportMenu : MonoBehaviour
             {
                 if (_carnageReportStrucs[i].team == winningTeam)
                 {
-                    print($"{_carnageReportStrucs[i].playerName} {_carnageReportStrucs[i].team} {winningTeam}");
+                    Log.Print($"{_carnageReportStrucs[i].playerName} {_carnageReportStrucs[i].team} {winningTeam}");
                     ColorUtility.TryParseHtmlString(_carnageReportStrucs[i].team.ToString().ToLower(), out _tCol);
-                    print($"Changing carnage report row color to: {_tCol}");
+                    Log.Print($"Changing carnage report row color to: {_tCol}");
                     carnageReportRowArray[c].mainColor.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
 
 
@@ -118,9 +118,9 @@ public class CarnageReportMenu : MonoBehaviour
             {
                 if (_carnageReportStrucs[i].team != winningTeam)
                 {
-                    print($"{_carnageReportStrucs[i].playerName} {_carnageReportStrucs[i].team} {winningTeam}");
+                    Log.Print($"{_carnageReportStrucs[i].playerName} {_carnageReportStrucs[i].team} {winningTeam}");
                     ColorUtility.TryParseHtmlString(_carnageReportStrucs[i].team.ToString().ToLower(), out _tCol);
-                    print($"Changing carnage report row color to: {_tCol}");
+                    Log.Print($"Changing carnage report row color to: {_tCol}");
                     carnageReportRowArray[c].mainColor.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
 
 

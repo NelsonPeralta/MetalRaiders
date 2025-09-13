@@ -11,7 +11,7 @@ public class MouseDebug : MonoBehaviour
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit))
         {
-            print(hit.collider.name);
+            Log.Print(hit.collider.name);
         }
 
         OnMouseOver();
@@ -19,6 +19,6 @@ public class MouseDebug : MonoBehaviour
 
     void OnMouseOver()
     {
-        print(gameObject.name);
+        Log.Print(gameObject.name);
     }
 }

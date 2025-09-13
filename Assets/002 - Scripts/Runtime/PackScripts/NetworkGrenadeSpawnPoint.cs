@@ -12,7 +12,7 @@ public class NetworkGrenadeSpawnPoint : MonoBehaviour
     {
         set
         {
-            print($"oneobjmode - NetworkGrenadeSpawnPoint {value}");
+            Log.Print($"oneobjmode - NetworkGrenadeSpawnPoint {value}");
             ammoInThisPack = defaultAmmo;
             UpdateAmmoText();
             if (value) _tts = _defaultTts;

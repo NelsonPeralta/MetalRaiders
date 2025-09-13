@@ -83,7 +83,7 @@ public class SpawnPoint : MonoBehaviour
 
             //if (players.Count == 0)
             //{
-            //    print("Unreserve spawn point");
+            //    PrintOnlyInEditor.Log("Unreserve spawn point");
             //    _reserved = false;
             //}
         }

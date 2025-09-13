@@ -18,13 +18,13 @@ public class MarkerManager : MonoBehaviour
     {
         if (instance)
         {
-            print("MarkerManager Awake 1");
+            Log.Print("MarkerManager Awake 1");
             Destroy(gameObject);
             return;
         }
         else
         {
-            print("MarkerManager Awake 2");
+            Log.Print("MarkerManager Awake 2");
             instance = this;
             SceneManager.sceneLoaded += OnSceneLoaded;
             DontDestroyOnLoad(gameObject);
@@ -42,10 +42,10 @@ public class MarkerManager : MonoBehaviour
     {
         if (instance == this)
         {
-            print("MarkerManager OnSceneLoaded instance");
+            Log.Print("MarkerManager OnSceneLoaded instance");
             if (scene.buildIndex > 0)
             {
-                print("MarkerManager OnSceneLoaded > 0");
+                Log.Print("MarkerManager OnSceneLoaded > 0");
                 instance._markers = new List<Marker>();
                 instance._markersEnSpot = new List<Marker>();
 
@@ -65,7 +65,7 @@ public class MarkerManager : MonoBehaviour
             }
             else
             {
-                print("MarkerManager OnSceneLoaded 0");
+                Log.Print("MarkerManager OnSceneLoaded 0");
                 if (instance._markers.Count > 0)
                     for (int i = instance._markers.Count; i-- > 0;)
                         if (instance._markers[i] != null)
@@ -90,7 +90,7 @@ public class MarkerManager : MonoBehaviour
 
     public void SpawnNormalMarker(Vector3 pos, int playerPhotonView)
     {
-        print($"SpawnNormalMarker {playerPhotonView}");
+        Log.Print($"SpawnNormalMarker {playerPhotonView}");
         foreach (Marker obj in instance._markers)
             if (!obj.gameObject.activeSelf)
             {
@@ -111,8 +111,8 @@ public class MarkerManager : MonoBehaviour
             {
                 obj.transform.position = pos;
                 obj.targetPlayer = GameManager.GetPlayerWithPhotonView(player_id);
-                print($"SpawnEnnSpotMarker {obj.gameObject}");
-                print($"SpawnEnnSpotMarker {player_id}");
+                Log.Print($"SpawnEnnSpotMarker {obj.gameObject}");
+                Log.Print($"SpawnEnnSpotMarker {player_id}");
                 ChangeLayer(obj.gameObject, GameManager.GetPlayerWithPhotonView(player_id).rid);
                 obj.gameObject.SetActive(true);
                 StartCoroutine(DisableObjectAfterTime(obj.gameObject, 4));

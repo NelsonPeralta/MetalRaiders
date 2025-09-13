@@ -29,6 +29,7 @@ public class SpawnPointDisablerRay : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        return;
         if (GameManager.instance.gameMode == GameManager.GameMode.Coop) return;
         _c -= Time.deltaTime;
 
@@ -78,7 +79,7 @@ public class SpawnPointDisablerRay : MonoBehaviour
                     }
                     else
                     {
-                        //print($"Hit SINGLE {_id} {_hits_[0].transform.name}");
+                        //PrintOnlyInEditor.Log($"Hit SINGLE {_id} {_hits_[0].transform.name}");
                         if (_hits_[0].transform.GetComponent<SpawnPointDisablerRayTarget>())
                         {
                             //_hits_[0].transform.GetComponent<SpawnPointDisablerRayTarget>().spawnPoint.seen = true;

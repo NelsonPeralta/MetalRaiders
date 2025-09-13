@@ -168,8 +168,8 @@ public class ReticuleMagnetism : MonoBehaviour
 
             if (player.playerController.rid == 0)
             {
-                //print($"position of my camera is {player.mainCamera.transform.position} and direction is {player.mainCamera.transform.forward}");
-                //print($"the point is {player.mainCamera.transform.position + (2.4f * player.mainCamera.transform.forward)}");
+                //PrintOnlyInEditor.Log($"position of my camera is {player.mainCamera.transform.position} and direction is {player.mainCamera.transform.forward}");
+                //PrintOnlyInEditor.Log($"the point is {player.mainCamera.transform.position + (2.4f * player.mainCamera.transform.forward)}");
             }
 
             if (Physics.Raycast(player.mainCamera.transform.position

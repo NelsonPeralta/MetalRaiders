@@ -93,13 +93,13 @@ public class SpawnManager : MonoBehaviour
 
     Transform GetCompletelyRandomSpawnpoint()
     {
-        print($"GetCompletelyRandomSpawnpoint");
+        Log.Print($"GetCompletelyRandomSpawnpoint");
         return genericSpawnPoints[Random.Range(0, genericSpawnPoints.Count)].transform;
     }
 
     public (Transform, bool) GetRandomSafeSpawnPoint(GameManager.Team team) // return a position and if the spawn is random or not
     {
-        print($"GetRandomSafeSpawnPoint {team} {blueSpawnPoints.Count}");
+        Log.Print($"GetRandomSafeSpawnPoint {team} {blueSpawnPoints.Count}");
 
         List<SpawnPoint> availableSpawnPoints = new List<SpawnPoint>();
 
@@ -116,7 +116,7 @@ public class SpawnManager : MonoBehaviour
                 {
                     for (int i = 0; i < _tempListOfSpawns.Count; i++)
                     {
-                        print($"SpawnManager F0 {i}/{_tempListOfSpawns.Count} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
+                        Log.Print($"SpawnManager F0 {i}/{_tempListOfSpawns.Count} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
                     }
 
                     _tempListOfSpawns.Sort((hit1, hit2) => hit1.blockingLevel.CompareTo(hit2.blockingLevel)); // this should sort by danger level. Smallest index = lowest
@@ -126,7 +126,7 @@ public class SpawnManager : MonoBehaviour
 
                     for (int i = 0; i < _tempListOfSpawns.Count; i++)
                     {
-                        print($"SpawnManager F1 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
+                        Log.Print($"SpawnManager F1 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
                     }
                 }
                 else
@@ -145,7 +145,7 @@ public class SpawnManager : MonoBehaviour
 
                         for (int i = 0; i < _tempListOfSpawns.Count; i++)
                         {
-                            print($"SpawnManager F2 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
+                            Log.Print($"SpawnManager F2 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
                         }
                     }
                     else
@@ -163,7 +163,7 @@ public class SpawnManager : MonoBehaviour
 
                             for (int i = 0; i < _tempListOfSpawns.Count; i++)
                             {
-                                print($"SpawnManager F3 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
+                                Log.Print($"SpawnManager F3 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
                             }
                         }
                     }
@@ -186,7 +186,7 @@ public class SpawnManager : MonoBehaviour
 
                         for (int i = 0; i < _tempListOfSpawns.Count; i++)
                         {
-                            print($"SpawnManager F1 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
+                            Log.Print($"SpawnManager F1 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
                         }
                     }
                     else
@@ -205,7 +205,7 @@ public class SpawnManager : MonoBehaviour
 
                             for (int i = 0; i < _tempListOfSpawns.Count; i++)
                             {
-                                print($"SpawnManager F2 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
+                                Log.Print($"SpawnManager F2 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
                             }
                         }
                         else
@@ -223,7 +223,7 @@ public class SpawnManager : MonoBehaviour
 
                                 for (int i = 0; i < _tempListOfSpawns.Count; i++)
                                 {
-                                    print($"SpawnManager F3 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
+                                    Log.Print($"SpawnManager F3 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
                                 }
                             }
                         }
@@ -247,7 +247,7 @@ public class SpawnManager : MonoBehaviour
 
                         for (int i = 0; i < _tempListOfSpawns.Count; i++)
                         {
-                            print($"SpawnManager F1 {i} {_tempListOfSpawns[i].blockingLevel}");
+                            Log.Print($"SpawnManager F1 {i} {_tempListOfSpawns[i].blockingLevel}");
                         }
                     }
                     else
@@ -266,7 +266,7 @@ public class SpawnManager : MonoBehaviour
 
                             for (int i = 0; i < _tempListOfSpawns.Count; i++)
                             {
-                                print($"SpawnManager F2 {i} {_tempListOfSpawns[i].blockingLevel}");
+                                Log.Print($"SpawnManager F2 {i} {_tempListOfSpawns[i].blockingLevel}");
                             }
                         }
                         else
@@ -284,7 +284,7 @@ public class SpawnManager : MonoBehaviour
 
                                 for (int i = 0; i < _tempListOfSpawns.Count; i++)
                                 {
-                                    print($"SpawnManager F3 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
+                                    Log.Print($"SpawnManager F3 {i} {_tempListOfSpawns[i].name} {_tempListOfSpawns[i].blockingLevel}");
                                 }
                             }
                         }
@@ -309,7 +309,7 @@ public class SpawnManager : MonoBehaviour
         if (availableSpawnPoints.Count > 0)
         {
             int ran = Random.Range(0, availableSpawnPoints.Count);
-            print($"Returning {availableSpawnPoints[ran].name} spawn (danger level {availableSpawnPoints[ran].blockingLevel})");
+            Log.Print($"Returning {availableSpawnPoints[ran].name} spawn (danger level {availableSpawnPoints[ran].blockingLevel})");
             return (availableSpawnPoints[ran].transform, false);
         }
 
@@ -322,7 +322,7 @@ public class SpawnManager : MonoBehaviour
         {
             if (sp.transform.position == p)
             {
-                print($"Returning spawn point {sp.name}");
+                Log.Print($"Returning spawn point {sp.name}");
                 return sp.transform;
             }
         }
@@ -332,7 +332,7 @@ public class SpawnManager : MonoBehaviour
         {
             if (sp.transform.position == p)
             {
-                print($"Returning spawn point {sp.name}");
+                Log.Print($"Returning spawn point {sp.name}");
                 return sp.transform;
             }
         }
@@ -341,7 +341,7 @@ public class SpawnManager : MonoBehaviour
         {
             if (sp.transform.position == p)
             {
-                print($"Returning spawn point {sp.name}");
+                Log.Print($"Returning spawn point {sp.name}");
                 return sp.transform;
             }
         }
@@ -366,7 +366,7 @@ public class SpawnManager : MonoBehaviour
 
     public void RotateSpawns()
     {
-        print($"oneobjmode - RotateSpawns");
+        Log.Print($"oneobjmode - RotateSpawns");
 
         List<SpawnPoint> _tempSplRed = new List<SpawnPoint>(redSpawnPoints);
         List<SpawnPoint> _tempSplBlue = new List<SpawnPoint>(blueSpawnPoints);

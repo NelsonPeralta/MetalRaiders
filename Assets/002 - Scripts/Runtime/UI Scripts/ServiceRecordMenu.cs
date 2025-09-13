@@ -11,7 +11,7 @@ public class ServiceRecordMenu : MonoBehaviour
         set
         {
             _playerData = value;
-            print($"ServiceRecordMenu setting player data: {_playerData}");
+            Log.Print($"ServiceRecordMenu setting player data: {_playerData}");
 
 
             float kd = 0;
@@ -79,7 +79,7 @@ public class ServiceRecordMenu : MonoBehaviour
 
     private void OnEnable()
     {
-        print($"ServiceRecordMenu OnEnable {playerDataCell}");
+        Log.Print($"ServiceRecordMenu OnEnable {playerDataCell}");
 
 
 

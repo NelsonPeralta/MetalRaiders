@@ -110,7 +110,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
 
         if (_lookAtThisPlayer)
         {
-            //print($"PlayerWorldUIMarker {name} {_targetPlayer.isDead} {_targetPlayer.isRespawning} {_player.isDead} {_player.isRespawning}");
+            //PrintOnlyInEditor.Log($"PlayerWorldUIMarker {name} {_targetPlayer.isDead} {_targetPlayer.isRespawning} {_player.isDead} {_player.isRespawning}");
             if (_lookAtThisPlayer.isDead || _lookAtThisPlayer.isRespawning || _rootPlayer.isDead || _rootPlayer.isRespawning)
                 holder.SetActive(false);
             else

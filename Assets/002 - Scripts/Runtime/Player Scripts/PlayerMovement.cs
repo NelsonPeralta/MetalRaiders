@@ -27,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
             _previousMovementDirEnum = _playerMovementDirection;
             _playerMovementDirection = value;
 
-            if (_previousMovementDirEnum != _playerMovementDirection) print($"movementDirection changed: {value}");
+            if (_previousMovementDirEnum != _playerMovementDirection) Log.Print($"movementDirection changed: {value}");
 
             if ((_previousMovementDirEnum == PlayerMovementDirection.Left && _playerMovementDirection == PlayerMovementDirection.Right) ||
                 (_previousMovementDirEnum == PlayerMovementDirection.Right && _playerMovementDirection == PlayerMovementDirection.Left) ||
@@ -48,7 +48,7 @@ public class PlayerMovement : MonoBehaviour
         {
             if (_grounded == false && value == true /*&& !_fpsJumpingAnimator.GetCurrentAnimatorStateInfo(0).IsName("jump") && _timeFalling > 1*/)
             {
-                //print($"may have landed: {_timeFalling}");
+                //PrintOnlyInEditor.Log($"may have landed: {_timeFalling}");
 
                 if (_timeFalling > 0.5f)
                     _fpsJumpingAnimator.Play("land");
@@ -102,7 +102,7 @@ public class PlayerMovement : MonoBehaviour
 
 
 
-            //print($"returning animation speed {_animationSpeed}");
+            //PrintOnlyInEditor.Log($"returning animation speed {_animationSpeed}");
             return Mathf.Abs(_animationSpeed);
         }
     }
@@ -134,7 +134,7 @@ public class PlayerMovement : MonoBehaviour
             else
                 _moveSpeed = Mathf.Clamp(_moveSpeed, 1, _moveSpeed);
 
-            //if (_moveSpeed == 1) print($"moveSpeed: {_moveSpeed}");
+            //if (_moveSpeed == 1) PrintOnlyInEditor.Log($"moveSpeed: {_moveSpeed}");
         }
     }
 
@@ -1183,7 +1183,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnPlayerRespawnEarly(Player p)
     {
-        print($"OnPlayerRespawnEarly {_fpsJumpingAnimator.transform.localPosition.y}");
+        Log.Print($"OnPlayerRespawnEarly {_fpsJumpingAnimator.transform.localPosition.y}");
         _rb.linearVelocity = Vector3.zero; _rb.angularVelocity = Vector3.zero;
         blockedMovementType = BlockedMovementType.None;
         blockPlayerMoveInput = 0;

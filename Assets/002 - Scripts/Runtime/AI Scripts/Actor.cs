@@ -117,7 +117,7 @@ abstract public class Actor : Biped
 
                 _targetPlayer = value;
 
-                if (_targetPlayer) print($"targetplayer changed: {value.name}");
+                if (_targetPlayer) Log.Print($"targetplayer changed: {value.name}");
             }
         }
     }
@@ -219,7 +219,7 @@ abstract public class Actor : Biped
         transform.parent = SwarmManager.instance.transform;
         gameObject.SetActive(false);
 
-        print($"Adding {name} {transform.position} to instantiation_position_Biped_Dict");
+        Log.Print($"Adding {name} {transform.position} to instantiation_position_Biped_Dict");
         originalSpawnPosition = transform.position;
         GameManager.instance.instantiation_position_Biped_Dict.Add(transform.position, this); GameManager.instance.instantiation_position_Biped_Dict = GameManager.instance.instantiation_position_Biped_Dict;
     }
@@ -318,7 +318,7 @@ abstract public class Actor : Biped
 
     public void Damage(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false, int weIndx = -1)
     {
-        print($"Actor Damage: {damageSource}");
+        Log.Print($"Actor Damage: {damageSource}");
         //{ // Hit Marker Handling
         //    Player p = GameManager.GetPlayerWithPhotonView(playerWhoShotPDI);
 
@@ -594,7 +594,7 @@ abstract public class Actor : Biped
 
                 if (_meleeCooldown <= 0 && !isFlinching && !isBoosting && !isDodging)
                 {
-                    print($"trying to melee {targetTransform.name}");
+                    Log.Print($"trying to melee {targetTransform.name}");
                     if (targetTransform.GetComponent<Player>() || targetTransform.root.GetComponent<Player>())
                         Melee();
                 }
@@ -614,7 +614,7 @@ abstract public class Actor : Biped
 
                 if (_isInRange)
                 {
-                    //print($"{_isDodgingCooldown} {targetTransform.GetComponent<HitPoints>()} {CheckIfSideIsClear()} {isSeenByTargetPlayer}");
+                    //PrintOnlyInEditor.Log($"{_isDodgingCooldown} {targetTransform.GetComponent<HitPoints>()} {CheckIfSideIsClear()} {isSeenByTargetPlayer}");
 
                     if (_isDodgingCooldown <= -2 && targetTransform.GetComponent<HitPoints>())
                     {
@@ -636,7 +636,7 @@ abstract public class Actor : Biped
 
 
                     int ran = UnityEngine.Random.Range(0, 6);
-                    //print($"{_shootProjectileCooldown} {isTaunting} {isFlinching} {isBoosting} {isDodging} {ran}");
+                    //PrintOnlyInEditor.Log($"{_shootProjectileCooldown} {isTaunting} {isFlinching} {isBoosting} {isDodging} {ran}");
 
                     if (ran != 0)
                     {
@@ -647,7 +647,7 @@ abstract public class Actor : Biped
                                 targetTransform = null;
                             else
                             {
-                                //print("Throw Fireball to Player");
+                                //PrintOnlyInEditor.Log("Throw Fireball to Player");
                                 if (!SwarmManager.instance.editMode) ShootProjectile(PhotonNetwork.InRoom);
                             }
 
@@ -657,7 +657,7 @@ abstract public class Actor : Biped
                     {
                         if (_throwExplosiveCooldown <= 0 && !isTaunting && !isFlinching && !isBoosting && !isDodging)
                         {
-                            //print("Throw Fireball to Player");
+                            //PrintOnlyInEditor.Log("Throw Fireball to Player");
 
                             if (!targetTransform.GetComponent<HitPoints>())
                                 targetTransform = null;
@@ -689,7 +689,7 @@ abstract public class Actor : Biped
                     }
                     else if (isFlinching || isTaunting || isBoosting || isDodging)
                     {
-                        //print("disabling NavMeshAgent");
+                        //PrintOnlyInEditor.Log("disabling NavMeshAgent");
                         nma.enabled = false;
                     }
                 }
@@ -710,13 +710,13 @@ abstract public class Actor : Biped
 
                 if (isRunning && !isFlinching && !isTaunting && !isBoosting && !isDodging)
                 {
-                    //print($"Going to waypoint {targetTransform.name}");
+                    //PrintOnlyInEditor.Log($"Going to waypoint {targetTransform.name}");
                     nma.enabled = true;
                     nma.SetDestination(targetTransform.position);
                 }
                 else if (isFlinching || isTaunting || isBoosting || isDodging)
                 {
-                    //print("disabling NavMeshAgent");
+                    //PrintOnlyInEditor.Log("disabling NavMeshAgent");
                     nma.enabled = false;
                 }
             }
@@ -831,7 +831,7 @@ abstract public class Actor : Biped
         }
         else
         {
-            print($"SetNewTargetPlayerWithPid {pid}");
+            Log.Print($"SetNewTargetPlayerWithPid {pid}");
             targetHitpoints = PhotonView.Find(pid).GetComponent<Player>().GetComponent<HitPoints>();
         }
     }
@@ -884,16 +884,16 @@ abstract public class Actor : Biped
     [PunRPC]
     public void Dodge(int left, bool callRPC = true)
     {
-        //print("Dodge RPC");
+        //PrintOnlyInEditor.Log("Dodge RPC");
 
         if (callRPC && PhotonNetwork.IsMasterClient)
         {
-            //print("Dodge RPC call");
+            //PrintOnlyInEditor.Log("Dodge RPC call");
             GetComponent<PhotonView>().RPC("Dodge", RpcTarget.All, left, false);
         }
         else if (!callRPC)
         {
-            //print("Dodge RPC processing");
+            //PrintOnlyInEditor.Log("Dodge RPC processing");
             _isDodgingCooldown = 1;
 
             if (GameManager.instance.difficulty == SwarmManager.Difficulty.Heroic) _isDodgingCooldown = 0.9f;
@@ -929,18 +929,18 @@ abstract public class Actor : Biped
 
     bool CheckIfSideIsClear(bool right = false)
     {
-        print("CheckIfSideIsClear");
+        Log.Print("CheckIfSideIsClear");
         if (!right)
         {
             foreach (Collider c in Physics.OverlapSphere(_leftChecks[2].position, 1, _overlapSphereMask))
-                print(c.name);
+                Log.Print(c.name);
 
             if (Physics.OverlapSphere(_leftChecks[2].position, 1, _overlapSphereMask).Length > 0) return false;
         }
         else
         {
             foreach (Collider c in Physics.OverlapSphere(_leftChecks[2].position, 1, _overlapSphereMask))
-                print(c.name);
+                Log.Print(c.name);
 
             if (Physics.OverlapSphere(_rightChecks[2].position, 1, _overlapSphereMask).Length > 0) return false;
         }
@@ -959,7 +959,7 @@ abstract public class Actor : Biped
     {
         base.SpawnUltraBindExplosion();
 
-        print("Actor SpawnUltraBindExplosion");
+        Log.Print("Actor SpawnUltraBindExplosion");
         GrenadePool.SpawnExplosion(_targetPlayer.GetComponent<Player>(), damage: 999, radius: 2, GameManager.DEFAULT_EXPLOSION_POWER, damageCleanNameSource: "Ultra Bind", targetTrackingCorrectTarget.position, Explosion.Color.Purple, Explosion.Type.UltraBind, GrenadePool.instance.ultraBindClip, WeaponProperties.KillFeedOutput.Ultra_Bind);
 
 
@@ -977,7 +977,7 @@ abstract public class Actor : Biped
     [PunRPC]
     public void AssignPlayerOnBulletNearby(int playerPhotonId, bool callRPC = true)
     {
-        //print("AssignPlayerOnBulletNearby");
+        //PrintOnlyInEditor.Log("AssignPlayerOnBulletNearby");
         if (callRPC && PhotonNetwork.IsMasterClient)
         {
             if (_switchPlayerCooldown <= 0 && hitPoints > 0)
@@ -985,7 +985,7 @@ abstract public class Actor : Biped
         }
         else if (!callRPC)
         {
-            print("AssignPlayerOnBulletNearby Processing");
+            Log.Print("AssignPlayerOnBulletNearby Processing");
 
             targetTransform = PhotonView.Find(playerPhotonId).GetComponent<Player>().transform;
             targetHitpoints = PhotonView.Find(playerPhotonId).GetComponent<Player>().GetComponent<HitPoints>();

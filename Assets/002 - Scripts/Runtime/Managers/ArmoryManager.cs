@@ -67,7 +67,7 @@ public class ArmoryManager : MonoBehaviour
                 pal.GetComponent<ArmorPieceListing>().playerArmorPiece = playerArmorPiece;
                 pal.name += $" ({i})";
                 i++;
-                print(pal.GetComponent<ArmorPieceListing>().playerArmorPiece.entity);
+                Log.Print(pal.GetComponent<ArmorPieceListing>().playerArmorPiece.entity);
             }
         }
 

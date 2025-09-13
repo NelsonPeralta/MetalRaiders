@@ -312,7 +312,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     }
     public void CheckForEndGame()
     {
-        print($"CheckForEndGame {highestScore} / {scoreToWin}");
+        Log.Print($"CheckForEndGame {highestScore} / {scoreToWin}");
         if (highestScore == scoreToWin)
             FindObjectOfType<NetworkGameManager>().EndGame();
         //EndGame();
@@ -320,7 +320,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     public void EndGame(bool saveXp = true, bool actuallyQuit = false)
     {
         CurrentRoomManager.instance.gameOver = true;
-        print($"EndGame {highestScore} / {scoreToWin}");
+        Log.Print($"EndGame {highestScore} / {scoreToWin}");
 
         CreateWinningPlayersList();
         SpawnWinnerKillFeeds();
@@ -342,13 +342,13 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
 
             //if (highestScore >= scoreToWin)
             //{
-            //    print($"EndGame {highestScore} / {scoreToWin}");
+            //    PrintOnlyInEditor.Log($"EndGame {highestScore} / {scoreToWin}");
             //    if (GameManager.instance.teamMode == GameManager.TeamMode.None)
             //    {
             //        if (GameManager.instance.gameType != GameManager.GameType.GunGame)
             //            foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>())
             //            {
-            //                print($"EndGame {pms.score} / {scoreToWin}");
+            //                PrintOnlyInEditor.Log($"EndGame {pms.score} / {scoreToWin}");
             //                if (pms.score >= scoreToWin)
             //                {
             //                    pp.GetComponent<KillFeedManager>().EnterNewFeed($"<color=#31cff9>GAME OVER! {pms.GetComponent<Player>().username} wins!");
@@ -564,7 +564,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     {
         foreach (Player p in GameManager.GetLocalPlayers())
         {
-            print("SpawnWinnerKillFeeds");
+            Log.Print("SpawnWinnerKillFeeds");
             if (!isADraw)
             {
                 if (CurrentRoomManager.instance.leftRoomManually)

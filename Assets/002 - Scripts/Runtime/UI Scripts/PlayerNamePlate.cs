@@ -143,7 +143,7 @@ public class PlayerNamePlate : MonoBehaviour
                 secBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 0.4f);
             }
             else
-                print("PLAYER TEAM IS NONE");
+                Log.Print("PLAYER TEAM IS NONE");
         }
         else
         {
@@ -166,7 +166,7 @@ public class PlayerNamePlate : MonoBehaviour
         {
             GameManager.PlayClickSound();
 
-            print($"PlayerNamePLate {_playerData.playerExtendedPublicData.player_id} {_playerData.playerExtendedPublicData.player_id != -999}");
+            Log.Print($"PlayerNamePLate {_playerData.playerExtendedPublicData.player_id} {_playerData.playerExtendedPublicData.player_id != -999}");
             if (_playerData.playerExtendedPublicData.player_id > 0)
             {
                 ServiceRecordMenu s = MenuManager.Instance.GetMenu("service_record").GetComponent<ServiceRecordMenu>();

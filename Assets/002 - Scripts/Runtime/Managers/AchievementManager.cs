@@ -139,7 +139,7 @@ public class AchievementManager : MonoBehaviour
 
     public static void UnlockAchievement(string an)
     {
-        print($"UnlockAchievement {an}");
+        Log.Print($"UnlockAchievement {an}");
         Steamworks.SteamUserStats.SetAchievement(an);
         Steamworks.SteamUserStats.StoreStats();
     }

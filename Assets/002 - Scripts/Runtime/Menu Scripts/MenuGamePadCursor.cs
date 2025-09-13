@@ -186,7 +186,7 @@ public class MenuGamePadCursor : MonoBehaviour
         {
             if (rewiredPlayer.GetButtonDown("Escape"))
             {
-                print($"{FindObjectsByType<EscapeButtonTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Length}");
+                Log.Print($"{FindObjectsByType<EscapeButtonTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Length}");
 
                 if (FindObjectsByType<EscapeButtonTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Length > 0)
                     FindObjectsByType<EscapeButtonTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)[0].GetComponent<Button>().onClick.Invoke();
@@ -196,7 +196,7 @@ public class MenuGamePadCursor : MonoBehaviour
         {
             if (rewiredPlayer.GetButtonDown("Crouch"))
             {
-                print($"{FindObjectsByType<EscapeButtonTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Length}");
+                Log.Print($"{FindObjectsByType<EscapeButtonTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Length}");
 
                 if (FindObjectsByType<EscapeButtonTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Length > 0)
                     FindObjectsByType<EscapeButtonTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)[0].GetComponent<Button>().onClick.Invoke();
@@ -279,7 +279,7 @@ public class MenuGamePadCursor : MonoBehaviour
         {
 
 
-            print($"MenuGamePadCursor {_eventSystemRaycastResults.Count} {_preEentSystemRaycastResults.Count}");
+            Log.Print($"MenuGamePadCursor {_eventSystemRaycastResults.Count} {_preEentSystemRaycastResults.Count}");
 
 
             for (int i = _preEentSystemRaycastResults.Count - 1; i >= 0; i--)
@@ -290,7 +290,7 @@ public class MenuGamePadCursor : MonoBehaviour
                         _preEentSystemRaycastResults[i].gameObject.GetComponent<Image>().sprite = _buttonUnderCursorUnselectedSprite;
                         if (_preEentSystemRaycastResults[i].gameObject.GetComponent<EventTrigger>())
                         {
-                            //print($"MenuGamePadCursor OnPointerExit {r.gameObject.name} {r.gameObject.activeSelf}");
+                            //PrintOnlyInEditor.Log($"MenuGamePadCursor OnPointerExit {r.gameObject.name} {r.gameObject.activeSelf}");
 
                             if (SceneManager.GetActiveScene().buildIndex == 0 && MenuManager.Instance.GetOpenMenu().Equals("armory") && !_preEentSystemRaycastResults[i].gameObject.activeSelf)
                             {
@@ -342,7 +342,7 @@ public class MenuGamePadCursor : MonoBehaviour
                         _buttonUnderCursor.GetComponent<Image>().sprite = _buttonUnderCursorUnselectedSprite;
                         if (_buttonUnderCursor.GetComponent<EventTrigger>())
                         {
-                            print($"MenuGamePadCursor OnPointerExit {_buttonUnderCursor.gameObject.name} {_buttonUnderCursor.gameObject.activeSelf}");
+                            Log.Print($"MenuGamePadCursor OnPointerExit {_buttonUnderCursor.gameObject.name} {_buttonUnderCursor.gameObject.activeSelf}");
 
                             if (SceneManager.GetActiveScene().buildIndex == 0 && MenuManager.Instance.GetOpenMenu().Equals("armory") && !_buttonUnderCursor.gameObject.activeSelf)
                             {

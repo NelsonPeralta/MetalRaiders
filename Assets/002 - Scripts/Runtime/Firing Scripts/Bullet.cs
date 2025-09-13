@@ -95,7 +95,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         originalPos = transform.position;
         timeToDespawn = CalculateTimeToDespawn();
 
-        print($"Bullet OnEnable {damage} {speed} {trackingTarget != null}");
+        Log.Print($"Bullet OnEnable {damage} {speed} {trackingTarget != null}");
     }
 
     float CalculateTimeToDespawn()
@@ -160,7 +160,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                 for (int i = _hitList.Count; i-- > 0;)
                 {
                     _tempRh = _hitList[i];
-                    print($"bullet hit: {_hitList[i].collider.name}");
+                    Log.Print($"bullet hit: {_hitList[i].collider.name}");
                     if (_tempRh.collider.transform.root == weaponProperties.player.transform) _hitList.RemoveAt(i);
                 }
 
@@ -186,7 +186,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                 if (objectsHit.Count > 0 && !damageDealt)
                 {
                     if (damage > 0) CheckForFinalHit();
-                    print($"bullet time test. Despawned at: {Time.time}");
+                    Log.Print($"bullet time test. Despawned at: {Time.time}");
                 }
             }
         }
@@ -238,7 +238,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     Vector3 _bulletToTrackingTargetDirection = Vector3.zero;
     void Travel()
     {
-        //print($"Bullet has tracking target {weaponProperties.targetTracking} {trackingTarget}");
+        //PrintOnlyInEditor.Log($"Bullet has tracking target {weaponProperties.targetTracking} {trackingTarget}");
 
         transform.Translate(Vector3.forward * Time.deltaTime * speed);
         if (weaponProperties && weaponProperties.targetTracking && trackingTarget)
@@ -374,7 +374,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                         if (player.hasArmor)
                         {
-                            print($"Bullet Overcharged damage : {player.shieldPoints}");
+                            Log.Print($"Bullet Overcharged damage : {player.shieldPoints}");
                             if (player.shieldPoints > 0 && overcharged) damage = (int)player.shieldPoints;
                         }
 
@@ -422,7 +422,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                     if (finalHitObject.GetComponent<IDamageable>() == null && !finalHitObject.GetComponent<DontSpawnBulletHoleDecalHere>()) // avoids staying in empty space after glass is destroyed
                     {
-                        //print($"SpawnBulletHole {hitInfo.transform.name}");
+                        //PrintOnlyInEditor.Log($"SpawnBulletHole {hitInfo.transform.name}");
                         if (damage > 0) GameObjectPool.instance.SpawnBulletHole(finalHitPoint, hitInfo.normal);
                     }
 

@@ -45,11 +45,11 @@ public class MotionTrackerDot : MonoBehaviour
                     }
                     else
                     {
-                        print($"motiontracker targetPlayerController");
-                        print($"motiontracker targetPlayerController {_targetPlayerController.player}");
-                        print($"motiontracker targetPlayerController {transform.root.GetComponent<Player>()}");
-                        print($"motiontracker targetPlayerController {transform.root.GetComponent<Player>().team}");
-                        print($"motiontracker targetPlayerController {_targetPlayerController.player.team}");
+                        Log.Print($"motiontracker targetPlayerController");
+                        Log.Print($"motiontracker targetPlayerController {_targetPlayerController.player}");
+                        Log.Print($"motiontracker targetPlayerController {transform.root.GetComponent<Player>()}");
+                        Log.Print($"motiontracker targetPlayerController {transform.root.GetComponent<Player>().team}");
+                        Log.Print($"motiontracker targetPlayerController {_targetPlayerController.player.team}");
 
                         if (_targetPlayerController.player.team == transform.root.GetComponent<Player>().team)
                         {

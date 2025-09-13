@@ -135,7 +135,7 @@ public class PlayerInventory : MonoBehaviourPun
         {
             if (value)
             {
-                print($"showing third weapon");
+                Log.Print($"showing third weapon");
                 pController.SetDrawingThirdWeapon();
                 pController.Descope();
                 value.gameObject.SetActive(true);
@@ -186,7 +186,7 @@ public class PlayerInventory : MonoBehaviourPun
             }
             else
             {
-                print($"third weapon becomes null");
+                Log.Print($"third weapon becomes null");
                 if (_thirdWeapon != null)
                 {
                     if (_thirdWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
@@ -209,7 +209,7 @@ public class PlayerInventory : MonoBehaviourPun
 
 
 
-                    print($"hiding third weapon");
+                    Log.Print($"hiding third weapon");
                     _thirdWeapon.OnCurrentAmmoChanged -= OnActiveWeaponAmmoChanged;
                     _thirdWeapon.gameObject.SetActive(false);
 
@@ -227,7 +227,7 @@ public class PlayerInventory : MonoBehaviourPun
 
             if (value && value.weaponType == WeaponProperties.WeaponType.Heavy && GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
             {
-                print("setting up third person");
+                Log.Print("setting up third person");
                 pController.SetDrawingWeaponCooldown();
 
 
@@ -706,7 +706,7 @@ public class PlayerInventory : MonoBehaviourPun
 
         if (player.isMine) // Do locally right now if its mine
         {
-            print($"SwitchWeapons_RPC {isDualWielding} {(SwitchWeapons_Mode)mode}");
+            Log.Print($"SwitchWeapons_RPC {isDualWielding} {(SwitchWeapons_Mode)mode}");
             if ((SwitchWeapons_Mode)mode == SwitchWeapons_Mode.dropFlag)
             {
                 try { OnActiveWeaponChanged?.Invoke(this); } catch { }
@@ -749,10 +749,10 @@ public class PlayerInventory : MonoBehaviourPun
     [PunRPC]
     void AssignWeapon(string codeName, bool actWeap = true)
     {
-        print($"{player.name} AssignWeapon");
+        Log.Print($"{player.name} AssignWeapon");
         if (!PV.IsMine)
         {
-            print($"AssignWeapon {codeName}");
+            Log.Print($"AssignWeapon {codeName}");
             pController.SetDrawingWeaponCooldown();
 
             foreach (GameObject weap in allWeaponsInInventory)
@@ -779,7 +779,7 @@ public class PlayerInventory : MonoBehaviourPun
 
                     if (actWeap) // activeWeapon
                     {
-                        print($"AssignWeapon {codeName} actWeap");
+                        Log.Print($"AssignWeapon {codeName} actWeap");
 
                         _activeWeapon = weap.GetComponent<WeaponProperties>();
                         _activeWeapon.loadedAmmo = _activeWeapon.ammoCapacity;
@@ -1296,7 +1296,7 @@ public class PlayerInventory : MonoBehaviourPun
 
     void OnPlayerIdAndRewiredIdAssigned_Delegate(Player p)
     {
-        print($"PlayerInventory OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} {player.isMine} {GameManager.instance.gameType}");
+        Log.Print($"PlayerInventory OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} {player.isMine} {GameManager.instance.gameType}");
 
 
         foreach (GameObject w in allWeaponsInInventory)
@@ -1379,7 +1379,7 @@ public class PlayerInventory : MonoBehaviourPun
     {
         if (PV.IsMine && thirdWeapon)
         {
-            print("DropThirdWeapon");
+            Log.Print("DropThirdWeapon");
             NetworkGameManager.SpawnNetworkWeapon(thirdWeapon, player.weaponDropPoint.position, player.weaponDropPoint.forward, currAmmo: thirdWeapon.loadedAmmo, spareAmmo: thirdWeapon.spareAmmo);
             PV.RPC("RemoveThirdWeapon_RPC", RpcTarget.All);
         }
@@ -1404,7 +1404,7 @@ public class PlayerInventory : MonoBehaviourPun
     {
         if (dw)
         {
-            print("PickupThirdWeapon RPC");
+            Log.Print("PickupThirdWeapon RPC");
             LootableWeapon weaponToLoot = WeaponPool.instance.weaponPool.Where(item => item.spawnPointPosition == collidingWeaponPosition).FirstOrDefault();
 
             foreach (GameObject w in allWeaponsInInventory)

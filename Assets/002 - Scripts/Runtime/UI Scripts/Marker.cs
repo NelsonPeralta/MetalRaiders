@@ -20,8 +20,8 @@ public class Marker : MonoBehaviour
             this.transform.LookAt(targetPostition);
 
 
-            //print(Vector3.Distance(transform.position, lookAtThisTrans.position) / 100);
-            //print(Mathf.Clamp(Vector3.Distance(transform.position, lookAtThisTrans.position) / 100, .01f, 1));
+            //PrintOnlyInEditor.Log(Vector3.Distance(transform.position, lookAtThisTrans.position) / 100);
+            //PrintOnlyInEditor.Log(Mathf.Clamp(Vector3.Distance(transform.position, lookAtThisTrans.position) / 100, .01f, 1));
             localScale.localScale = Vector3.one * (Mathf.Clamp(Vector3.Distance(transform.position, targetPlayer.transform.position) / 30, .03f, 1));
 
             if (!targetPlayer.isAlive)

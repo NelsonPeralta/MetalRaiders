@@ -523,7 +523,7 @@ public class Movement : MonoBehaviour, IMoveable
                 {
                     _verticalVector.y += 1;
                     crouchJumpTime = 1;
-                    print("Courch Jump");
+                    Log.Print("Courch Jump");
                 }
         }
 

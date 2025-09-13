@@ -23,7 +23,7 @@ public class FlagDropOff : MonoBehaviour
     {
         if (CurrentRoomManager.instance.gameStarted && !CurrentRoomManager.instance.gameOver)
         {
-            //print($"FLAG OnTriggerStay {other.transform.root.name}");
+            //PrintOnlyInEditor.Log($"FLAG OnTriggerStay {other.transform.root.name}");
             if (other.transform.root.GetComponent<Player>() && other.transform.root.GetComponent<Player>().team == _flagSpawnPoint.team
                 && other.transform.root.GetComponent<Player>().hasEnnemyFlag)
             {

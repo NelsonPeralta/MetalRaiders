@@ -275,7 +275,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
     {
         if (Vector3.Distance(weaponSpawned.transform.position, transform.position) > 2 || !weaponSpawned.gameObject.activeSelf)
         {
-            print("ResetWeaponPosition_Coroutine");
+            Log.Print("ResetWeaponPosition_Coroutine");
             ReturnWeaponToSpawnPosition();
         }
     }

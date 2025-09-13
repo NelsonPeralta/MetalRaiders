@@ -32,7 +32,7 @@ public class PlayerLookingAtActorRay : MonoBehaviour
             //    _hitObj = hit.transform.gameObject;
             //    //Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.yellow);
 
-            //    print(_hitObj.GetComponent<PlayerLookingAtActorRayTarget>());
+            //    PrintOnlyInEditor.Log(_hitObj.GetComponent<PlayerLookingAtActorRayTarget>());
             //    if (_hitObj.GetComponent<PlayerLookingAtActorRayTarget>())
             //        _hitObj.GetComponent<PlayerLookingAtActorRayTarget>().Actor.ResetSeenCooldown(p);
 

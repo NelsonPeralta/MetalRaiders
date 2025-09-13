@@ -36,7 +36,7 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
 
     private void Awake()
     {
-        print($"PlayerThirdPersonModelManager Awake {transform.root.name}");
+        Log.Print($"PlayerThirdPersonModelManager Awake {transform.root.name}");
         undersuitMesh.layer = 0;
 
         OnModelAssigned -= GetComponent<PlayerHitboxes>().OnModelAssigned;
@@ -54,12 +54,12 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
     }
     private void Start()
     {
-        print($"PlayerThirdPersonModelManager Start {transform.root.name}");
+        Log.Print($"PlayerThirdPersonModelManager Start {transform.root.name}");
     }
 
     public void OnActiveWeaponChanged_PlayTPSAnimations_Delegate(PlayerInventory playerInventory)
     {
-        print($"Chaging TPS model stance {playerInventory.activeWeapon.killFeedOutput} {playerInventory.activeWeapon.idleHandlingAnimationType}");
+        Log.Print($"Chaging TPS model stance {playerInventory.activeWeapon.killFeedOutput} {playerInventory.activeWeapon.idleHandlingAnimationType}");
 
 
         if (!playerInventory.isDualWielding && !playerInventory.isHoldingHeavy)
@@ -98,7 +98,7 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
         else if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On ||
            (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off && player.playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy))
         {
-            print($"OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} OnPlayerIdAssigned THIRPERSON MODE ON");
+            Log.Print($"OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} OnPlayerIdAssigned THIRPERSON MODE ON");
 
             Scene currentScene = SceneManager.GetActiveScene();
             if (currentScene.buildIndex > 0) // We are not in the menu
@@ -169,7 +169,7 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
 
     void SetupThirdPersonModelLayers_FPS()
     {
-        print($"OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} OnPlayerIdAssigned");
+        Log.Print($"OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} OnPlayerIdAssigned");
 
         Scene currentScene = SceneManager.GetActiveScene();
         if (currentScene.buildIndex > 0) // We are not in the menu

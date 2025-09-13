@@ -15,8 +15,8 @@ public class OnEnableIncreaseScaleThenScaleBack : MonoBehaviour
     private void OnEnable()
     {
         transform.localScale = Vector3.one * 2;
-        neededTicks = Mathf.RoundToInt(timeToDescale / (1 / 50f)); print($"needed ticks: {neededTicks}");
-        sub = new Vector3(1f / neededTicks, 1f / neededTicks, 1f / neededTicks); print($"sub: {sub}");
+        neededTicks = Mathf.RoundToInt(timeToDescale / (1 / 50f)); Log.Print($"needed ticks: {neededTicks}");
+        sub = new Vector3(1f / neededTicks, 1f / neededTicks, 1f / neededTicks); Log.Print($"sub: {sub}");
     }
 
     private void FixedUpdate()

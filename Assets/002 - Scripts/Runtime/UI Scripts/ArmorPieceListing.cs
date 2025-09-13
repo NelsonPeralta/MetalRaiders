@@ -116,7 +116,7 @@ public class ArmorPieceListing : MonoBehaviour
 
     void BuyArmorPiece()
     {
-        print("BuyArmorPiece");
+        Log.Print("BuyArmorPiece");
         GameManager.PlayClickSound();
         StartCoroutine(WebManager.webManagerInstance.SaveUnlockedArmorStringData_Coroutine(MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell,playerArmorPiece));
 
@@ -128,7 +128,7 @@ public class ArmorPieceListing : MonoBehaviour
 
     void EquipArmorPiece()
     {
-        print("EquipArmorPiece");
+        Log.Print("EquipArmorPiece");
         //Debug.Log($"Previous: {.armorDataString}");
         GameManager.PlayClickSound();
         string newData = MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.armorDataString;
@@ -169,7 +169,7 @@ public class ArmorPieceListing : MonoBehaviour
 
     public void UnequipArmorPiece()
     {
-        print("UnequipArmorPiece");
+        Log.Print("UnequipArmorPiece");
         GameManager.PlayCancelSound();
         string newData = MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.armorDataString.Replace($"{playerArmorPiece.entity}", "");
         newData = newData.Replace($"----", "--");
@@ -187,7 +187,7 @@ public class ArmorPieceListing : MonoBehaviour
 
     public void OnButtonMouseEnter()
     {
-        print("OnButtonMouseEnter");
+        Log.Print("OnButtonMouseEnter");
         foreach (ArmorPieceListing armorPieceListing in ArmoryManager.instance.armorPieceListingList)
             if (armorPieceListing != this)
                 try
@@ -202,7 +202,7 @@ public class ArmorPieceListing : MonoBehaviour
 
     public void OnButtonMouseExit()
     {
-        print("OnButtonMouseExit");
+        Log.Print("OnButtonMouseExit");
         foreach (ArmorPieceListing armorPieceListing in ArmoryManager.instance.armorPieceListingList)
             if (armorPieceListing != this)
                 if (MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.armorDataString.Contains(armorPieceListing.playerArmorPiece.entity))

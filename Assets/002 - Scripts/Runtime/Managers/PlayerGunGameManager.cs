@@ -17,7 +17,7 @@ public class PlayerGunGameManager : MonoBehaviour
                 }
 
                 _index = value;
-                print($"index: {value} {playerInventory.player.name}");
+                Log.Print($"index: {value} {playerInventory.player.name}");
 
 
                 WeaponProperties _preActiveWeapon = playerInventory.activeWeapon;

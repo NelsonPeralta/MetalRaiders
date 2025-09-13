@@ -133,7 +133,7 @@ public class ThirdPersonLookAt : MonoBehaviour
 
     public void MoveLookAtTargetToThirdPersonPosition()
     {
-        print("MoveLookAtTargetToThirdPersonPosition");
+        Log.Print("MoveLookAtTargetToThirdPersonPosition");
         lookAtGO.localPosition = new Vector3(lookAtGO.localPosition.x,
                 lookAtGO.localPosition.y, lookAtGO.localPosition.z - (PlayerCamera.THIRD_PERSON_LOCAL_OFFSET.z * 2));
     }

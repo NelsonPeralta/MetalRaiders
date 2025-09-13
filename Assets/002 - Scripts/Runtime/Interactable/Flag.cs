@@ -76,7 +76,7 @@ public class Flag : MonoBehaviour
         {
             if (_onTriggerStayCheck < 0)
             {
-                print($"FLAG OnTriggerStay {other.transform.root.name}");
+                Log.Print($"FLAG OnTriggerStay {other.transform.root.name}");
                 if (_triggerReset <= 0 && scriptRoot.gameObject.activeSelf && other.transform.root.GetComponent<Player>() &&
                     !other.transform.root.GetComponent<Player>().hasEnnemyFlag &&
                     other.transform.root.GetComponent<Player>() && other.transform.root.GetComponent<Player>().team != spawnPoint.team)
@@ -84,21 +84,21 @@ public class Flag : MonoBehaviour
                     if (other.transform.root.GetComponent<Player>().isAlive)
                     {
                         _player = other.transform.root.GetComponent<Player>();
-                        print($"{other.name} has taken the flag");
+                        Log.Print($"{other.name} has taken the flag");
                         //other.transform.root.GetComponent<Player>().playerInventory.EquipFlag(); // do locally then network
 
 
                         if (Physics.Raycast(transform.position, (_player.playerCapsule.transform.position - transform.position)
                                     , out _playerHit, 5, GameManager.instance.playerCapsuleLayerMask))
                         {
-                            print($"FLAG Player Hit {Vector3.Distance(_playerHit.point, transform.position)}");
+                            Log.Print($"FLAG Player Hit {Vector3.Distance(_playerHit.point, transform.position)}");
 
 
 
                             if (Physics.Raycast(transform.position, (_player.playerCapsule.transform.position - transform.position)
                                 , out _obsHit, 5, GameManager.instance.obstructionMask))
                             {
-                                print($"FLAG Obstruction Hit {Vector3.Distance(_obsHit.point, transform.position)}");
+                                Log.Print($"FLAG Obstruction Hit {Vector3.Distance(_obsHit.point, transform.position)}");
 
                                 if (Vector3.Distance(_playerHit.point, transform.position) < Vector3.Distance(_obsHit.point, transform.position))
                                     NetworkGameManager.instance.EquipFlagToPlayer_RPC(other.transform.root.GetComponent<Player>().photonId, (int)(other.transform.root.GetComponent<Player>().team == GameManager.Team.Red ? GameManager.Team.Blue : GameManager.Team.Red));

@@ -17,7 +17,7 @@ public class Biped : MonoBehaviour
 
             if (_ultraMergeCount == 12)
             {
-                print("ULTRA MERGE!");
+                Log.Print("ULTRA MERGE!");
                 SpawnUltraBindExplosion();
             }
         }

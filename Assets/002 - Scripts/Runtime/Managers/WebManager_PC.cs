@@ -278,7 +278,7 @@ public partial class WebManager
 
     IEnumerator SaveXp_Coroutine(GameManager.GameMode gm, GameEndType gameEndType, List<(long, int)> winPlayers)
     {
-        foreach (var player in winPlayers) { print($"SaveXp_Coroutine {player}"); }
+        foreach (var player in winPlayers) { Log.Print($"SaveXp_Coroutine {player}"); }
 
         int xpAndCreditGain = 0;
         int honorGained = 0;
@@ -288,7 +288,7 @@ public partial class WebManager
         {
             honorGained = honorGainedForWinningPlayer;
             xpAndCreditGain = defaultRandomXpGain;
-            print($"SaveXp_Coroutine 9");
+            Log.Print($"SaveXp_Coroutine 9");
         }
         else if (gm == GameManager.GameMode.Versus)
         {
@@ -296,7 +296,7 @@ public partial class WebManager
             {
                 honorGained = honorGainedForLosingPlayer;
                 xpAndCreditGain = defaultRandomXpGain;
-                print($"SaveXp_Coroutine 1");
+                Log.Print($"SaveXp_Coroutine 1");
             }
             else if (gameEndType == GameEndType.Game_Complete_Or_Resolved)
             {
@@ -304,13 +304,13 @@ public partial class WebManager
                 {
                     honorGained = honorGainedForWinningPlayer;
                     xpAndCreditGain = (int)(1.3f * defaultRandomXpGain);
-                    print($"SaveXp_Coroutine 2");
+                    Log.Print($"SaveXp_Coroutine 2");
                 }
                 else
                 {
                     honorGained = honorGainedForLosingPlayer;
                     xpAndCreditGain = defaultRandomXpGain;
-                    print($"SaveXp_Coroutine 3");
+                    Log.Print($"SaveXp_Coroutine 3");
                 }
             }
         }

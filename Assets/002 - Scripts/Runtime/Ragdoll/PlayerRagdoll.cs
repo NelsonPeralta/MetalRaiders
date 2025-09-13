@@ -89,7 +89,7 @@ public class PlayerRagdoll : Ragdoll
         //{
         //    if (i < 1)
         //    {
-        //        print($"ToggleAllRigidbodiesToKinetmatic {GetComponentsInChildren<Rigidbody>(true)[i].name}");
+        //        PrintOnlyInEditor.Log($"ToggleAllRigidbodiesToKinetmatic {GetComponentsInChildren<Rigidbody>(true)[i].name}");
         //        GetComponentsInChildren<Rigidbody>(true)[i].isKinematic = b;
         //    }
         //}
@@ -115,10 +115,10 @@ public class PlayerRagdoll : Ragdoll
 
     public void PrintRigibodiesVelocities()
     {
-        print("PrintRigibodiesVelocities");
+        Log.Print("PrintRigibodiesVelocities");
         foreach (Rigidbody rb in GetComponentsInChildren<Rigidbody>(true).Where(item => item.GetComponent<RagdollLimb>() != null))
         {
-            print($"ResetRigidbodieVelocities {rb.name} {rb.linearVelocity} {rb.angularVelocity}");
+            Log.Print($"ResetRigidbodieVelocities {rb.name} {rb.linearVelocity} {rb.angularVelocity}");
         }
     }
 }

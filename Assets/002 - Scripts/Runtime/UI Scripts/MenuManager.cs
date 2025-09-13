@@ -22,17 +22,17 @@ public class MenuManager : MonoBehaviour
     void Awake()
     {
         name += $" {Random.Range(100, 999)}";
-        print($"MenuManager Awake {name}");
+        Log.Print($"MenuManager Awake {name}");
     }
 
     private void OnEnable()
     {
-        print("MenuManager OnEnable");
+        Log.Print("MenuManager OnEnable");
     }
 
     private void Start()
     {
-        print("MenuManager Start");
+        Log.Print("MenuManager Start");
     }
 
     public string GetOpenMenu()
@@ -55,7 +55,7 @@ public class MenuManager : MonoBehaviour
 
         if (GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits))
         {
-            menuName = "carnage report"; print($"Changed to Carnage Report {menuName}");
+            menuName = "carnage report"; Log.Print($"Changed to Carnage Report {menuName}");
         }
 
 
@@ -114,7 +114,7 @@ public class MenuManager : MonoBehaviour
 
     public void OpenPopUpMenu(Menu menu) // Open a menu GO using the Menu script itself, used for connecting with buttons
     {
-        print($"OpenPopUpMenu {menu.menuName}");
+        Log.Print($"OpenPopUpMenu {menu.menuName}");
 
         if (!PhotonNetwork.InRoom && (menu.menuName.Equals("armory") || menu.menuName.Equals("service_record")))
             menu.GetComponent<ServiceRecordMenu>().playerDataCell = CurrentRoomManager.instance.playerDataCells[0];
@@ -137,7 +137,7 @@ public class MenuManager : MonoBehaviour
 
     public void OpenPopUpMenu(string menuName) // Open a menu GO using the Menu script itself, used for connecting with buttons
     {
-        print($"OpenPopUpMenu {menuName}");
+        Log.Print($"OpenPopUpMenu {menuName}");
         for (int i = 0; i < menus.Length; i++)
         {
             if (menus[i].menuName == menuName)
@@ -150,7 +150,7 @@ public class MenuManager : MonoBehaviour
 
     public void OpenErrorMenu(string mess)
     {
-        print($"OpenErrorMenu");
+        Log.Print($"OpenErrorMenu");
         for (int i = 0; i < menus.Length; i++)
         {
             if (menus[i].menuName.Equals("error"))
@@ -220,7 +220,7 @@ public class MenuManager : MonoBehaviour
 
     public Menu GetMenu(string n)
     {
-        print($"GetMenu {n}");
+        Log.Print($"GetMenu {n}");
         for (int i = 0; i < menus.Length; i++)
         {
             if (menus[i].menuName.Equals(n))
@@ -231,7 +231,7 @@ public class MenuManager : MonoBehaviour
 
     public void OpenLoadingMenu(string message = "Loading...")
     {
-        print("OpenLoadingMenu");
+        Log.Print("OpenLoadingMenu");
         loadingMenuText.text = message;
 
         OpenMenu("loading");
@@ -239,14 +239,14 @@ public class MenuManager : MonoBehaviour
 
     void ResetLoadingMenu()
     {
-        print("ResetLoadingMenu");
+        Log.Print("ResetLoadingMenu");
         loadingMenuText.text = "Loading...";
     }
 
 
     public void CloseCarnageReportMenu()
     {
-        print($"CloseCarnageReportMenu {GameManager.instance.nbLocalPlayersPreset}");
+        Log.Print($"CloseCarnageReportMenu {GameManager.instance.nbLocalPlayersPreset}");
 
         if (GameManager.instance.connection == GameManager.NetworkType.Local)
         {
@@ -255,7 +255,7 @@ public class MenuManager : MonoBehaviour
 
         if (GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates))
         {
-            print("CloseCarnageReportMenu 1");
+            Log.Print("CloseCarnageReportMenu 1");
             GameManager.instance.RemoveFromPreviousScenePayload(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates);
             Launcher.instance.TriggerOnJoinedRoomBehaviour();
             //MenuManager.Instance.OpenMenu("multiplayer_room");
@@ -264,7 +264,7 @@ public class MenuManager : MonoBehaviour
         }
         else if (GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.OpenMultiplayerRoomOnly))
         {
-            print("CloseCarnageReportMenu 2");
+            Log.Print("CloseCarnageReportMenu 2");
             GameManager.instance.RemoveFromPreviousScenePayload(GameManager.PreviousScenePayload.OpenMultiplayerRoomOnly);
             CloseMenu(GetMenu("carnage report"));
         }
@@ -306,7 +306,7 @@ public class MenuManager : MonoBehaviour
 
     public void OpenRoomBrowserMenu()
     {
-        print("OpenRoomBrowserMenu");
+        Log.Print("OpenRoomBrowserMenu");
         OpenMenu("room browser");
     }
 
@@ -317,7 +317,7 @@ public class MenuManager : MonoBehaviour
         for (int i = 0; i < menus.Length; i++)
             if (menus[i].open)
             {
-                print($"GetActiveMenuName {menus[i].menuName}");
+                Log.Print($"GetActiveMenuName {menus[i].menuName}");
                 _menus.Add(menus[i].name);
             }
 

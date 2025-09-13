@@ -19,7 +19,7 @@ public class AimAssist : MonoBehaviour
 
     public Vector3 targetPointPosition
     {
-        get { print(_targetPointPosition); return _targetPointPosition; }
+        get { Log.Print(_targetPointPosition); return _targetPointPosition; }
     }
 
     public bool redReticuleIsOn
@@ -292,7 +292,7 @@ public class AimAssist : MonoBehaviour
 
     public void ResetRedReticule()
     {
-        if (player.playerController.rid == 0 && player.isMine) print("RESETREDRETICULE");
+        if (player.playerController.rid == 0 && player.isMine) Log.Print("RESETREDRETICULE");
         redReticuleIsOn = false;
         closestHbToCrosshairCenter = null;
     }

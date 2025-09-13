@@ -21,8 +21,8 @@ public class PlayerShooting : MonoBehaviourPun
 
             if (_preTrackingTarget != _trackingTarget)
             {
-                if (_trackingTarget != null) print($"{playerController.player.name} updated tracking target to {_trackingTarget.name}");
-                else print("Cleared tracking target");
+                if (_trackingTarget != null) Log.Print($"{playerController.player.name} updated tracking target to {_trackingTarget.name}");
+                else Log.Print("Cleared tracking target");
 
                 if (playerController.player.isMine)
                     playerController.UpdateTrackingTargetForOtherPlayers(true, (_trackingTarget != null) ? _trackingTarget.originalSpawnPosition : Vector3.zero);
@@ -40,7 +40,7 @@ public class PlayerShooting : MonoBehaviourPun
         set
         {
             _fireButtonDown = value;
-            print($"Fire Button Down: {value}");
+            Log.Print($"Fire Button Down: {value}");
         }
     }
 
@@ -140,26 +140,26 @@ public class PlayerShooting : MonoBehaviourPun
     {
         fireButtonDown = false;
 
-        print($"OnPlayerControllerFireUp_Delegate 1");
+        Log.Print($"OnPlayerControllerFireUp_Delegate 1");
 
 
         if (!playerController.player.isRespawning && !playerController.player.isDead)
             if (playerController.player.playerInventory.activeWeapon && playerController.player.playerInventory.activeWeapon.overcharge)
             {
-                print($"OnPlayerControllerFireUp_Delegate 2 {pInventory.activeWeapon.overheatCooldown} {pInventory.activeWeapon.loadedAmmo}");
+                Log.Print($"OnPlayerControllerFireUp_Delegate 2 {pInventory.activeWeapon.overheatCooldown} {pInventory.activeWeapon.loadedAmmo}");
 
                 if (pInventory.activeWeapon.overheatCooldown <= 0 && pInventory.activeWeapon.loadedAmmo > 0)
                 {
-                    print($"OnPlayerControllerFireUp_Delegate 3");
+                    Log.Print($"OnPlayerControllerFireUp_Delegate 3");
 
                     if (_overchargeFloat > (WeaponProperties.OVERCHARGE_TIME_FULL))
                     {
-                        print("SHOOT OVERCHARGED SHOT");
+                        Log.Print("SHOOT OVERCHARGED SHOT");
                         ShootOverchargeWeapon(playerController.player.playerInventory.activeWeapon, true);
                     }
                     else
                     {
-                        print("Shoot normal shot");
+                        Log.Print("Shoot normal shot");
                         ShootOverchargeWeapon(playerController.player.playerInventory.activeWeapon);
                     }
                 }
@@ -185,20 +185,20 @@ public class PlayerShooting : MonoBehaviourPun
         if (!playerController.player.isRespawning && !playerController.player.isDead)
             if (playerController.player.playerInventory.thirdWeapon && playerController.player.playerInventory.thirdWeapon.overcharge)
             {
-                print($"OnPlayerFireDualWieldedWeaponButtonUp_Delegate 2 {pInventory.thirdWeapon.overheatCooldown} {pInventory.thirdWeapon.loadedAmmo}");
+                Log.Print($"OnPlayerFireDualWieldedWeaponButtonUp_Delegate 2 {pInventory.thirdWeapon.overheatCooldown} {pInventory.thirdWeapon.loadedAmmo}");
 
                 if (pInventory.thirdWeapon.overheatCooldown <= 0 && pInventory.thirdWeapon.loadedAmmo > 0)
                 {
-                    print($"OnPlayerFireDualWieldedWeaponButtonUp_Delegate 3");
+                    Log.Print($"OnPlayerFireDualWieldedWeaponButtonUp_Delegate 3");
 
                     if (_overchargeFloat_thirdWeapon > (WeaponProperties.OVERCHARGE_TIME_FULL))
                     {
-                        print("OnPlayerFireDualWieldedWeaponButtonUp_Delegate SHOOT OVERCHARGED SHOT");
+                        Log.Print("OnPlayerFireDualWieldedWeaponButtonUp_Delegate SHOOT OVERCHARGED SHOT");
                         ShootOverchargeWeapon(playerController.player.playerInventory.thirdWeapon, true);
                     }
                     else
                     {
-                        print("OnPlayerFireDualWieldedWeaponButtonUp_Delegate Shoot normal shot");
+                        Log.Print("OnPlayerFireDualWieldedWeaponButtonUp_Delegate Shoot normal shot");
                         ShootOverchargeWeapon(playerController.player.playerInventory.thirdWeapon);
                     }
                 }
@@ -216,10 +216,10 @@ public class PlayerShooting : MonoBehaviourPun
     public void Shoot(WeaponProperties wp)
     {
         /*if (wp == playerController.player.playerInventory.thirdWeapon)*/
-        print("Calling Shoot");
+        Log.Print("Calling Shoot");
         if (playerController.isDrawingWeapon) return;
         /*if (wp == playerController.player.playerInventory.thirdWeapon)*/
-        print($"Shoot start 1 {_fireRecovery} {_leftFireRecovery} {wp == playerController.player.playerInventory.activeWeapon}");
+        Log.Print($"Shoot start 1 {_fireRecovery} {_leftFireRecovery} {wp == playerController.player.playerInventory.activeWeapon}");
 
 
 
@@ -246,7 +246,7 @@ public class PlayerShooting : MonoBehaviourPun
         }
 
         /* if (wp == playerController.player.playerInventory.thirdWeapon)*/
-        print($"Shoot start 2 {wp == playerController.player.playerInventory.activeWeapon} {_fireRecovery} {_leftFireRecovery} {wp.overcharge} {wp}");
+        Log.Print($"Shoot start 2 {wp == playerController.player.playerInventory.activeWeapon} {_fireRecovery} {_leftFireRecovery} {wp.overcharge} {wp}");
 
         if (CanShootAuto(wp) || CanShootSingleOrBurst(wp))
         {
@@ -256,7 +256,7 @@ public class PlayerShooting : MonoBehaviourPun
                 dualWieldedWeaponFireButnDown = true;
 
             /*if (wp == playerController.player.playerInventory.thirdWeapon)*/
-            print($"Shoot start 3 {wp == playerController.player.playerInventory.activeWeapon} {wp.overcharge} {wp}");
+            Log.Print($"Shoot start 3 {wp == playerController.player.playerInventory.activeWeapon} {wp.overcharge} {wp}");
 
 
             if (wp.firingMode == WeaponProperties.FiringMode.Burst)
@@ -265,7 +265,7 @@ public class PlayerShooting : MonoBehaviourPun
                 Shoot_Caller(wp == playerController.player.playerInventory.thirdWeapon);
             else if (wp.overcharge)
             {
-                //print("shooting overcharg");
+                //PrintOnlyInEditor.Log("shooting overcharg");
                 //Shoot_Caller(isLeftWeapon);
             }
         }
@@ -292,7 +292,7 @@ public class PlayerShooting : MonoBehaviourPun
 
                 if (wp.overcharge)
                 {
-                    print("shooting overcharg");
+                    Log.Print("shooting overcharg");
                     Shoot_Caller(false, overcharge);
                 }
             }
@@ -310,7 +310,7 @@ public class PlayerShooting : MonoBehaviourPun
 
                 if (wp.overcharge)
                 {
-                    print("shooting overcharg");
+                    Log.Print("shooting overcharg");
                     Shoot_Caller(true, overcharge);
                 }
             }
@@ -329,7 +329,7 @@ public class PlayerShooting : MonoBehaviourPun
 
     bool CanShootSingleOrBurst(WeaponProperties weaponToShoot)
     {
-        print($"CanShootSingleOrBurst: {weaponToShoot.firingMode} {fireButtonDown} {dualWieldedWeaponFireButnDown} {pInventory.isDualWielding}");
+        Log.Print($"CanShootSingleOrBurst: {weaponToShoot.firingMode} {fireButtonDown} {dualWieldedWeaponFireButnDown} {pInventory.isDualWielding}");
 
 
         if (!pInventory.isDualWielding)
@@ -370,7 +370,7 @@ public class PlayerShooting : MonoBehaviourPun
 
     void ShootBurst(WeaponProperties activeWeapon)
     {
-        print("Shoot Burst");
+        Log.Print("Shoot Burst");
         for (int i = 0; i < 3; i++)
         {
             if (activeWeapon.loadedAmmo > 0)
@@ -469,7 +469,7 @@ public class PlayerShooting : MonoBehaviourPun
         {
             if (!playerController.GetComponent<Player>().aimAssist.redReticuleIsOn && !playerController.GetComponent<Player>().aimAssist.invisibleAimAssistOn)
             {
-                print("Third Person Mode NO aim assist");
+                Log.Print("Third Person Mode NO aim assist");
                 // if the player is allowed no aim assist at all
                 // we will simply correct the angle so that the bullet is fired at whatever is at the center of the players main cam
                 playerController.gwProperties.tpsBulletRotationToCameraCenterControl.localRotation = Quaternion.identity;
@@ -478,7 +478,7 @@ public class PlayerShooting : MonoBehaviourPun
             }
             else
             {
-                print("Third Person Mode aim assist");
+                Log.Print("Third Person Mode aim assist");
                 // if the player is allowed a certain amount of aim assist, do nothing special for now
                 // make sure its reset so it does not come in control with the aim assist rotation control
                 playerController.gwProperties.tpsBulletRotationToCameraCenterControl.localRotation = Quaternion.identity;
@@ -521,7 +521,7 @@ public class PlayerShooting : MonoBehaviourPun
                 {
                     //if (!player.isMine/* || GameManager.instance.connection == GameManager.Connection.Local*/)
                     {
-                        if (weaponToShoot == playerController.player.playerInventory.thirdWeapon) print("spawning FAKE bullet");
+                        if (weaponToShoot == playerController.player.playerInventory.thirdWeapon) Log.Print("spawning FAKE bullet");
 
 
 
@@ -553,10 +553,10 @@ public class PlayerShooting : MonoBehaviourPun
                                 if (fakeBulletTrailRaycasthits.Count > 0)
                                 {
 
-                                    print("There is a collider at the center of our main camera. " +
+                                    Log.Print("There is a collider at the center of our main camera. " +
                                     $"The dot product is: {Vector3.Dot(fakeBulletTrailRaycasthits[0].point - player.mainCamera.transform.position, fakeBulletTrailRaycasthits[0].point - playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position)}");
 
-                                    print($"The distance between the muzzle and the hit at the center of the camera is: " +
+                                    Log.Print($"The distance between the muzzle and the hit at the center of the camera is: " +
                                         $"{Vector3.Distance(playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position, fakeBulletTrailRaycasthits[0].point)}");
 
                                     if (Vector3.Dot(fakeBulletTrailRaycasthits[0].point - player.mainCamera.transform.position,
@@ -606,18 +606,18 @@ public class PlayerShooting : MonoBehaviourPun
 
 
 
-                        //print("spawning FAKE bullet");
+                        //PrintOnlyInEditor.Log("spawning FAKE bullet");
                         //RaycastHit hit;
                         //if (Physics.Raycast(player.mainCamera.transform.position, player.mainCamera.transform.forward, out hit, playerController.pInventory.activeWeapon.range, _fakeBulletTrailCollisionLayerMask))
                         //{
-                        //    print($"spawning FAKE bullet {hit.collider.name}");
+                        //    PrintOnlyInEditor.Log($"spawning FAKE bullet {hit.collider.name}");
 
                         //    int d = (int)Vector3.Distance(player.mainCamera.transform.position, hit.point);
                         //    pInventory.SpawnFakeBulletTrail(d, ranSprayQuat);
                         //}
                         //else
                         //{
-                        //    print($"spawning FAKE bullet {hit.collider.name}");
+                        //    PrintOnlyInEditor.Log($"spawning FAKE bullet {hit.collider.name}");
                         //    pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range, ranSprayQuat);
                         //}
                     }
@@ -638,7 +638,7 @@ public class PlayerShooting : MonoBehaviourPun
 
                     if (fakeBulForPB)
                     {
-                        print("Shooting fake plasma blast");
+                        Log.Print("Shooting fake plasma blast");
                         bullet.GetComponent<Bullet>().damage = 0;
                         bullet.GetComponent<Bullet>().speed = 150;
                         bullet.GetComponent<Bullet>().redPlasma.SetActive(true);
@@ -658,21 +658,21 @@ public class PlayerShooting : MonoBehaviourPun
 
                     if (weaponToShoot.targetTracking)
                     {
-                        print($"Bullet 1");
+                        Log.Print($"Bullet 1");
                         if (!weaponToShoot.overcharge) // for Plasma Rifle{
                         {
-                            print($"Bullet 2");
+                            Log.Print($"Bullet 2");
 
                             bullet.GetComponent<Bullet>().trackingTarget = trackingTarget;
 
                         }
                         else
                         {
-                            print($"Bullet 3");
+                            Log.Print($"Bullet 3");
 
                             if (overcharge) // For plasma Pistol
                             {
-                                print($"Bullet 4");
+                                Log.Print($"Bullet 4");
 
                                 bullet.GetComponent<Bullet>().trackingTarget = trackingTarget;
                                 bullet.GetComponent<Bullet>().overcharged = overcharge;
@@ -680,7 +680,7 @@ public class PlayerShooting : MonoBehaviourPun
                             }
                         }
                     }
-                    print($"Active weapon has target tracking: {weaponToShoot.targetTracking}. PlayerShooting script has tracking target {trackingTarget}. {overcharge}");
+                    Log.Print($"Active weapon has target tracking: {weaponToShoot.targetTracking}. PlayerShooting script has tracking target {trackingTarget}. {overcharge}");
 
 
 
@@ -690,11 +690,11 @@ public class PlayerShooting : MonoBehaviourPun
                         Debug.Log(weaponToShoot);
 
                         if (bullet.GetComponent<DisableAfterXSeconds>()) bullet.GetComponent<DisableAfterXSeconds>().enabled = false;
-                        bullet.GetComponent<Bullet>().bluePlasma.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Blue && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                        //bullet.GetComponent<Bullet>().bluePlasma.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Blue && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
                         //bullet.GetComponent<Bullet>().redPlasma.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Red && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
-                        bullet.GetComponent<Bullet>().redPlasma.SetActive(false);
-                        bullet.GetComponent<Bullet>().greenPlasma.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Green && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
-                        bullet.GetComponent<Bullet>().shard.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Shard && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                        //bullet.GetComponent<Bullet>().redPlasma.SetActive(false);
+                        //bullet.GetComponent<Bullet>().greenPlasma.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Green && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
+                        //bullet.GetComponent<Bullet>().shard.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Shard && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
                     }
 
                     if (!playerController.GetComponent<Player>().aimAssist.redReticuleIsOn && !playerController.GetComponent<Player>().aimAssist.invisibleAimAssistOn)
@@ -748,14 +748,14 @@ public class PlayerShooting : MonoBehaviourPun
                     bullet.gameObject.GetComponent<Bullet>().range = (int)weaponToShoot.range;
                     bullet.gameObject.GetComponent<Bullet>().speed = (int)weaponToShoot.bulletSpeed;
 
-                    if (weaponToShoot.hybridHitscan && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet && player.aimAssist.redReticuleIsOn) { bullet.gameObject.GetComponent<Bullet>().speed = 999; print("hybrid hitscan working"); }
+                    if (weaponToShoot.hybridHitscan && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet && player.aimAssist.redReticuleIsOn) { bullet.gameObject.GetComponent<Bullet>().speed = 999; Log.Print("hybrid hitscan working"); }
 
                     if (overcharge) bullet.gameObject.GetComponent<Bullet>().speed = (int)(weaponToShoot.bulletSpeed * 0.65f);
                     //bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
                     //try { bullet.gameObject.GetComponent<Bullet>().playerWhoShot = playerController.GetComponent<GeneralWeapProperties>().GetComponent<Player>(); } catch { }
                     //bullet.gameObject.GetComponent<Bullet>().pInventory = pInventory;
                     //try { bullet.gameObject.GetComponent<Bullet>().crosshairScript = playerController.GetComponent<Player>().cScript; } catch { }
-                    print($"bullet time test. Spawned at: {Time.time}");
+                    Log.Print($"bullet time test. Spawned at: {Time.time}");
 
                     //bullet.GetComponent<TrailRenderer>().enabled = GameManager.instance.nbLocalPlayersPreset == 1;
                     bullet.SetActive(true);
@@ -826,7 +826,7 @@ public class PlayerShooting : MonoBehaviourPun
         {
             if (!overcharge)
             {
-                print("removing 1 loaded ammo");
+                Log.Print("removing 1 loaded ammo");
                 weaponToShoot.loadedAmmo -= 1;
             }
             else
@@ -875,7 +875,7 @@ public class PlayerShooting : MonoBehaviourPun
     [PunRPC]
     void SpawnFakeExplosiveProjectile_RPC(int projectileIndex, Vector3 pos, Vector3 rot)
     {
-        print($"SpawnFakeExplosiveProjectile_RPC {projectileIndex}");
+        Log.Print($"SpawnFakeExplosiveProjectile_RPC {projectileIndex}");
 
         WeaponProperties activeWeapon = pInventory.activeWeapon.GetComponent<WeaponProperties>();
 

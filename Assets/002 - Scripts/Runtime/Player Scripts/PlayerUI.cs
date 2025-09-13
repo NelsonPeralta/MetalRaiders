@@ -512,7 +512,7 @@ public class PlayerUI : MonoBehaviour
     {
         if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
         {
-            print($"SetScoreWitnesses {GetComponent<Player>().team}");
+            Log.Print($"SetScoreWitnesses {GetComponent<Player>().team}");
             neutralPointsHolder.gameObject.SetActive(false);
             redPointsHolder.gameObject.SetActive(GetComponent<Player>().team == GameManager.Team.Red);
             bluePointsHolder.gameObject.SetActive(GetComponent<Player>().team == GameManager.Team.Blue);
@@ -537,7 +537,7 @@ public class PlayerUI : MonoBehaviour
     {
         if (_motionTracker.gameObject.activeSelf != b)
         {
-            print($"ToggleMotionTracker {b}");
+            Log.Print($"ToggleMotionTracker {b}");
             _motionTracker.SetActive(b);
         }
     }
@@ -686,7 +686,7 @@ public class PlayerUI : MonoBehaviour
         //}
         //else
         //{
-        //    print($"OnClosestInteractableObjectAssigned {pioh.closestInteractableObject.name}");
+        //    PrintOnlyInEditor.Log($"OnClosestInteractableObjectAssigned {pioh.closestInteractableObject.name}");
 
         //    if (pioh.closestInteractableObject.GetComponent<LootableWeapon>())
         //    {
@@ -776,7 +776,7 @@ public class PlayerUI : MonoBehaviour
 
     void OnOneObjRoundOverLocalEvent()
     {
-        print($"oneobjmode - OnOneObjRoundOverLocalEvent blackscreen PLAY");
+        Log.Print($"oneobjmode - OnOneObjRoundOverLocalEvent blackscreen PLAY");
 
 
         if (GameManager.instance.OneObjModeRoundCounter < GameManager.MAX_NB_OF_ROUNDS - 1)
@@ -804,7 +804,7 @@ public class PlayerUI : MonoBehaviour
     public void HideBlackScreens()
     {
 
-        print($"oneobjmode - HideBlackScreens");
+        Log.Print($"oneobjmode - HideBlackScreens");
         try
         {
             _blackscreenDefault.Play("hide");

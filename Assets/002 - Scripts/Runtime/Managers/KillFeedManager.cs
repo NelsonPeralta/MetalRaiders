@@ -27,7 +27,7 @@ public class KillFeedManager : MonoBehaviour
 
     public void EnterNewFeed(string feed)
     {
-        print($"EnterNewFeed asdf {feed}");
+        Log.Print($"EnterNewFeed asdf {feed}");
         int numChild = gridLayout.transform.childCount;
         while (numChild > 3)
         {

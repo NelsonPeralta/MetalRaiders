@@ -82,12 +82,12 @@ public class GrenadePool : MonoBehaviour
 
     public static int GetAvailableGrenadeIndex(bool isFrag, int photonRoomIndex) // this is called localy only
     {
-        print($"GetAvailableGrenadeIndex {photonRoomIndex}");
+        Log.Print($"GetAvailableGrenadeIndex {photonRoomIndex}");
 
         for (int i = (photonRoomIndex - 1) * GRENADE_INC; i < (photonRoomIndex * GRENADE_INC) - 1; i++)
         {
-            print($"GetAvailableGrenadeIndex {i}");
-            print($"GetAvailableGrenadeIndex {photonRoomIndex}   {i}   {_instance._fragGrenadePool[i].name}");
+            Log.Print($"GetAvailableGrenadeIndex {i}");
+            Log.Print($"GetAvailableGrenadeIndex {photonRoomIndex}   {i}   {_instance._fragGrenadePool[i].name}");
 
             if (isFrag)
             {
@@ -120,7 +120,7 @@ public class GrenadePool : MonoBehaviour
         {
 
             if (!_instance._glProjectilePool[i].gameObject.activeInHierarchy) _instance._glProjectilePool[i].transform.SetParent(instance.transform);
-            if (!_instance._glProjectilePool[i].gameObject.activeInHierarchy) { print($"GetAvailableGrenadeLauncherProjectileAtIndex: {i}"); return i; }
+            if (!_instance._glProjectilePool[i].gameObject.activeInHierarchy) { Log.Print($"GetAvailableGrenadeLauncherProjectileAtIndex: {i}"); return i; }
         }
 
         return -1;
@@ -227,7 +227,7 @@ public class GrenadePool : MonoBehaviour
 
     public void DisableExplosive(WeaponProperties.KillFeedOutput kfo, int ind, Vector3 pos)
     {
-        print($"DisableExplosive {PhotonNetwork.IsMasterClient} {kfo} {ind}");
+        Log.Print($"DisableExplosive {PhotonNetwork.IsMasterClient} {kfo} {ind}");
         if (kfo == WeaponProperties.KillFeedOutput.Frag_Grenade)
         {
             _fragGrenadePool[ind].GetComponent<ExplosiveProjectile>().TriggerExplosion(pos);
@@ -258,7 +258,7 @@ public class GrenadePool : MonoBehaviour
         foreach (Explosion obj in instance._explosions)
             if (!obj.gameObject.activeInHierarchy)
             {
-                print($"SpawnExplosion. KFO: {(WeaponProperties.KillFeedOutput)kfo} damage: {damage} stuck: {stuck}");
+                Log.Print($"SpawnExplosion. KFO: {(WeaponProperties.KillFeedOutput)kfo} damage: {damage} stuck: {stuck}");
                 obj.GetComponent<AudioSource>().clip = ac;
                 obj.player = source;
                 obj.killFeedOutput = kfo;
