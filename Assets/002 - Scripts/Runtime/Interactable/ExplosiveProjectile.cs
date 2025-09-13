@@ -295,7 +295,7 @@ public class ExplosiveProjectile : MonoBehaviour
     {
         Log.Print($"Explosion {_stuckPlayerPhotonId} {PhotonNetwork.IsMasterClient == true}");
 
-        if (PhotonNetwork.IsMasterClient)
+        if (PhotonNetwork.IsMasterClient && !_exploded)
         {
             if (_stuckPlayerPhotonId > 0)
             {
@@ -311,6 +311,7 @@ public class ExplosiveProjectile : MonoBehaviour
             {
                 Log.Print($"Explosion 2");
                 _exploded = true;
+                Debug.Log("Calling DisableAndExplodeProjectile");
                 NetworkGameManager.instance.DisableAndExplodeProjectile((int)_killFeedOutput, GrenadePool.instance.GetIndexOfExplosive(_killFeedOutput, gameObject), transform.position);
             }
         }
@@ -321,6 +322,7 @@ public class ExplosiveProjectile : MonoBehaviour
         yield return new WaitForEndOfFrame();
         if (!_exploded)
             _exploded = true;
+        Debug.Log("Calling DisableAndExplodeProjectile");
         NetworkGameManager.instance.DisableAndExplodeProjectile((int)_killFeedOutput, GrenadePool.instance.GetIndexOfExplosive(_killFeedOutput, gameObject), transform.position);
     }
 

@@ -1,33 +1,42 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 
 public class GameObjectPool : MonoBehaviour
 {
-    public PhotonView PV;
-    public int amountToPool;
+    public static GameObjectPool instance { get { return _instance; } }
+
+
+
+
     bool objectsSpawned = false;
 
-    [Header("Base Objects")]
+    [SerializeField] GameObject bulletPrefab, bluePlasmaRoundPrefab, redPlasmaRoundPrefab, greenPlasmaRoundPrefab, shardRoundPrefab;
+    [SerializeField] GameObject shieldHitPrefab, bloodHitPrefab, genericHitPrefab, weaponSmokeCollisionPrefab;
+    [SerializeField] GameObject bluePlasmaRoundPrefab_SS, greenPlasmaRoundPrefab_SS;
+    [SerializeField] GameObject bulletMetalImpactPrefab;
+
     public List<GameObject> bullets = new List<GameObject>();
-    public GameObject bulletPrefab;
+    public List<GameObject> bluePlasmaRounds = new List<GameObject>();
+    public List<GameObject> redPlasmaRounds = new List<GameObject>();
+    public List<GameObject> greenPlasmaRounds = new List<GameObject>();
+    public List<GameObject> shardRounds = new List<GameObject>();
+
+    public List<GameObject> bluePlasmaRounds_SS = new List<GameObject>();
+    public List<GameObject> greenPlasmaRounds_SS = new List<GameObject>();
+
+
     public List<GameObject> shieldHits = new List<GameObject>();
-    public GameObject shieldHitPrefab;
     public List<GameObject> bloodHits = new List<GameObject>();
-    public GameObject bloodHitPrefab;
     public List<GameObject> genericHits = new List<GameObject>();
-    public GameObject genericHitPrefab;
     public List<GameObject> weaponSmokeCollisions = new List<GameObject>();
-    public GameObject weaponSmokeCollisionPrefab;
 
 
     public List<GameObject> bulletMetalImpactList = new List<GameObject>();
-    [SerializeField] GameObject bulletMetalImpactPrefab;
 
 
 
-    public static GameObjectPool instance { get { return _instance; } }
 
 
     static GameObjectPool _instance;
@@ -49,13 +58,64 @@ public class GameObjectPool : MonoBehaviour
     {
         if (GameObjectPool.instance.objectsSpawned)
             return;
-        for (int i = 0; i < amountToPool; i++)
+
+        for (int i = 0; i < CurrentRoomManager.instance.expectedNbPlayers * 20; i++)
         {
             GameObject obj = Instantiate(bulletPrefab, transform.position, transform.rotation);
-            //GameObject obj = PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlinePlayerBullet"), Vector3.zero, Quaternion.identity);
             obj.SetActive(false);
             bullets.Add(obj);
             obj.transform.parent = gameObject.transform;
+
+
+            obj = Instantiate(shardRoundPrefab, transform.position, transform.rotation);
+            obj.SetActive(false);
+            shardRounds.Add(obj);
+            obj.transform.parent = gameObject.transform;
+        }
+
+
+
+        for (int i = 0; i < CurrentRoomManager.instance.expectedNbPlayers * 10; i++)
+        {
+            GameObject obj = null;
+
+            if (GameManager.instance.nbLocalPlayersPreset == 1)
+            {
+                obj = Instantiate(bluePlasmaRoundPrefab, transform.position, transform.rotation);
+                obj.SetActive(false);
+                bluePlasmaRounds.Add(obj);
+                obj.transform.parent = gameObject.transform;
+
+                obj = Instantiate(redPlasmaRoundPrefab, transform.position, transform.rotation);
+                obj.SetActive(false);
+                redPlasmaRounds.Add(obj);
+                obj.transform.parent = gameObject.transform;
+
+                obj = Instantiate(greenPlasmaRoundPrefab, transform.position, transform.rotation);
+                obj.SetActive(false);
+                greenPlasmaRounds.Add(obj);
+                obj.transform.parent = gameObject.transform;
+            }
+            else
+            {
+                obj = Instantiate(bluePlasmaRoundPrefab_SS, transform.position, transform.rotation);
+                obj.SetActive(false);
+                bluePlasmaRounds_SS.Add(obj);
+                obj.transform.parent = gameObject.transform;
+
+
+                obj = Instantiate(greenPlasmaRoundPrefab_SS, transform.position, transform.rotation);
+                obj.SetActive(false);
+                greenPlasmaRounds_SS.Add(obj);
+                obj.transform.parent = gameObject.transform;
+            }
+
+
+
+
+
+
+
 
             obj = Instantiate(bloodHitPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
@@ -75,11 +135,6 @@ public class GameObjectPool : MonoBehaviour
 
 
 
-            obj = Instantiate(bulletMetalImpactPrefab, transform.position, transform.rotation);
-            obj.SetActive(false);
-            bulletMetalImpactList.Add(obj);
-            obj.transform.parent = gameObject.transform;
-
             obj = Instantiate(weaponSmokeCollisionPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
             weaponSmokeCollisions.Add(obj);
@@ -88,7 +143,7 @@ public class GameObjectPool : MonoBehaviour
 
 
 
-        for (int i = 0; i < 100; i++)
+        for (int i = 0; i < CurrentRoomManager.instance.expectedNbPlayers * 20; i++)
         {
             GameObject obj = Instantiate(bulletMetalImpactPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
@@ -97,11 +152,54 @@ public class GameObjectPool : MonoBehaviour
         }
     }
 
-    public GameObject SpawnPooledBullet()
+
+    public enum BulletType { normal, blue_plasma_round, red_plasma_round, green_plasma_round, shard_round }
+    public GameObject SpawnPooledBullet(BulletType bulletType)
     {
-        foreach (GameObject obj in bullets)
-            if (!obj.activeSelf)
-                return obj;
+        if (bulletType == BulletType.normal)
+            foreach (GameObject obj in bullets)
+                if (!obj.activeSelf)
+                    return obj;
+
+
+
+
+        if (bulletType == BulletType.blue_plasma_round && GameManager.instance.nbLocalPlayersPreset == 1)
+            foreach (GameObject obj in bluePlasmaRounds)
+                if (!obj.activeSelf)
+                    return obj;
+        if (bulletType == BulletType.blue_plasma_round && GameManager.instance.nbLocalPlayersPreset > 1)
+            foreach (GameObject obj in bluePlasmaRounds_SS)
+                if (!obj.activeSelf)
+                    return obj;
+
+
+
+        if (bulletType == BulletType.red_plasma_round && GameManager.instance.nbLocalPlayersPreset == 1)
+            foreach (GameObject obj in redPlasmaRounds)
+                if (!obj.activeSelf)
+                    return obj;
+
+
+
+
+        if (bulletType == BulletType.green_plasma_round && GameManager.instance.nbLocalPlayersPreset == 1)
+            foreach (GameObject obj in greenPlasmaRounds)
+                if (!obj.activeSelf)
+                    return obj;
+        if (bulletType == BulletType.green_plasma_round && GameManager.instance.nbLocalPlayersPreset > 1)
+            foreach (GameObject obj in greenPlasmaRounds_SS)
+                if (!obj.activeSelf)
+                    return obj;
+
+
+
+
+        if (bulletType == BulletType.shard_round)
+            foreach (GameObject obj in shardRounds)
+                if (!obj.activeSelf)
+                    return obj;
+
         return null;
     }
 

@@ -7,7 +7,6 @@ using System.Linq;
 public class Hurtzone : MonoBehaviour
 {
     public bool instantKillzone;
-    public AudioSource audioSource;
 
     [Header("Damage Over Time")]
     public int damage;

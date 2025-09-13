@@ -5,8 +5,9 @@ public static class Log
     [Conditional("UNITY_EDITOR")]
     public static void Print(object message)
     {
-        if (GameManager.instance.disableAllLogs == false)
-            UnityEngine.Debug.Log(message);
+        if (GameManager.instance)
+            if (GameManager.instance.disableAllLogs == false)
+                UnityEngine.Debug.Log(message);
     }
 
     [Conditional("UNITY_EDITOR")]

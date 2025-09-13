@@ -4,6 +4,8 @@ using UnityEngine;
 using Photon.Pun;
 using System.Linq;
 using System;
+using Steamworks;
+using static GameObjectPool;
 
 public class PlayerShooting : MonoBehaviourPun
 {
@@ -517,7 +519,7 @@ public class PlayerShooting : MonoBehaviourPun
                 if (playerController.isAiming && weaponToShoot.hipSprayOnly)
                     ranSprayQuat = Quaternion.identity;
 
-                if (weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet)
+                if (weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet || (fakeBulForPB == true && GameManager.instance.nbLocalPlayersPreset > 1))
                 {
                     //if (!player.isMine/* || GameManager.instance.connection == GameManager.Connection.Local*/)
                     {
@@ -534,7 +536,7 @@ public class PlayerShooting : MonoBehaviourPun
                             {
 
                                 // if we find no colliders (default or hitboxes), shoot a fake trail at its maximum lenght
-                                pInventory.SpawnFakeBulletTrail((int)weaponToShoot.range,
+                                pInventory.SpawnFakeBulletTrail(fakeBulForPB ? PlayerInventory.FakeTrailColor.red : PlayerInventory.FakeTrailColor.yellow, (int)weaponToShoot.range,
                                     ranSprayQuat, player.isMine,
                                    muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position);
                             }
@@ -564,7 +566,7 @@ public class PlayerShooting : MonoBehaviourPun
                                     {
                                         if (Vector3.Distance(playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position, fakeBulletTrailRaycasthits[0].point) > 4)
                                         {
-                                            pInventory.SpawnFakeBulletTrail((int)Vector3.Distance(playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position, fakeBulletTrailRaycasthits[0].point),
+                                            pInventory.SpawnFakeBulletTrail(fakeBulForPB ? PlayerInventory.FakeTrailColor.red : PlayerInventory.FakeTrailColor.yellow, (int)Vector3.Distance(playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position, fakeBulletTrailRaycasthits[0].point),
                                                 ranSprayQuat, player.isMine,
                                    muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position,
                                    lookAtThisTarget: (playerController.player.aimAssist.targetPointPosition != Vector3.zero ? playerController.player.aimAssist.targetPointPosition : fakeBulletTrailRaycasthits[0].point));
@@ -581,14 +583,14 @@ public class PlayerShooting : MonoBehaviourPun
                                         // The target may be between the position of the camera and the end of the muzzle of the gun
                                         // the player may be in 3PS mode
 
-                                        pInventory.SpawnFakeBulletTrail((int)Vector3.Distance(playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position, playerController.player.playerCamera.playerCameraCenterPointCheck.target.position),
+                                        pInventory.SpawnFakeBulletTrail(fakeBulForPB ? PlayerInventory.FakeTrailColor.red : PlayerInventory.FakeTrailColor.yellow, (int)Vector3.Distance(playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position, playerController.player.playerCamera.playerCameraCenterPointCheck.target.position),
                                     ranSprayQuat, player.isMine,
                                    muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position);
                                     }
                                 }
                                 else
                                 {
-                                    pInventory.SpawnFakeBulletTrail((int)playerController.pInventory.activeWeapon.range,
+                                    pInventory.SpawnFakeBulletTrail(fakeBulForPB ? PlayerInventory.FakeTrailColor.red : PlayerInventory.FakeTrailColor.yellow, (int)playerController.pInventory.activeWeapon.range,
                                     ranSprayQuat, player.isMine,
                                    muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position);
                                 }
@@ -631,24 +633,70 @@ public class PlayerShooting : MonoBehaviourPun
 
                 if (player.isMine || weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
                 {
-                    Debug.Log($"Shooting Plasma bullet {overcharge} {weaponToShoot.targetTracking}");
-                    var bullet = GameObjectPool.instance.SpawnPooledBullet();
+                    GameObject bullet = null;
+
+                    if (!fakeBulForPB)
+                    {
+                        GameObjectPool.BulletType bulletType = GameObjectPool.BulletType.normal;
+
+                        if (weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
+                        {
+                            switch (weaponToShoot.plasmaColor)
+                            {
+                                case WeaponProperties.PlasmaColor.Blue:
+                                    bulletType = GameObjectPool.BulletType.blue_plasma_round;
+                                    break;
+                                case WeaponProperties.PlasmaColor.Green:
+                                    bulletType = GameObjectPool.BulletType.green_plasma_round;
+                                    break;
+                                case WeaponProperties.PlasmaColor.Shard:
+                                    bulletType = GameObjectPool.BulletType.shard_round;
+                                    break;
+                                default:
+                                    bulletType = GameObjectPool.BulletType.normal;
+                                    break;
+                            }
+                        }
+
+                        bullet = GameObjectPool.instance.SpawnPooledBullet(bulletType);
+                    }
+                    else
+                    {
+                        Debug.Log($"Shooting Plasma bullet 0 {fakeBulForPB == true} {overcharge} {weaponToShoot.targetTracking}");
+                        if (GameManager.instance.nbLocalPlayersPreset == 1)
+                        {
+                            Debug.Log($"Shooting Plasma bullet 1 {fakeBulForPB == true} {overcharge} {weaponToShoot.targetTracking}");
+                            bullet = GameObjectPool.instance.SpawnPooledBullet(BulletType.red_plasma_round);
+                            bullet.transform.localScale = Vector3.one;
+
+                            bullet.GetComponent<Bullet>().damage = 0;
+                            bullet.GetComponent<Bullet>().speed = 150;
+                            bullet.GetComponent<Bullet>().range = 100;
+                            bullet.GetComponent<Bullet>().weaponProperties = weaponToShoot;
+                            bullet.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
+                            bullet.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
+
+                            bullet.SetActive(true);
+
+                            return;
+                        }
+                        else if (GameManager.instance.nbLocalPlayersPreset > 1)
+                        {
+                            Debug.Log($"Shooting Plasma bullet 2 {fakeBulForPB == true} {overcharge} {weaponToShoot.targetTracking}");
+                            return;
+                        }
+                        else
+                        {
+                            Debug.Log($"Shooting Plasma bullet 3 {fakeBulForPB == true} {overcharge} {weaponToShoot.targetTracking}");
+
+                        }
+                    }
+
+
+
+                    Debug.Log($"Shooting Plasma bullet {fakeBulForPB == true} {overcharge} {weaponToShoot.targetTracking}");
                     bullet.transform.localScale = Vector3.one;
                     try { bullet.gameObject.GetComponent<Bullet>().weaponProperties = weaponToShoot; } catch { }
-
-                    if (fakeBulForPB)
-                    {
-                        Log.Print("Shooting fake plasma blast");
-                        bullet.GetComponent<Bullet>().damage = 0;
-                        bullet.GetComponent<Bullet>().speed = 150;
-                        bullet.GetComponent<Bullet>().redPlasma.SetActive(true);
-                        bullet.transform.position = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.position;
-                        bullet.transform.rotation = playerController.GetComponent<GeneralWeapProperties>().bulletSpawnPoint.transform.rotation;
-
-                        bullet.SetActive(true);
-
-                        return;
-                    }
 
                     if (overcharge) bullet.transform.localScale = Vector3.one * 5;
 

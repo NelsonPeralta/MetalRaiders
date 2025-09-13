@@ -1,0 +1,5 @@
+newmtl PolyVikings_Material_01
+map_Kd Texture_01.png
+Kd 1 1 1
+d 1
+

@@ -1,0 +1,5 @@
+newmtl Polygon_War_Material_01_A
+map_Kd PolygonWar_Texture_01_A.png
+Kd 1 1 1
+d 1
+

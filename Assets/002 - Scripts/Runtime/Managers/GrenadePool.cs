@@ -256,9 +256,12 @@ public class GrenadePool : MonoBehaviour
         Vector3 pos, Explosion.Color col, Explosion.Type t, AudioClip ac, WeaponProperties.KillFeedOutput kfo, bool stuck = false)
     {
         foreach (Explosion obj in instance._explosions)
+        {
+            Debug.Log($"SpawnExplosion. KFO: {obj.gameObject.activeInHierarchy} {obj.gameObject.activeSelf}");
+
             if (!obj.gameObject.activeInHierarchy)
             {
-                Log.Print($"SpawnExplosion. KFO: {(WeaponProperties.KillFeedOutput)kfo} damage: {damage} stuck: {stuck}");
+                Debug.Log($"SpawnExplosion. KFO: {(WeaponProperties.KillFeedOutput)kfo} damage: {damage} stuck: {stuck}");
                 obj.GetComponent<AudioSource>().clip = ac;
                 obj.player = source;
                 obj.killFeedOutput = kfo;
@@ -275,6 +278,7 @@ public class GrenadePool : MonoBehaviour
                 obj.DisableIn3Seconds();
                 break;
             }
+        }
     }
 
 

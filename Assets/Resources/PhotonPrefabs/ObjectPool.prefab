@@ -45,26 +45,42 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e89a3f33078fb0a408dc6b93b93b7b0f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  PV: {fileID: 0}
-  amountToPool: 100
-  bullets: []
   bulletPrefab: {fileID: 652686745487404900, guid: be7ba75c7401067478ca44c36f3954e7,
     type: 3}
-  shieldHits: []
+  bluePlasmaRoundPrefab: {fileID: 652686745487404900, guid: 0c2f9ed17b08dbe4b85828bf6eaa6584,
+    type: 3}
+  redPlasmaRoundPrefab: {fileID: 652686745487404900, guid: 59aa475af6db59e4eb8ab198d8ade557,
+    type: 3}
+  greenPlasmaRoundPrefab: {fileID: 652686745487404900, guid: ad37281f1b6b1c84693e179cef233360,
+    type: 3}
+  shardRoundPrefab: {fileID: 652686745487404900, guid: 52b7585b91e024e40a14ece842620fae,
+    type: 3}
   shieldHitPrefab: {fileID: 1620636520166436, guid: f66fa1fcd728a934c93a47993d6f4887,
     type: 3}
-  bloodHits: []
   bloodHitPrefab: {fileID: 1146961906002798, guid: 04f6f308bd2d35947a3a6b2a626d1980,
     type: 3}
-  genericHits: []
   genericHitPrefab: {fileID: 8649884254006485902, guid: 8ea603131d195f2438c4eafba1c9f895,
     type: 3}
-  weaponSmokeCollisions: []
   weaponSmokeCollisionPrefab: {fileID: 3153810699896921423, guid: 70421fc0a47ec0545a6cc52aa1ae17ea,
     type: 3}
-  bulletMetalImpactList: []
+  bluePlasmaRoundPrefab_SS: {fileID: 652686745487404900, guid: 2a8430c157a2a954d8be0d085330adfa,
+    type: 3}
+  greenPlasmaRoundPrefab_SS: {fileID: 652686745487404900, guid: 4686d0302514dd34a82f61881b80d3f3,
+    type: 3}
   bulletMetalImpactPrefab: {fileID: 4537056961858913665, guid: 4a0c9aef69209e24e88754e9cdc94acf,
     type: 3}
+  bullets: []
+  bluePlasmaRounds: []
+  redPlasmaRounds: []
+  greenPlasmaRounds: []
+  shardRounds: []
+  bluePlasmaRounds_SS: []
+  greenPlasmaRounds_SS: []
+  shieldHits: []
+  bloodHits: []
+  genericHits: []
+  weaponSmokeCollisions: []
+  bulletMetalImpactList: []
 --- !u!114 &-6797353524191117134
 MonoBehaviour:
   m_ObjectHideFlags: 0
