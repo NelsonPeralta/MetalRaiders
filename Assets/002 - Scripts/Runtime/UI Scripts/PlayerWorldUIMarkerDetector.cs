@@ -9,20 +9,25 @@ public class PlayerWorldUIMarkerDetector : MonoBehaviour
         get { return _rayHit; }
         set
         {
-            GameObject _previous = _rayHit;
             _rayHit = value;
+            if (value == null) return;
 
 
-            try
+            // try to get ReticuleFriction on the target; if not present, fall back to Player.reticuleFriction
+            _retfric = _rayHit.GetComponent<ReticuleFriction>();
+            if (_retfric == null)
             {
-                _retfric = value.GetComponent<ReticuleFriction>(); if (_retfric == null) _retfric = value.GetComponent<Player>().reticuleFriction;
-                if (_retfric)
-                {
-                    if (_retfric.player != _player)
-                        _retfric.player.GetComponent<AllPlayerScripts>().worldUis[_player.controllerId].seen = true;
-                }
+                var p = _rayHit.GetComponent<Player>();
+                if (p != null) _retfric = p.reticuleFriction;
             }
-            catch (System.Exception e) { /*Debug.LogWarning(e);*/ }
+
+            // apply 'seen' flag if appropriate
+            if (_retfric != null && _retfric.player != _player)
+            {
+                var aps = _retfric.player.GetComponent<AllPlayerScripts>();
+                if (aps != null)
+                    aps.worldUis[_player.controllerId].seen = true;
+            }
         }
     }
 
@@ -36,18 +41,29 @@ public class PlayerWorldUIMarkerDetector : MonoBehaviour
 
     ReticuleFriction _retfric;
 
+    RaycastHit hit;
+
     private void Update()
     {
         if (!_player.isMine)
             return;
 
-        try { if (_player.isDead || _player.isRespawning) { rayHit = null; return; } } catch { }
-        try { _distance = (int)_player.playerInventory.activeWeapon.currentRedReticuleRange; } catch { _distance = 15; }
+        if (_player.isDead || _player.isRespawning)
+        {
+            rayHit = null;
+            return;
+        }
 
-        var hit = new RaycastHit();
-        Ray ray = new Ray(transform.position, transform.forward);
+        // safer access to active weapon range without exceptions
+        _distance = 15;
+        if (_player.playerInventory != null && _player.playerInventory.activeWeapon != null)
+        {
+            _distance = (int)_player.playerInventory.activeWeapon.currentRedReticuleRange;
+        }
 
-        if (Physics.Raycast(ray, out hit, _distance, _targetLayerMask))
+
+
+        if (Physics.Raycast(transform.position, transform.forward, out hit, _distance, _targetLayerMask))
         {
             bool canSeePlayer = false;
 

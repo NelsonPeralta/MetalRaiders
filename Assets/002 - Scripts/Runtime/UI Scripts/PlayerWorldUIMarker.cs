@@ -41,6 +41,15 @@ public class PlayerWorldUIMarker : MonoBehaviour
     int damping = 1, tries = 0;
     Color _tCol;
 
+
+
+
+    // add near other private fields
+    private Color _orangeColor;
+    private Color _fallbackOrange = new Color(1f, 110f / 255f, 0f, 1f); // cached fallback
+    private bool _orangeColorParsed = false;
+
+
     private void Awake()
     {
         _rootPlayer = transform.root.GetComponent<Player>();
@@ -56,25 +65,34 @@ public class PlayerWorldUIMarker : MonoBehaviour
     {
 
         _greenMarkerImage = _greenMarker.GetComponent<Image>();
+
+        // parse and cache the "orange" color once (avoid parsing every frame)
+        if (GameManager.colorDict != null && GameManager.colorDict.TryGetValue("orange", out string hex))
+        {
+            if (ColorUtility.TryParseHtmlString(hex, out _orangeColor))
+                _orangeColorParsed = true;
+            Debug.Log("_orangeColorParsed parsed");
+        }
     }
 
     private void Update()
     {
         if (!CurrentRoomManager.instance.gameStarted) return;
 
-        if (!_lookAtThisPlayer)
+        if (_lookAtThisPlayer == null)
         {
-            try
-            {
-                _lookAtThisPlayer = GameManager.GetLocalPlayer(_controllerTarget);
-            }
-            catch { }
-            return;
+            _lookAtThisPlayer = GameManager.GetLocalPlayer(_controllerTarget);
+            if (_lookAtThisPlayer == null)
+                return;
         }
         else
         {
-            transform.GetChild(0).gameObject.SetActive(_lookAtThisPlayer.isAlive);
+            // small micro-opt: avoid redundant SetActive calls on the child
+            var child0 = transform.childCount > 0 ? transform.GetChild(0) : null;
+            if (child0 != null && child0.gameObject.activeSelf != _lookAtThisPlayer.isAlive)
+                child0.gameObject.SetActive(_lookAtThisPlayer.isAlive);
         }
+
 
         Vector3 targetPostition = new Vector3(_lookAtThisPlayer.transform.position.x,
                                         this.transform.position.y,
@@ -93,18 +111,33 @@ public class PlayerWorldUIMarker : MonoBehaviour
 
         if (_lookAtThisPlayer)
         {
-            _greenMarker.gameObject.SetActive(GameManager.instance.teamMode == GameManager.TeamMode.Classic && _rootPlayer.team == _lookAtThisPlayer.team);
+            //_greenMarker.gameObject.SetActive(GameManager.instance.teamMode == GameManager.TeamMode.Classic && _rootPlayer.team == _lookAtThisPlayer.team);
 
+            bool greenShould = GameManager.instance.teamMode == GameManager.TeamMode.Classic && _rootPlayer.team == _lookAtThisPlayer.team;
+            if (_greenMarker != null && _greenMarker.activeSelf != greenShould)
+                _greenMarker.SetActive(greenShould);
 
             if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
             {
-                if (_rootPlayer.team == _lookAtThisPlayer.team) _text.gameObject.SetActive(true);
+                //if (_rootPlayer.team == _lookAtThisPlayer.team) _text.gameObject.SetActive(true);
+                if (_text != null && !_text.gameObject.activeSelf)
+                    _text.gameObject.SetActive(true);
 
-                if ((_rootPlayer.isDead || _rootPlayer.isRespawning) && _rootPlayer.team == _lookAtThisPlayer.team) _deadTag.gameObject.SetActive(true); else _deadTag.gameObject.SetActive(false);
+
+                if ((_rootPlayer.isDead || _rootPlayer.isRespawning) && _rootPlayer.team == _lookAtThisPlayer.team)
+                {
+                    if (!_deadTag.gameObject.activeSelf)
+                        _deadTag.gameObject.SetActive(true);
+                }
+                else if (!_deadTag.gameObject.activeSelf)
+                {
+                    _deadTag.gameObject.SetActive(false);
+                }
             }
             else
             {
-                _deadTag.gameObject.SetActive(false);
+                if (!_deadTag.gameObject.activeSelf)
+                    _deadTag.gameObject.SetActive(false);
             }
         }
 
@@ -124,17 +157,27 @@ public class PlayerWorldUIMarker : MonoBehaviour
             {
                 if (_rootPlayer.isTakingDamage)
                 {
-                    //_greenMarkerImage.color = new Color(255, 110, 0, 255);
-                    ColorUtility.TryParseHtmlString(GameManager.colorDict["orange"], out _tCol);
-                    _greenMarkerImage.color = _tCol;
+                    if (_orangeColorParsed)
+                    {
+                        if (_greenMarkerImage.color != _orangeColor)
+                            _greenMarkerImage.color = _orangeColor;
+                    }
+                    else
+                    {
+                        // fallback (cached fallbackColor struct avoids realloc)
+                        if (_greenMarkerImage.color != _fallbackOrange)
+                            _greenMarkerImage.color = _fallbackOrange;
+                    }
                 }
                 else if (_rootPlayer.playerController.isCurrentlyShootingForMotionTracker)
                 {
-                    _greenMarkerImage.color = Color.yellow;
+                    if (_greenMarkerImage.color != Color.yellow)
+                        _greenMarkerImage.color = Color.yellow;
                 }
                 else
                 {
-                    _greenMarkerImage.color = Color.green;
+                    if (_greenMarkerImage.color != Color.green)
+                        _greenMarkerImage.color = Color.green;
                 }
             }
         }

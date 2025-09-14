@@ -395,7 +395,7 @@ public class PlayerShooting : MonoBehaviourPun
 
         WeaponProperties weap = pInventory.activeWeapon.GetComponent<WeaponProperties>();
         /*if (activeWeapon == playerController.player.playerInventory.thirdWeapon)*/
-        Debug.Log($"Shoot_Caller: {playerController.player.name} Shoot_Caller {weap.name} {weap.loadedAmmo} {isLeftWeapon}");
+        Log.Print($"Shoot_Caller: {playerController.player.name} Shoot_Caller {weap.name} {weap.loadedAmmo} {isLeftWeapon}");
 
         if (isLeftWeapon) weap = pInventory.thirdWeapon;
 
@@ -404,7 +404,7 @@ public class PlayerShooting : MonoBehaviourPun
             if (weap.loadedAmmo <= 0 || playerController.isReloading)
             {
                 /*if (activeWeapon == playerController.player.playerInventory.thirdWeapon)*/
-                Debug.Log($"{playerController.player.name} Shoot_Caller {weap.name} {weap.loadedAmmo} isReloading: {playerController.isReloading}");
+                Log.Print($"{playerController.player.name} Shoot_Caller {weap.name} {weap.loadedAmmo} isReloading: {playerController.isReloading}");
                 return;
             }
         }
@@ -415,7 +415,7 @@ public class PlayerShooting : MonoBehaviourPun
                 if (weap.loadedAmmo <= 0 || playerController.isReloadingRight)
                 {
                     /*if (activeWeapon == playerController.player.playerInventory.thirdWeapon)*/
-                    Debug.Log($"{playerController.player.name} Shoot_Caller {weap.name} {weap.loadedAmmo} isReloading: {playerController.isReloading}");
+                    Log.Print($"{playerController.player.name} Shoot_Caller {weap.name} {weap.loadedAmmo} isReloading: {playerController.isReloading}");
                     return;
                 }
             }
@@ -424,7 +424,7 @@ public class PlayerShooting : MonoBehaviourPun
                 if (weap.loadedAmmo <= 0 || playerController.isReloadingLeft)
                 {
                     /*if (activeWeapon == playerController.player.playerInventory.thirdWeapon)*/
-                    Debug.Log($"{playerController.player.name} Shoot_Caller {weap.name} {weap.loadedAmmo} isReloading: {playerController.isReloading}");
+                    Log.Print($"{playerController.player.name} Shoot_Caller {weap.name} {weap.loadedAmmo} isReloading: {playerController.isReloading}");
                     return;
                 }
             }
@@ -438,7 +438,7 @@ public class PlayerShooting : MonoBehaviourPun
         //if (activeWeapon.loadedAmmo <= 0 || playerController.isReloading)
         //{
         //    /*if (activeWeapon == playerController.player.playerInventory.thirdWeapon)*/
-        //    Debug.Log($"{playerController.player.name} Shoot_Caller {activeWeapon.name} {activeWeapon.loadedAmmo} isReloading: {playerController.isReloading}");
+        //    Log.Print($"{playerController.player.name} Shoot_Caller {activeWeapon.name} {activeWeapon.loadedAmmo} isReloading: {playerController.isReloading}");
         //    return;
         //}
 
@@ -494,7 +494,7 @@ public class PlayerShooting : MonoBehaviourPun
 
         playerController.player.assignActorPlayerTargetOnShootingSphere.TriggerBehaviour();
 
-        //Debug.Log($"shoooo 1 {isLeftWeapon}");
+        //Log.Print($"shoooo 1 {isLeftWeapon}");
 
         int counter = 1;
         WeaponProperties weaponToShoot = pInventory.activeWeapon.GetComponent<WeaponProperties>();
@@ -662,10 +662,10 @@ public class PlayerShooting : MonoBehaviourPun
                     }
                     else
                     {
-                        Debug.Log($"Shooting Plasma bullet 0 {fakeBulForPB == true} {overcharge} {weaponToShoot.targetTracking}");
+                        Log.Print($"Shooting Plasma bullet 0 {fakeBulForPB == true} {overcharge} {weaponToShoot.targetTracking}");
                         if (GameManager.instance.nbLocalPlayersPreset == 1)
                         {
-                            Debug.Log($"Shooting Plasma bullet 1 {fakeBulForPB == true} {overcharge} {weaponToShoot.targetTracking}");
+                            Log.Print($"Shooting Plasma bullet 1 {fakeBulForPB == true} {overcharge} {weaponToShoot.targetTracking}");
                             bullet = GameObjectPool.instance.SpawnPooledBullet(BulletType.red_plasma_round);
                             bullet.transform.localScale = Vector3.one;
 
@@ -682,19 +682,19 @@ public class PlayerShooting : MonoBehaviourPun
                         }
                         else if (GameManager.instance.nbLocalPlayersPreset > 1)
                         {
-                            Debug.Log($"Shooting Plasma bullet 2 {fakeBulForPB == true} {overcharge} {weaponToShoot.targetTracking}");
+                            Log.Print($"Shooting Plasma bullet 2 {fakeBulForPB == true} {overcharge} {weaponToShoot.targetTracking}");
                             return;
                         }
                         else
                         {
-                            Debug.Log($"Shooting Plasma bullet 3 {fakeBulForPB == true} {overcharge} {weaponToShoot.targetTracking}");
+                            Log.Print($"Shooting Plasma bullet 3 {fakeBulForPB == true} {overcharge} {weaponToShoot.targetTracking}");
 
                         }
                     }
 
 
 
-                    Debug.Log($"Shooting Plasma bullet {fakeBulForPB == true} {overcharge} {weaponToShoot.targetTracking}");
+                    Log.Print($"Shooting Plasma bullet {fakeBulForPB == true} {overcharge} {weaponToShoot.targetTracking}");
                     bullet.transform.localScale = Vector3.one;
                     try { bullet.gameObject.GetComponent<Bullet>().weaponProperties = weaponToShoot; } catch { }
 
@@ -734,8 +734,8 @@ public class PlayerShooting : MonoBehaviourPun
 
 
                     {
-                        Debug.Log(bullet);
-                        Debug.Log(weaponToShoot);
+                        Log.Print(bullet);
+                        Log.Print(weaponToShoot);
 
                         if (bullet.GetComponent<DisableAfterXSeconds>()) bullet.GetComponent<DisableAfterXSeconds>().enabled = false;
                         //bullet.GetComponent<Bullet>().bluePlasma.SetActive(weaponToShoot.plasmaColor == WeaponProperties.PlasmaColor.Blue && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma);
@@ -836,7 +836,7 @@ public class PlayerShooting : MonoBehaviourPun
                 weaponToShoot.SpawnMuzzleflash();
 
 
-                //Debug.Log($"{playerController.name} PlayerShooting: AmmoProjectileType.Rocket");
+                //Log.Print($"{playerController.name} PlayerShooting: AmmoProjectileType.Rocket");
                 //ExplosiveProjectile rocket = null;
 
                 //if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket)
@@ -847,7 +847,7 @@ public class PlayerShooting : MonoBehaviourPun
                 //else if (activeWeapon.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
                 //    rocket = Instantiate(playerController.GetComponent<GeneralWeapProperties>().grenadeLauncherProjectilePrefab).GetComponent<ExplosiveProjectile>();
 
-                //Debug.Log($"{playerController.name} PlayerShooting: {rocket.name}");
+                //Log.Print($"{playerController.name} PlayerShooting: {rocket.name}");
                 //rocket.player = playerController.player;
 
 
@@ -896,8 +896,8 @@ public class PlayerShooting : MonoBehaviourPun
             //    activeWeapon.leftWeapon.GetComponent<Animator>().Play("Fire", 0, 0f);
             //StartCoroutine(Player3PSFiringAnimation());
         }
-        catch (System.Exception e) { Debug.LogError(e); }
-        Debug.Log("Calling Recoil()");
+        catch (System.Exception e) { Log.PrintError(e); }
+        Log.Print("Calling Recoil()");
         weaponToShoot.Recoil();
         //if (pInventory.isDualWielding)
         //    activeWeapon.rightWeapon.Recoil();
@@ -960,7 +960,7 @@ public class PlayerShooting : MonoBehaviourPun
 
 
 
-        //Debug.Log($"{playerController.name} PlayerShooting: {rocket.name}");
+        //Log.Print($"{playerController.name} PlayerShooting: {rocket.name}");
         //rocket.player = playerController.player;
 
 

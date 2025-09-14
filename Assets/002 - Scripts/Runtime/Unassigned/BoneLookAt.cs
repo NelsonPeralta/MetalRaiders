@@ -9,28 +9,36 @@ public class BoneLookAt : MonoBehaviour
     [Header("Offsets")]
     public Vector3 offset;
 
-    Player _p;
+    Player _player;
+    private Transform _root;
+    private Quaternion _offsetQuat;
+
+
+    private void Start()
+    {
+        _root = transform.root;
+        _player = _root.GetComponent<Player>();
+        _offsetQuat = Quaternion.Euler(offset); // compute once
+    }
 
     private void LateUpdate()
     {
-        if (transform.root.GetComponent<Player>())
+        if (_player != null)
         {
-            if (_p == null) _p = transform.root.GetComponent<Player>();
-
-            if (_p.isAlive && !_p.playerController.cameraIsFloating)
+            if (_player.isAlive && !_player.playerController.cameraIsFloating)
             {
                 transform.LookAt(target.position);
-                transform.rotation *= Quaternion.Euler(offset);
+                transform.rotation *= _offsetQuat;
             }
         }
         else
         {
-            try
+            // fallback if no Player component
+            if (target != null)
             {
                 transform.LookAt(target.position);
-                transform.rotation *= Quaternion.Euler(offset);
+                transform.rotation *= _offsetQuat;
             }
-            catch { }
         }
     }
 }

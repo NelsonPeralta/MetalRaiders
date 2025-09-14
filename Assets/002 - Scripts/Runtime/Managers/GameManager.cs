@@ -1123,8 +1123,17 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public static Player GetLocalPlayer(int controllerId)
     {
-        return instance._allPlayers.Where(item => item != null && item.controllerId == controllerId && item.isMine).FirstOrDefault();
+        if (instance == null || instance._allPlayers == null) return null;
+
+        for (int i = 0; i < instance._allPlayers.Count; i++)
+        {
+            Player p = instance._allPlayers[i];
+            if (p != null && p.controllerId == controllerId && p.isMine)
+                return p;
+        }
+        return null;
     }
+
 
     public static List<Player> GetLocalPlayers()
     {
