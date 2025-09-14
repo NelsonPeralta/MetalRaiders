@@ -182,24 +182,23 @@ public class MenuGamePadCursor : MonoBehaviour
         }
 
 
-        if (GameManager.instance.activeControllerType != ControllerType.Joystick)
-        {
-            if (rewiredPlayer.GetButtonDown("Escape"))
-            {
-                Log.Print($"{FindObjectsByType<EscapeButtonTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Length}");
 
-                if (FindObjectsByType<EscapeButtonTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Length > 0)
-                    FindObjectsByType<EscapeButtonTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)[0].GetComponent<Button>().onClick.Invoke();
-            }
-        }
-        else
-        {
-            if (rewiredPlayer.GetButtonDown("Crouch"))
-            {
-                Log.Print($"{FindObjectsByType<EscapeButtonTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Length}");
 
-                if (FindObjectsByType<EscapeButtonTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None).Length > 0)
-                    FindObjectsByType<EscapeButtonTarget>(FindObjectsInactive.Exclude, FindObjectsSortMode.None)[0].GetComponent<Button>().onClick.Invoke();
+
+        if ((GameManager.instance.activeControllerType != ControllerType.Joystick && rewiredPlayer.GetButtonDown("Escape")) ||
+    (GameManager.instance.activeControllerType == ControllerType.Joystick && rewiredPlayer.GetButtonDown("Crouch")))
+        {
+            Transform parent = MenuManager.Instance.APopUpMenuisOpen()
+                ? Launcher.instance.popupMenuParent.transform
+                : Launcher.instance.transform;
+
+            var escapeTargets = parent.GetComponentsInChildren<EscapeButtonTarget>(false);
+
+            Log.Print($"{escapeTargets.Length}");
+
+            if (escapeTargets.Length > 0)
+            {
+                escapeTargets[0].GetComponent<Button>().onClick.Invoke();
             }
         }
     }

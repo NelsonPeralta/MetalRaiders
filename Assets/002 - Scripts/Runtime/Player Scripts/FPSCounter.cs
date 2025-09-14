@@ -1,32 +1,41 @@
-﻿using TMPro;
+﻿using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class FPSCounter : MonoBehaviour
 {
-    public TextMeshProUGUI txtFps; // or Text if not using TMP
+    //https://answers.unity.com/questions/64331/accurate-frames-per-second-count.html
 
-    public float updateRateSeconds = 4.0f;
+    public string formatedString = "{value} FPS";
+    public Text txtFps;
+
+    public float updateRateSeconds = 4.0F;
 
     int frameCount = 0;
-    float dt = 0.0f;
-    float fps = 0.0f;
+    float dt = 0.0F;
+    float fps = 0.0F;
+
+
+    private void Awake()
+    {
+#if !UNITY_EDITOR
+    gameObject.SetActive(false);
+#endif
+    }
+
+
 
     void Update()
     {
         frameCount++;
         dt += Time.unscaledDeltaTime;
-        if (dt > 1.0f / updateRateSeconds)
+        if (dt > 1.0 / updateRateSeconds)
         {
             fps = frameCount / dt;
             frameCount = 0;
-            dt -= 1.0f / updateRateSeconds;
-
-            // Avoid string allocations completely:
-            if (txtFps != null)
-            {
-                int fpsInt = Mathf.RoundToInt(fps);
-                txtFps.SetText("{0} FPS", fpsInt); // TMP-friendly, no GC
-            }
+            dt -= 1.0F / updateRateSeconds;
         }
+        txtFps.text = formatedString.Replace("{value}", System.Math.Round(fps, 1).ToString("0.0"));
     }
 }

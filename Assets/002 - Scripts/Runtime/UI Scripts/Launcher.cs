@@ -180,6 +180,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         get { return _gametypeSelectedText; }
     }
 
+    public GameObject popupMenuParent;
 
 
     void Awake()
