@@ -5,7 +5,7 @@ using Photon.Pun;
 
 public class GameObjectPool : MonoBehaviour
 {
-    public static GameObjectPool instance { get { return _instance; } }
+    public static GameObjectPool instance { get { return _instance; } set { _instance = value; } }
 
 
 
@@ -43,22 +43,13 @@ public class GameObjectPool : MonoBehaviour
 
     void Awake()
     {
-        if (_instance != null && _instance != this)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            _instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
+        _instance = this;
     }
+
+    
 
     private void Start()
     {
-        if (GameObjectPool.instance.objectsSpawned)
-            return;
-
         for (int i = 0; i < CurrentRoomManager.instance.expectedNbPlayers * 20; i++)
         {
             GameObject obj = Instantiate(bulletPrefab, transform.position, transform.rotation);
@@ -150,6 +141,9 @@ public class GameObjectPool : MonoBehaviour
             bulletMetalImpactList.Add(obj);
             obj.transform.parent = gameObject.transform;
         }
+
+
+        CurrentRoomManager.instance.AddSpawnedMappAddOn(null);
     }
 
 
@@ -278,14 +272,7 @@ public class GameObjectPool : MonoBehaviour
 
     private void OnDestroy()
     {
-        foreach (GameObject go in bullets)
-            Destroy(go);
-
-        foreach (GameObject go in bloodHits)
-            Destroy(go);
-
-        foreach (GameObject go in genericHits)
-            Destroy(go);
+        instance = null;
     }
 
     public IEnumerator DisableObjectAfterTime(GameObject obj, float time = 1)

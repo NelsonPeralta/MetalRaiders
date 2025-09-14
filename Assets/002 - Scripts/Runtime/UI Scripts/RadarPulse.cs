@@ -15,12 +15,6 @@ public class RadarPulse : MonoBehaviour
     public Camera minimapCamera;
     public RawImage rawImage;
 
-    [Header("Render Textures")]
-    public RenderTexture player0RT;
-    public RenderTexture player1RT;
-    public RenderTexture player2RT;
-    public RenderTexture player3RT;
-
 
     float wait;
 
@@ -65,27 +59,27 @@ public class RadarPulse : MonoBehaviour
         if (pProperties.controllerId == 0)
         {
             //Debug.Log("Gave Player 0 good minimap");
-            minimapCamera.targetTexture = player0RT;
-            rawImage.texture = player0RT;
+            minimapCamera.targetTexture = Resources.Load<RenderTexture>($"MinimapRenderTextures/Minimap Render TexturePlayer0");
+            rawImage.texture = Resources.Load<RenderTexture>($"MinimapRenderTextures/Minimap Render TexturePlayer0");
         }
 
         if (pProperties.controllerId == 1)
         {
             //Debug.Log("Gave Player 1 good minimap");
-            minimapCamera.targetTexture = player1RT;
-            rawImage.texture = player1RT;
+            minimapCamera.targetTexture = Resources.Load<RenderTexture>($"MinimapRenderTextures/Minimap Render TexturePlayer1");
+            rawImage.texture = Resources.Load<RenderTexture>($"MinimapRenderTextures/Minimap Render TexturePlayer1");
         }
 
         if (pProperties.controllerId == 2)
         {
-            minimapCamera.targetTexture = player2RT;
-            rawImage.texture = player2RT;
+            minimapCamera.targetTexture = Resources.Load<RenderTexture>($"MinimapRenderTextures/Minimap Render TexturePlayer2");
+            rawImage.texture = Resources.Load<RenderTexture>($"MinimapRenderTextures/Minimap Render TexturePlayer2");
         }
 
         if (pProperties.controllerId == 3)
         {
-            minimapCamera.targetTexture = player3RT;
-            rawImage.texture = player3RT;
+            minimapCamera.targetTexture = Resources.Load<RenderTexture>($"MinimapRenderTextures/Minimap Render TexturePlayer3");
+            rawImage.texture = Resources.Load<RenderTexture>($"MinimapRenderTextures/Minimap Render TexturePlayer3");
         }
     }
 }

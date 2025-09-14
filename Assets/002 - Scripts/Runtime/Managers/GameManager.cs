@@ -497,9 +497,12 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called zero
 
     // private Variables
+    [SerializeField] GameObjectPool _gameObjectPoolPrefab;
+    [SerializeField] SoundManager _inGameSoundManager;
     [SerializeField] WeaponPool _weaponPoolPrefab;
     [SerializeField] RagdollPool _ragdollPoolPrefab;
     [SerializeField] GrenadePool _grenadePoolPrefab;
+    [SerializeField] MarkerManager _markerManagerPrefab;
     [SerializeField] ActorAddonsPool _actorAddonsPoolPrefab;
     [SerializeField] Dictionary<Vector3, Biped> _orSpPos_Biped_Dict = new Dictionary<Vector3, Biped>();
     [SerializeField] Dictionary<string, int> _teamDict = new Dictionary<string, int>();
@@ -552,7 +555,6 @@ public class GameManager : MonoBehaviourPunCallbacks
     [SerializeField] AudioSource _beepConsecutiveAudioSource;
 
     public List<GameplayRecorderPoint> gameplayRecorderPoints = new List<GameplayRecorderPoint>();
-    public RenderTexture[] minimapRenderTextures;
 
 
 
@@ -709,6 +711,10 @@ public class GameManager : MonoBehaviourPunCallbacks
             CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.None;
             Launcher.instance.menuGamePadCursorScript.GetReady(GameManager.instance.activeControllerType);
             ActorAddonsPool.instance = null;
+            MarkerManager.instance = null;
+            GameObjectPool.instance = null;
+            SoundManager.instance = null;   
+            SpawnManager.spawnManagerInstance = null;
 
             instantiation_position_Biped_Dict.Clear();
             gameplayRecorderPoints.Clear(); gameplayRecorderPoints.Add(null);
@@ -837,14 +843,17 @@ public class GameManager : MonoBehaviourPunCallbacks
                 Debug.Log($"Is there a Player Manager: {PlayerManager.playerManagerInstance}");
                 //if (!PlayerManager.playerManagerInstance)
                 //    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
-                if (!GameObjectPool.instance)
-                    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "ObjectPool"), Vector3.zero, Quaternion.identity);
+                //if (!GameObjectPool.instance)
+                //    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "ObjectPool"), Vector3.zero, Quaternion.identity);
                 //PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "OnlineWeaponPool"), Vector3.zero + new Vector3(0, 5, 0), Quaternion.identity);
                 //if (!OnlineGameTime.onlineGameTimeInstance)
                 PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "NetworkGameTime"), Vector3.zero + new Vector3(0, -100, 0), Quaternion.identity);
             }
             catch (Exception e) { Debug.LogWarning(e.Message); }
 
+            Instantiate(_gameObjectPoolPrefab);
+            Instantiate(_markerManagerPrefab);
+            Instantiate(_inGameSoundManager);
             Instantiate(_weaponPoolPrefab);
             Instantiate(_ragdollPoolPrefab);
             Instantiate(_grenadePoolPrefab);

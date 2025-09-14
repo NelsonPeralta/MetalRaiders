@@ -23,26 +23,20 @@ public class SoundManager : MonoBehaviour
 
 
 
-
+    private void OnDestroy()
+    {
+        instance = null;
+    }
 
     private void Awake()
     {
-        if (instance)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        else
-        {
-
-            DontDestroyOnLoad(gameObject);
-            instance = this;
-        }
+        instance = this;
+        CurrentRoomManager.instance.AddSpawnedMappAddOn(null);
     }
 
     private void Start()
     {
-        for (int i = 0; i < 20; i++)
+        for (int i = 0; i < 10; i++)
         {
             AudioSource obj = Instantiate(_prefab, transform.position, transform.rotation);
             obj.gameObject.SetActive(false);

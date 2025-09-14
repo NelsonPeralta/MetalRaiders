@@ -15,7 +15,9 @@ public class MotionTrackerCamera : MonoBehaviour
         if (transform.root.GetComponent<Player>().isMine)
         {
             gameObject.SetActive(true);
-            GetComponent<Camera>().targetTexture = GameManager.instance.minimapRenderTextures[rewiredId];
+            //GetComponent<Camera>().targetTexture = GameManager.instance.minimapRenderTextures[rewiredId];
+
+            GetComponent<Camera>().targetTexture = Resources.Load<RenderTexture>($"MinimapRenderTextures/Minimap Render TexturePlayer{rewiredId}");
         }
 
     }

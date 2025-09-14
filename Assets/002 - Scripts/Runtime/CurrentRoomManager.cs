@@ -33,6 +33,8 @@ public class CurrentRoomManager : MonoBehaviour
     /// <summary>
     /// Lobby
     /// </summary>
+    /// 
+
     public int expectedNbPlayers
     {
         get { return _expectedNbPlayers; }
@@ -376,7 +378,15 @@ public class CurrentRoomManager : MonoBehaviour
     [SerializeField] bool _matchSettingsSet, _gameStarted, _gameOver;
     [SerializeField] float _gameStartCountdown, _roomGameStartCountdown, _vetoCountdown = 9, _rpcCooldown;
 
-    [SerializeField] int _expectedMapAddOns, _spawnedMapAddOns, _expectedNbPlayers, _playersLoadedScene, _nbPlayersSpawned, _nbPlayersSet, _vetos, _gameReadyStep;
+    [SerializeField]
+    int _expectedMapAddOns,
+        _spawnedMapAddOns,
+        _expectedNbPlayers,
+        _playersLoadedScene,
+        _nbPlayersSpawned,
+        _nbPlayersSet,
+        _vetos,
+        _gameReadyStep;
 
     [SerializeField] RoomType _roomType;
 
@@ -589,6 +599,11 @@ public class CurrentRoomManager : MonoBehaviour
                 foreach (NetworkWeaponSpawnPoint nwsp in FindObjectsOfType<NetworkWeaponSpawnPoint>()) // the spawnpopint disables itself in awake. This is called later and does not get the disabled objects
                     if (nwsp.transform.root.GetComponent<Player>() == null)
                         expectedMapAddOns += 1;
+
+
+            expectedMapAddOns += 1;// for mark manager
+            expectedMapAddOns += 1;// for gameobjectpool
+            expectedMapAddOns += 1;// for sound manager
         }
     }
 

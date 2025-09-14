@@ -47,6 +47,11 @@ public class SpawnManager : MonoBehaviour
         spawnManagerInstance = this;
     }
 
+    private void OnDestroy()
+    {
+        spawnManagerInstance = null;
+    }
+
     private void Start()
     {
         oddballSpawnPoint = FindObjectOfType<OddballSpawnPoint>();

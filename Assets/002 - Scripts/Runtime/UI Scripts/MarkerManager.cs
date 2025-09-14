@@ -16,19 +16,36 @@ public class MarkerManager : MonoBehaviour
     // called zero
     private void Awake()
     {
-        if (instance)
+        instance = this;
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+
+
+        Log.Print("MarkerManager OnSceneLoaded > 0");
+        instance._markers = new List<Marker>();
+        instance._markersEnSpot = new List<Marker>();
+
+        for (int i = 0; i < CurrentRoomManager.instance.expectedNbPlayers * 10; i++)
         {
-            Log.Print("MarkerManager Awake 1");
-            Destroy(gameObject);
-            return;
+            GameObject obj = Instantiate(_marker.gameObject, transform.position, transform.rotation);
+            obj.SetActive(false);
+            instance._markers.Add(obj.GetComponent<Marker>());
+            obj.transform.parent = gameObject.transform;
+
+
+            obj = Instantiate(_markerEnSpot.gameObject, transform.position, transform.rotation);
+            obj.SetActive(false);
+            instance._markersEnSpot.Add(obj.GetComponent<Marker>());
+            obj.transform.parent = gameObject.transform;
         }
-        else
-        {
-            Log.Print("MarkerManager Awake 2");
-            instance = this;
-            SceneManager.sceneLoaded += OnSceneLoaded;
-            DontDestroyOnLoad(gameObject);
-        }
+
+        CurrentRoomManager.instance.AddSpawnedMappAddOn(null);
+    }
+
+    private void OnDestroy()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+        instance = null;
     }
 
     // called first
@@ -40,45 +57,45 @@ public class MarkerManager : MonoBehaviour
     // called second
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (instance == this)
-        {
-            Log.Print("MarkerManager OnSceneLoaded instance");
-            if (scene.buildIndex > 0)
-            {
-                Log.Print("MarkerManager OnSceneLoaded > 0");
-                instance._markers = new List<Marker>();
-                instance._markersEnSpot = new List<Marker>();
+        //if (instance == this)
+        //{
+        //    Log.Print("MarkerManager OnSceneLoaded instance");
+        //    if (scene.buildIndex > 0)
+        //    {
+        //        Log.Print("MarkerManager OnSceneLoaded > 0");
+        //        instance._markers = new List<Marker>();
+        //        instance._markersEnSpot = new List<Marker>();
 
-                for (int i = 0; i < CurrentRoomManager.instance.expectedNbPlayers * 10; i++)
-                {
-                    GameObject obj = Instantiate(_marker.gameObject, transform.position, transform.rotation);
-                    obj.SetActive(false);
-                    instance._markers.Add(obj.GetComponent<Marker>());
-                    obj.transform.parent = gameObject.transform;
+        //        for (int i = 0; i < CurrentRoomManager.instance.expectedNbPlayers * 10; i++)
+        //        {
+        //            GameObject obj = Instantiate(_marker.gameObject, transform.position, transform.rotation);
+        //            obj.SetActive(false);
+        //            instance._markers.Add(obj.GetComponent<Marker>());
+        //            obj.transform.parent = gameObject.transform;
 
 
-                    obj = Instantiate(_markerEnSpot.gameObject, transform.position, transform.rotation);
-                    obj.SetActive(false);
-                    instance._markersEnSpot.Add(obj.GetComponent<Marker>());
-                    obj.transform.parent = gameObject.transform;
-                }
-            }
-            else
-            {
-                Log.Print("MarkerManager OnSceneLoaded 0");
-                if (instance._markers.Count > 0)
-                    for (int i = instance._markers.Count; i-- > 0;)
-                        if (instance._markers[i] != null)
-                            Destroy(instance._markers[i].gameObject);
+        //            obj = Instantiate(_markerEnSpot.gameObject, transform.position, transform.rotation);
+        //            obj.SetActive(false);
+        //            instance._markersEnSpot.Add(obj.GetComponent<Marker>());
+        //            obj.transform.parent = gameObject.transform;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Log.Print("MarkerManager OnSceneLoaded 0");
+        //        if (instance._markers.Count > 0)
+        //            for (int i = instance._markers.Count; i-- > 0;)
+        //                if (instance._markers[i] != null)
+        //                    Destroy(instance._markers[i].gameObject);
 
-                if (instance._markersEnSpot.Count > 0)
-                    for (int i = instance._markersEnSpot.Count; i-- > 0;)
-                        if (instance._markersEnSpot[i] != null)
-                            Destroy(instance._markersEnSpot[i].gameObject);
+        //        if (instance._markersEnSpot.Count > 0)
+        //            for (int i = instance._markersEnSpot.Count; i-- > 0;)
+        //                if (instance._markersEnSpot[i] != null)
+        //                    Destroy(instance._markersEnSpot[i].gameObject);
 
-                instance._markers.Clear(); instance._markersEnSpot.Clear();
-            }
-        }
+        //        instance._markers.Clear(); instance._markersEnSpot.Clear();
+        //    }
+        //}
     }
 
     // called third

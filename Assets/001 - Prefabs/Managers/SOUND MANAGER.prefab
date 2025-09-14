@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &7349674527581200055
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3216980882498166301}
+  - component: {fileID: 7004826802843847978}
+  m_Layer: 0
+  m_Name: SOUND MANAGER
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3216980882498166301
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7349674527581200055}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7004826802843847978
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7349674527581200055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f62f282e0b0a8e644a7688193e95adbe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  concretePunchHit: {fileID: 8300000, guid: dc873bc2becbe6b409caf22a4c0a6276, type: 3}
+  successfulPunch: {fileID: 8300000, guid: 7246d0bae02c51147a062a3290e04d24, type: 3}
+  failedPunch: {fileID: 8300000, guid: ab51630b799cea24388aab755cd5d207, type: 3}
+  successfulSwordSlash: {fileID: 8300000, guid: 482592aceaa455342b27b362019aeb88,
+    type: 3}
+  weaponCollision: {fileID: 8300000, guid: dea1f986e54155941b079d791c6f81c6, type: 3}
+  ragdollCollision: {fileID: 8300000, guid: ddd892ffa36db3e40ae58efd736f2f9e, type: 3}
+  _prefab: {fileID: 6743070605144663571, guid: 5a5645e623cbfde4d933ffb8905e9acb, type: 3}
+  _audioSources: []
