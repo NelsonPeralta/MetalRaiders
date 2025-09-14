@@ -171,6 +171,7 @@ public class SpawnPoint : MonoBehaviour
             if (_blockingLevelEntries[i].id == idd)
             {
                 _blockingLevelEntries[i].ttl = SeenResetTime;
+                _blockingLevelEntries[i].blockingLevel = levl;
                 return;
             }
         }
