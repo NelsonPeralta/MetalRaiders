@@ -79,11 +79,12 @@ public class PlayerShield : MonoBehaviour
 
 
 
-
+    private MaterialPropertyBlock[] _mpbSlots;
+    private float[] _shieldAlphaCache;
+    private float[] _overshieldAlphaCache;
 
     private void Awake()
     {
-        //shield = (float)_player.maxShield;
         _player = GetComponent<Player>();
         GetComponent<PlayerController>().OnPlayerTestButton += OnPlayerTestButton_Delegate;
     }
@@ -98,66 +99,89 @@ public class PlayerShield : MonoBehaviour
         _player.OnPlayerDeath += OnPlayerDeath_Delegate;
         _player.OnPlayerRespawned += OnPlayerRespawned_Delegate;
 
-
-
-        _shieldRenderers = _player.playerController.playerThirdPersonModelManager.spartanModel.GetComponentsInChildren<Renderer>(includeInactive: true).Where(item => item.GetComponent<PlayerShieldShaderHere>() && item.GetComponent<Renderer>()).ToList();
+        _shieldRenderers = _player.playerController.playerThirdPersonModelManager.spartanModel
+            .GetComponentsInChildren<Renderer>(includeInactive: true)
+            .Where(r => r.GetComponent<PlayerShieldShaderHere>())
+            .ToList();
 
         foreach (Renderer mr in _shieldRenderers)
         {
             mr.sharedMaterials[1].SetFloat("_Alpha", 0); // normal shield
             mr.sharedMaterials[2].SetFloat("_Alpha", 0); // overshield
-            //mr.materials[1].SetFloat("_Alpha", 0);
+        }
+
+        int count = _shieldRenderers.Count;
+        _shieldAlphaCache = new float[count];
+        _overshieldAlphaCache = new float[count];
+
+        // Initialize separate MaterialPropertyBlocks for each slot
+        _mpbSlots = new MaterialPropertyBlock[2];
+        _mpbSlots[0] = new MaterialPropertyBlock(); // slot 1
+        _mpbSlots[1] = new MaterialPropertyBlock(); // slot 2
+
+        // Initialize all alphas to 0
+        for (int i = 0; i < count; i++)
+        {
+            var mr = _shieldRenderers[i];
+
+            // Slot 1
+            mr.GetPropertyBlock(_mpbSlots[0]);
+            _mpbSlots[0].SetFloat("_Alpha", 0f);
+            mr.SetPropertyBlock(_mpbSlots[0], 1); // Apply to material slot 1
+            _shieldAlphaCache[i] = 0f;
+
+            // Slot 2
+            mr.GetPropertyBlock(_mpbSlots[1]);
+            _mpbSlots[1].SetFloat("_Alpha", 0f);
+            mr.SetPropertyBlock(_mpbSlots[1], 2); // Apply to material slot 2
+            _overshieldAlphaCache[i] = 0f;
         }
     }
-
 
     private void Update()
     {
-        if (_player)
+        if (!_player) return;
+
+        float shieldAlpha = CalculateShieldAlpha();
+        float overshieldAlpha = _player.overshieldPoints > 0
+            ? Mathf.Clamp(_player.overshieldPoints, 0f, _player.maxOvershieldPoints - 1f) / _player.maxOvershieldPoints
+            : 0f;
+
+        for (int i = 0; i < _shieldRenderers.Count; i++)
         {
-            foreach (Renderer mr in _shieldRenderers)
+            var mr = _shieldRenderers[i];
+            if (!mr.gameObject.activeInHierarchy) continue;
+
+            // Slot 1: normal shield
+            mr.GetPropertyBlock(_mpbSlots[0]);
+            if (_shieldAlphaCache[i] != shieldAlpha)
             {
-                if (mr.gameObject.activeInHierarchy)
-                {
-                    if (_player.isHealing)
-                    {
-                        if (shieldDamagePercentage > 0.5f)
-                            mr.materials[1].SetFloat("_Alpha", (1 - shieldDamagePercentage) * 2);
-                        else
-                            mr.materials[1].SetFloat("_Alpha", shieldDamagePercentage * 2);
-                    }
-                    else if (shieldDamagePercentage == 1 && mr.materials[1].GetFloat("_Alpha") != 0)
-                    {
-                        mr.materials[1].SetFloat("_Alpha", 0);
-                    }
-                    else if (shieldDamagePercentage == 0 && mr.materials[1].GetFloat("_Alpha") != 0)
-                    {
-                        mr.materials[1].SetFloat("_Alpha", 0);
-                    }
-                    else if (!_player.isHealing && (shieldDamagePercentage != 0 && shieldDamagePercentage != 1) &&
-                        mr.materials[1].GetFloat("_Alpha") != shieldDamagePercentage)
-                    {
-                        mr.materials[1].SetFloat("_Alpha", shieldDamagePercentage);
-                    }
+                _mpbSlots[0].SetFloat("_Alpha", shieldAlpha);
+                _shieldAlphaCache[i] = shieldAlpha;
+                mr.SetPropertyBlock(_mpbSlots[0], 1); // apply to material slot 1
+            }
 
-
-
-
-                    if (_player.overshieldPoints > 0)
-                    {
-                        mr.materials[2].SetFloat("_Alpha", Mathf.Clamp(_player.overshieldPoints, 0, _player.maxOvershieldPoints - 1) / _player.maxOvershieldPoints);
-                    }
-                    else
-                    {
-                        if (mr.materials[2].GetFloat("_Alpha") != 0)
-                        {
-                            mr.materials[2].SetFloat("_Alpha", 0);
-                        }
-                    }
-                }
+            // Slot 2: overshield
+            mr.GetPropertyBlock(_mpbSlots[1]);
+            if (_overshieldAlphaCache[i] != overshieldAlpha)
+            {
+                _mpbSlots[1].SetFloat("_Alpha", overshieldAlpha);
+                _overshieldAlphaCache[i] = overshieldAlpha;
+                mr.SetPropertyBlock(_mpbSlots[1], 2); // apply to material slot 2
             }
         }
     }
+
+    private float CalculateShieldAlpha()
+    {
+        float sdp = shieldDamagePercentage;
+        if (_player.isHealing)
+            return sdp > 0.5f ? (1f - sdp) * 2f : sdp * 2f;
+        if (sdp == 0f || sdp == 1f)
+            return 0f;
+        return sdp;
+    }
+
 
 
 
