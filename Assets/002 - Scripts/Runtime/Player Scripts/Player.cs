@@ -971,7 +971,7 @@ public class Player : Biped
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
     {
-        Log.Print($"Damage: ({damage}) {damageSourceCleanName} {(WeaponProperties.KillFeedOutput)kfo} {source_pid}");
+        Debug.Log($"Damage: {source_pid} ({damage}) {damageSourceCleanName} {(WeaponProperties.KillFeedOutput)kfo} {source_pid}");
 
 
         if (headshot && GameManager.GetPlayerWithPhotonView(source_pid).playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Sniper)

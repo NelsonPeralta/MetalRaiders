@@ -293,23 +293,23 @@ public class ExplosiveProjectile : MonoBehaviour
 
     void Explosion()
     {
-        Log.Print($"Explosion {_stuckPlayerPhotonId} {PhotonNetwork.IsMasterClient == true}");
+        Debug.Log($"Explosion {_stuckPlayerPhotonId} {PhotonNetwork.IsMasterClient == true} {_player.photonId}");
 
         if (PhotonNetwork.IsMasterClient && !_exploded)
         {
             if (_stuckPlayerPhotonId > 0)
             {
-                Log.Print($"Explosion 1");
+                Debug.Log($"Explosion 1");
                 _exploded = true;
 
                 GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).Damage(damage: 999, headshot: false, source_pid: _player.photonId, impactPos: transform.position,
                   impactDir: GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).targetTrackingCorrectTarget.position - transform.position, kfo: WeaponProperties.KillFeedOutput.Stuck);
 
-                StartCoroutine(ExplosionCoroutine());
+                //StartCoroutine(ExplosionCoroutine());
             }
             else
             {
-                Log.Print($"Explosion 2");
+                Debug.Log($"Explosion 2");
                 _exploded = true;
                 Debug.Log("Calling DisableAndExplodeProjectile");
                 NetworkGameManager.instance.DisableAndExplodeProjectile((int)_killFeedOutput, GrenadePool.instance.GetIndexOfExplosive(_killFeedOutput, gameObject), transform.position);
