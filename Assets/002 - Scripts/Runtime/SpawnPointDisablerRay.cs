@@ -97,12 +97,10 @@ public class SpawnPointDisablerRay : MonoBehaviour
 
             _tempBlockLevel = _blockingLevel;
 
-            if (_blockingLevel < 0)
-            {
-                float distance = Vector3.Distance(targetTransform.position, transform.position);
-                int blocksOfThree = Mathf.FloorToInt(distance / 3f);
-                _tempBlockLevel -= blocksOfThree;
-            }
+            float distance = Vector3.Distance(targetTransform.position, transform.position);
+            int blocksOfThree = Mathf.FloorToInt(distance / 3f);
+
+            _tempBlockLevel = Mathf.Max(0, _tempBlockLevel - blocksOfThree);
 
             target.spawnPoint.AddBlockingLevelEntry(_id, _tempBlockLevel, SpawnPoint.SeenResetTime);
         }
