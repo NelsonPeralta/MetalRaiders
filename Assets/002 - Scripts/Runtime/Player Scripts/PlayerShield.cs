@@ -75,13 +75,13 @@ public class PlayerShield : MonoBehaviour
 
 
     float _shieldDamagePercentage;
+    [SerializeField] float shieldAlpha;
 
 
 
-
-    [SerializeField] MaterialPropertyBlock[] _mpbSlots;
-    [SerializeField] float[] _shieldAlphaCache;
-    [SerializeField] float[] _overshieldAlphaCache;
+    private MaterialPropertyBlock[] _mpbSlots;
+    private float[] _shieldAlphaCache;
+    private float[] _overshieldAlphaCache;
 
     private void Awake()
     {
@@ -142,7 +142,7 @@ public class PlayerShield : MonoBehaviour
     {
         if (!_player) return;
 
-        float shieldAlpha = CalculateShieldAlpha();
+        shieldAlpha = CalculateShieldAlpha();
         float overshieldAlpha = _player.overshieldPoints > 0
             ? Mathf.Clamp(_player.overshieldPoints, 0f, _player.maxOvershieldPoints - 1f) / _player.maxOvershieldPoints
             : 0f;
