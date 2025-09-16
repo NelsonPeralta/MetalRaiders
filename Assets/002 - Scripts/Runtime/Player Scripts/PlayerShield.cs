@@ -79,9 +79,9 @@ public class PlayerShield : MonoBehaviour
 
 
 
-    private MaterialPropertyBlock[] _mpbSlots;
-    private float[] _shieldAlphaCache;
-    private float[] _overshieldAlphaCache;
+    [SerializeField] MaterialPropertyBlock[] _mpbSlots;
+    [SerializeField] float[] _shieldAlphaCache;
+    [SerializeField] float[] _overshieldAlphaCache;
 
     private void Awake()
     {
