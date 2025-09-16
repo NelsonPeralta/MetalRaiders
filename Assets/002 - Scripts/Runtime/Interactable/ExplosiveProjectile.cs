@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Animations;
+using static Player;
 
 public class ExplosiveProjectile : MonoBehaviour
 {
@@ -293,28 +294,33 @@ public class ExplosiveProjectile : MonoBehaviour
 
     void Explosion()
     {
-        Debug.Log($"Explosion {_stuckPlayerPhotonId} {PhotonNetwork.IsMasterClient == true} {_player.photonId}");
+        if (!_exploded)
+            Debug.Log($"Explosion {_stuckPlayerPhotonId} {PhotonNetwork.IsMasterClient == true} {_player.photonId} {_exploded == true}");
 
         if (PhotonNetwork.IsMasterClient && !_exploded)
         {
             if (_stuckPlayerPhotonId > 0)
             {
                 Debug.Log($"Explosion 1");
-                _exploded = true;
 
-                GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).Damage(damage: 999, headshot: false, source_pid: _player.photonId, impactPos: transform.position,
-                  impactDir: GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).targetTrackingCorrectTarget.position - transform.position, kfo: WeaponProperties.KillFeedOutput.Stuck);
+                //GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).Damage(damage: 999, headshot: false, source_pid: _player.photonId, impactPos: transform.position,
+                //  impactDir: GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).targetTrackingCorrectTarget.position - transform.position, kfo: WeaponProperties.KillFeedOutput.Stuck);
 
-                //StartCoroutine(ExplosionCoroutine());
+
+
+                GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).PV.RPC("Damage_RPC", RpcTarget.All, 0, 999, _player.photonId, (int)DeathNature.Stuck, transform.position, GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).targetTrackingCorrectTarget.position - transform.position, -1, (int)WeaponProperties.KillFeedOutput.Stuck);
+
+
+                StartCoroutine(ExplosionCoroutine());
             }
             else
             {
                 Debug.Log($"Explosion 2");
-                _exploded = true;
                 Debug.Log("Calling DisableAndExplodeProjectile");
                 NetworkGameManager.instance.DisableAndExplodeProjectile((int)_killFeedOutput, GrenadePool.instance.GetIndexOfExplosive(_killFeedOutput, gameObject), transform.position);
             }
         }
+        _exploded = true;
     }
 
     IEnumerator ExplosionCoroutine()

@@ -135,6 +135,9 @@ public class RagdollPool : MonoBehaviour
         obj.GetComponent<PlayerRagdoll>().isMine = isMine;
         obj.GetComponent<PlayerRagdoll>().TriggerOnEnable();
 
+        GameManager.SetLayerRecursively(obj.transform.GetChild(0).gameObject, 10);
+        obj.transform.GetChild(1).gameObject.layer = 10;
+
         return obj;
     }
 
