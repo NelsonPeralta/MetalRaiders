@@ -304,7 +304,7 @@ abstract public class Actor : Biped
     protected void Prepare()
     {
         _lastPlayerPhotonIdWhoDamagedThis = -1;
-        _ultraMergeCount = 0;
+        _splinterShardCount = 0;
         _isSeenByTargetPlayerCooldown = _isDodgingCooldown = _isCurrentlyAlertingCooldown = 0;
         _switchPlayerCooldown = 0;
         _isInRange = false;
@@ -790,7 +790,7 @@ abstract public class Actor : Biped
             if (weapIndx >= 0)
             {
                 if (GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory[weapIndx].GetComponent<WeaponProperties>().ultraBind)
-                    ultraMergeCount++;
+                    splinterShardCount++;
             }
 
             pp.GetComponent<PlayerUI>().SpawnHitMarker();

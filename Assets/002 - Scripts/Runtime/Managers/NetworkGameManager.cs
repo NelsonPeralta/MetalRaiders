@@ -786,6 +786,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     void StartOverShieldRespawn_RPC(int t)
     {
         Debug.Log("sdfaeqwer");
+        Debug.Log($"Spawning overshield in {t} seconds");
+
         StartCoroutine(StartOverShieldRespawn_Coroutine(t));
     }
 
@@ -878,6 +880,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             {
                 int timeToNextSpawn = overshield.tts - (GameTime.instance.timeElapsed % overshield.tts);
                 Log.Print($"LootOvershield {overshield.tts} {GameTime.instance.timeElapsed} {GameTime.instance.timeElapsed % overshield.tts} {timeToNextSpawn}");
+                Debug.Log($"Spawning overshield in {timeToNextSpawn} seconds");
+
                 StartCoroutine(StartOverShieldRespawn_Coroutine(timeToNextSpawn));
             }
 
@@ -962,7 +966,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     IEnumerator StartOverShieldRespawn_Coroutine(int t)
     {
-        Debug.Log($"Spawning Overshiled in {t} seconds");
+        Debug.Log($"Spawning overshield in {t} seconds");
         yield return new WaitForSeconds(t);
         if (SceneManager.GetActiveScene().buildIndex > 0)
             overshield.gameObject.SetActive(true);

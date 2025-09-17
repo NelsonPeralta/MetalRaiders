@@ -5,28 +5,39 @@ using UnityEngine;
 [RequireComponent(typeof(HitPoints))]
 public class Biped : MonoBehaviour
 {
+    public delegate void BipedDelegate();
+    public BipedDelegate SplinterShardCountIncrease;
+
     public Vector3 originalSpawnPosition;
 
 
-    public int ultraMergeCount
+    public int splinterShardCount
     {
-        get { return _ultraMergeCount; }
+        get { return _splinterShardCount; }
         set
         {
-            _ultraMergeCount = value;
+            if (value > _splinterShardCount)
+            {
+                SplinterShardCountIncrease?.Invoke();
+            }
 
-            if (_ultraMergeCount == 12)
+            _splinterShardCount = value;
+
+            if (_splinterShardCount == 12)
             {
                 Log.Print("ULTRA MERGE!");
                 SpawnUltraBindExplosion();
             }
+
+            else if (_splinterShardCount == 0) Debug.Log($"splinterShardCount RESET");
+
         }
     }
 
     public Transform targetTrackingCorrectTarget { get { return _targetTrackingCorrectTarget; } }
 
 
-    [SerializeField] protected int _ultraMergeCount;
+    [SerializeField] protected int _splinterShardCount;
     [SerializeField] Transform _targetTrackingCorrectTarget;
 
 

@@ -736,7 +736,7 @@ public class Player : Biped
 
     public bool isTakingDamage { get { return _isTakingDamageForIndicator > 0; } }
 
-    float _respawnCountdown, _isTakingDamageForIndicator, _spawnProtectionTime, _playerJustSpawned;
+    float _respawnCountdown, _isTakingDamageForIndicator, _spawnProtectionTime, _playerJustSpawned, _splinterShardCountResetCountdown;
     int _respawnBeepCount;
 
     private void Awake()
@@ -797,6 +797,7 @@ public class Player : Biped
         OnPlayerDamaged += OnPlayerDamaged_Delegate;
         OnPlayerHealthDamage += OnPlayerHealthDamaged_Delegate;
         OnPlayerDeath += GetComponent<PlayerController>().OnDeath_Delegate;
+        SplinterShardCountIncrease += OnSplinterShardCountIncrease;
 
         lastPID = -1;
         spawnManager = SpawnManager.spawnManagerInstance;
@@ -869,6 +870,14 @@ public class Player : Biped
         if (_playerJustSpawned > 0) _playerJustSpawned -= Time.deltaTime;
         if (_hurtCooldown > 0) _hurtCooldown -= Time.deltaTime;
         if (_isTakingDamageForIndicator > 0) _isTakingDamageForIndicator -= Time.deltaTime;
+        if (_splinterShardCountResetCountdown > 0)
+        {
+            _splinterShardCountResetCountdown -= Time.deltaTime;
+            if (_splinterShardCountResetCountdown <= 0)
+            {
+                splinterShardCount = 0;
+            }
+        }
 
 
         if (!PV.IsMine) _rb.isKinematic = true;
@@ -1457,7 +1466,7 @@ public class Player : Biped
         _spawnProtectionTime = 1;
         if (GameManager.instance.gameType == GameManager.GameType.CTF) _spawnProtectionTime = 2;
         _gameplayerRecordingPointsHolder.parent = transform; _gameplayerRecordingPointsHolder.transform.localPosition = Vector3.zero; _gameplayerRecordingPointsHolder.transform.localRotation = Quaternion.identity;
-        _ultraMergeExPrefab.gameObject.SetActive(false); _ultraMergeCount = 0;
+        _ultraMergeExPrefab.gameObject.SetActive(false); _splinterShardCount = 0;
 
         if (isRespawning || (GameManager.instance.oneObjMode == GameManager.OneObjMode.On && GameManager.instance.OneObjModeRoundOver))
         {
@@ -1803,6 +1812,14 @@ public class Player : Biped
         _bloodHit.SetActive(true);
     }
 
+    void OnSplinterShardCountIncrease()
+    {
+        if (overshieldPoints > 0)
+        {
+            _splinterShardCountResetCountdown = defaultHealingCountdown;
+        }
+    }
+
     #endregion
 
     // rpc functions
@@ -2059,7 +2076,7 @@ public class Player : Biped
         if (weaponIndx >= 0)
         {
             if (playerInventory.allWeaponsInInventory[weaponIndx].GetComponent<WeaponProperties>().ultraBind)
-                ultraMergeCount++;
+                splinterShardCount++;
         }
 
 
@@ -2431,7 +2448,7 @@ public class Player : Biped
         GrenadePool.SpawnExplosion(_lastPlayerSource, damage: 700, radius: 2, GameManager.DEFAULT_EXPLOSION_POWER, damageCleanNameSource: "Ultra Bind", targetTrackingCorrectTarget.position, Explosion.Color.Purple, Explosion.Type.UltraBind, GrenadePool.instance.ultraBindClip, WeaponProperties.KillFeedOutput.Ultra_Bind);
 
 
-        ultraMergeCount = 0;
+        splinterShardCount = 0;
     }
 
 

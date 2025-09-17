@@ -1091,6 +1091,9 @@ public class Launcher : MonoBehaviourPunCallbacks
             if (GameManager.instance.gameType == GameType.Hill)
                 _mapPreviewText.text = $"King of the Hill on {GameManager.instance.mapDataCells.Where(obj => obj.sceneBuildIndex.Equals(levelToLoadIndex)).SingleOrDefault().mapName}";
 
+            if (GameManager.instance.gameType == GameType.PurpleRain)
+                _mapPreviewText.text = $"Purple Rain on {GameManager.instance.mapDataCells.Where(obj => obj.sceneBuildIndex.Equals(levelToLoadIndex)).SingleOrDefault().mapName}";
+
             if (GameManager.instance.teamMode == TeamMode.Classic)
                 _mapPreviewText.text = "Team " + _mapPreviewText.text;
         }

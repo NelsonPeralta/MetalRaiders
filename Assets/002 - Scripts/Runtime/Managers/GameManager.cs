@@ -239,6 +239,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             Launcher.instance.gametypeSelectedText.text = $"Gametype: {_gameType}";
             if (GameManager.instance.gameType == GameType.Hill) Launcher.instance.gametypeSelectedText.text = $"Gametype: King of the Hill";
+            if (GameManager.instance.gameType == GameType.PurpleRain) Launcher.instance.gametypeSelectedText.text = $"Gametype: Purple Rain";
 
             if (value == GameType.CTF)
                 Launcher.instance.oneObjMode.text = $"One Flag: {_oneObjMode}";
