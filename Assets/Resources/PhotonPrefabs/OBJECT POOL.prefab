@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6070365059264262402}
   - component: {fileID: -6797353524191117134}
   m_Layer: 0
-  m_Name: ObjectPool
+  m_Name: OBJECT POOL
   m_TagString: ObjectPool
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -69,6 +69,8 @@ MonoBehaviour:
     type: 3}
   bulletMetalImpactPrefab: {fileID: 4537056961858913665, guid: 4a0c9aef69209e24e88754e9cdc94acf,
     type: 3}
+  waterSmallImpactPrefab: {fileID: 8616250445915952050, guid: cde84918a07d5bf4b82463e383edd647,
+    type: 3}
   bullets: []
   bluePlasmaRounds: []
   redPlasmaRounds: []
@@ -81,6 +83,7 @@ MonoBehaviour:
   genericHits: []
   weaponSmokeCollisions: []
   bulletMetalImpactList: []
+  waterSmallImpactList: []
 --- !u!114 &-6797353524191117134
 MonoBehaviour:
   m_ObjectHideFlags: 0

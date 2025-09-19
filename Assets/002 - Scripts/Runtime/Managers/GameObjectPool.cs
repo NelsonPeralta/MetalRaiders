@@ -15,7 +15,7 @@ public class GameObjectPool : MonoBehaviour
     [SerializeField] GameObject bulletPrefab, bluePlasmaRoundPrefab, redPlasmaRoundPrefab, greenPlasmaRoundPrefab, shardRoundPrefab;
     [SerializeField] GameObject shieldHitPrefab, bloodHitPrefab, genericHitPrefab, weaponSmokeCollisionPrefab;
     [SerializeField] GameObject bluePlasmaRoundPrefab_SS, greenPlasmaRoundPrefab_SS;
-    [SerializeField] GameObject bulletMetalImpactPrefab;
+    [SerializeField] GameObject bulletMetalImpactPrefab, waterSmallImpactPrefab;
 
     public List<GameObject> bullets = new List<GameObject>();
     public List<GameObject> bluePlasmaRounds = new List<GameObject>();
@@ -34,6 +34,7 @@ public class GameObjectPool : MonoBehaviour
 
 
     public List<GameObject> bulletMetalImpactList = new List<GameObject>();
+    public List<GameObject> waterSmallImpactList = new List<GameObject>();
 
 
 
@@ -139,6 +140,11 @@ public class GameObjectPool : MonoBehaviour
             GameObject obj = Instantiate(bulletMetalImpactPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
             bulletMetalImpactList.Add(obj);
+            obj.transform.parent = gameObject.transform;
+
+            Instantiate(waterSmallImpactPrefab, transform.position, transform.rotation);
+            obj.SetActive(false);
+            waterSmallImpactList.Add(obj);
             obj.transform.parent = gameObject.transform;
         }
 
@@ -255,6 +261,22 @@ public class GameObjectPool : MonoBehaviour
             }
         return null;
     }
+
+    public GameObject SpawnSmallWaterEffect(Vector3 pos, Vector3 norm)
+    {
+        foreach (GameObject obj in waterSmallImpactList)
+            if (!obj.activeSelf)
+            {
+                obj.transform.position = pos;
+                obj.transform.rotation = Quaternion.LookRotation(norm);
+                obj.transform.position += obj.transform.forward / 1000;
+                obj.SetActive(true);
+
+                return obj;
+            }
+        return null;
+    }
+
     public GameObject SpawnWeaponSmokeCollisionObject(Vector3 pos, AudioClip ac)
     {
         foreach (GameObject obj in weaponSmokeCollisions)
