@@ -1441,24 +1441,24 @@ public class Launcher : MonoBehaviourPunCallbacks
 
             if (i == 1)
             {
-                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorDataString = "vanguard_hc-commando_rsa-commando_lsa-overseer_ca";
+                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorDataString = "infiltrator_hc-commando_rsa-commando_lsa-overseer_ca";
                 CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorColorPalette = "blue";
             }
             else if (i == 2)
             {
-                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorDataString = "infiltrator_hc-pilot_rsa-pilot_lsa-grenadier_ca";
+                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorDataString = "sentry_hc-pilot_rsa-pilot_lsa-grenadier_ca";
                 CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorColorPalette = "yellow";
             }
             else if (i == 3)
             {
-                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorDataString = "sentry_hc-guerilla_ca-security_lsa-security_rsa";
+                CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorDataString = "scout_hc-guerilla_ca-security_lsa-security_rsa";
                 CurrentRoomManager.GetLocalPlayerData(i).playerExtendedPublicData.armorColorPalette = "green";
             }
         }
 
 
 
-        CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.armorDataString = "helmet1-operator_lsa-operator_rsa-patrol_ca";
+        CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.armorDataString = "vanguard_hc-operator_lsa-operator_rsa-patrol_ca";
         CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.armorColorPalette = "red";
     }
 

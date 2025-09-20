@@ -26,8 +26,8 @@ public class MainMenu : MonoBehaviour
 
             if (unlockedCount >= 12)
             {
-                if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("zenkai"))
-                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(CurrentRoomManager.instance.playerDataCells[0], "-zenkai-"));
+                if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("zenkai_hc"))
+                    WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(CurrentRoomManager.instance.playerDataCells[0], "-zenkai_hc-"));
             }
         }
         catch { }
