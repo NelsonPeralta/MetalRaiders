@@ -15,7 +15,7 @@ public class GameObjectPool : MonoBehaviour
     [SerializeField] GameObject bulletPrefab, bluePlasmaRoundPrefab, redPlasmaRoundPrefab, greenPlasmaRoundPrefab, shardRoundPrefab;
     [SerializeField] GameObject shieldHitPrefab, bloodHitPrefab, genericHitPrefab, weaponSmokeCollisionPrefab;
     [SerializeField] GameObject bluePlasmaRoundPrefab_SS, greenPlasmaRoundPrefab_SS;
-    [SerializeField] GameObject bulletMetalImpactPrefab, waterSmallImpactPrefab;
+    [SerializeField] GameObject bulletMetalImpactPrefab, waterSmallImpactPrefab, waterBigImpactPrefab;
 
     public List<GameObject> bullets = new List<GameObject>();
     public List<GameObject> bluePlasmaRounds = new List<GameObject>();
@@ -35,6 +35,7 @@ public class GameObjectPool : MonoBehaviour
 
     public List<GameObject> bulletMetalImpactList = new List<GameObject>();
     public List<GameObject> waterSmallImpactList = new List<GameObject>();
+    public List<GameObject> waterBigImpactList = new List<GameObject>();
 
 
 
@@ -145,6 +146,12 @@ public class GameObjectPool : MonoBehaviour
             obj = Instantiate(waterSmallImpactPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
             waterSmallImpactList.Add(obj);
+            obj.transform.parent = gameObject.transform;
+
+
+            obj = Instantiate(waterBigImpactPrefab, transform.position, transform.rotation);
+            obj.SetActive(false);
+            waterBigImpactList.Add(obj);
             obj.transform.parent = gameObject.transform;
         }
 
@@ -271,6 +278,19 @@ public class GameObjectPool : MonoBehaviour
                 obj.transform.position = pos;
                 //obj.transform.rotation = Quaternion.LookRotation(norm);
                 //obj.transform.position += obj.transform.forward / 1000;
+                obj.SetActive(true);
+
+                return obj;
+            }
+        return null;
+    }
+
+    public GameObject SpawnBigWaterEffect(Vector3 pos)
+    {
+        foreach (GameObject obj in waterBigImpactList)
+            if (!obj.activeSelf)
+            {
+                obj.transform.position = pos;
                 obj.SetActive(true);
 
                 return obj;

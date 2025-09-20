@@ -82,6 +82,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
     private void OnDisable()
     {
+        _lastPos = Vector3.zero ;
         if (_sticky && !GetComponent<Rigidbody>())
         {
             gameObject.AddComponent<Rigidbody>();

@@ -71,6 +71,8 @@ MonoBehaviour:
     type: 3}
   waterSmallImpactPrefab: {fileID: 8616250445915952050, guid: cde84918a07d5bf4b82463e383edd647,
     type: 3}
+  waterBigImpactPrefab: {fileID: 2186959887793968956, guid: 5e893d41c7a2fd74e8f0f8ab41a30da4,
+    type: 3}
   bullets: []
   bluePlasmaRounds: []
   redPlasmaRounds: []
@@ -84,6 +86,7 @@ MonoBehaviour:
   weaponSmokeCollisions: []
   bulletMetalImpactList: []
   waterSmallImpactList: []
+  waterBigImpactList: []
 --- !u!114 &-6797353524191117134
 MonoBehaviour:
   m_ObjectHideFlags: 0
