@@ -1,4 +1,3 @@
-using Mono.Cecil;
 using UnityEngine;
 
 public class RandomPitchChanger : MonoBehaviour
@@ -11,13 +10,6 @@ public class RandomPitchChanger : MonoBehaviour
 
     private void OnEnable()
     {
-        //Multiply pitch
-        if (pitchRandomMultiplier != 1)
-        {
-            if (Random.value < .5)
-                _audioSource.pitch *= Random.Range(1 / pitchRandomMultiplier, 1);
-            else
-                _audioSource.pitch *= Random.Range(1, pitchRandomMultiplier);
-        }
+
     }
 }

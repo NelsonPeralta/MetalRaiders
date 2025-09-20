@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public enum FlyingCamera { Enabled, Disabled }
 
     public enum PreviousScenePayload { None, OpenCarnageReportAndCredits, ReFetchAllPlayerStats, ResetPlayerDataCells, LoadTimeOutOpenErrorMenu, OpenMultiplayerRoomAndCreateNamePlates, OpenMainMenu, PlayerWasKicked, PlayerQuitGame, ErrorWhileCreatingRoom, OpenMultiplayerRoomOnly }
-
+    public static int[] LEVELS_WITH_WATER = { 1, 2, 4, 18 };
     public List<int> arenaLevelIndexes = new List<int>();
 
     // Intances

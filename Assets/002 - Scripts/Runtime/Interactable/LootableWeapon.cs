@@ -1,5 +1,6 @@
 ﻿using Photon.Pun;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.PlayerLoop;
 using UnityEngine.SceneManagement;
@@ -146,22 +147,25 @@ public class LootableWeapon : InteractableObject //IPunObservable*/
         }
 
 
-        if (_lastPos != Vector3.zero && _lastPos != transform.position)
+        if (GameManager.LEVELS_WITH_WATER.Contains(SceneManager.GetActiveScene().buildIndex))
         {
-            RaycastHit[] hits;
-
-            hits = Physics.RaycastAll(_lastPos, (transform.position - _lastPos), (transform.position - _lastPos).magnitude);
-
-            for (int i = 0; i < hits.Length; i++)
+            if (_lastPos != Vector3.zero && _lastPos != transform.position)
             {
-                Debug.Log($"RagdollLimbCollisionDetection splash check: {hits[i].collider.name}");
-                if (hits[i].collider.gameObject.layer == 4)
+                RaycastHit[] hits;
+
+                hits = Physics.RaycastAll(_lastPos, (transform.position - _lastPos), (transform.position - _lastPos).magnitude);
+
+                for (int i = 0; i < hits.Length; i++)
                 {
-                    GameObjectPool.instance.SpawnSmallWaterEffect(hits[i].point);
+                    Debug.Log($"RagdollLimbCollisionDetection splash check: {hits[i].collider.name}");
+                    if (hits[i].collider.gameObject.layer == 4)
+                    {
+                        GameObjectPool.instance.SpawnSmallWaterEffect(hits[i].point);
+                    }
                 }
             }
+            _lastPos = transform.position;
         }
-        _lastPos = transform.position;
     }
 
     public void RandomAmmo()

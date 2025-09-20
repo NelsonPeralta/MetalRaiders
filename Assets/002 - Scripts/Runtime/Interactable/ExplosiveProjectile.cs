@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Animations;
+using UnityEngine.SceneManagement;
 using static Player;
 
 public class ExplosiveProjectile : MonoBehaviour
@@ -82,7 +83,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
     private void OnDisable()
     {
-        _lastPos = Vector3.zero ;
+        _lastPos = Vector3.zero;
         if (_sticky && !GetComponent<Rigidbody>())
         {
             gameObject.AddComponent<Rigidbody>();
@@ -99,22 +100,26 @@ public class ExplosiveProjectile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_lastPos != Vector3.zero && _lastPos != transform.position)
+
+        if (GameManager.LEVELS_WITH_WATER.Contains(SceneManager.GetActiveScene().buildIndex))
         {
-            RaycastHit[] hits;
-
-            hits = Physics.RaycastAll(_lastPos, (transform.position - _lastPos), (transform.position - _lastPos).magnitude);
-
-            for (int i = 0; i < hits.Length; i++)
+            if (_lastPos != Vector3.zero && _lastPos != transform.position)
             {
-                //Debug.Log($"ExplosiveProjectile splash check: {hits[i].collider.name}");
-                if (hits[i].collider.gameObject.layer == 4)
+                RaycastHit[] hits;
+
+                hits = Physics.RaycastAll(_lastPos, (transform.position - _lastPos), (transform.position - _lastPos).magnitude);
+
+                for (int i = 0; i < hits.Length; i++)
                 {
-                    GameObjectPool.instance.SpawnSmallWaterEffect(hits[i].point);
+                    //Debug.Log($"ExplosiveProjectile splash check: {hits[i].collider.name}");
+                    if (hits[i].collider.gameObject.layer == 4)
+                    {
+                        GameObjectPool.instance.SpawnSmallWaterEffect(hits[i].point);
+                    }
                 }
             }
+            _lastPos = transform.position;
         }
-        _lastPos = transform.position;
 
 
 
@@ -435,6 +440,8 @@ public class ExplosiveProjectile : MonoBehaviour
 
     private bool IsUnderwater()
     {
+        if (!GameManager.LEVELS_WITH_WATER.Contains(SceneManager.GetActiveScene().buildIndex)) return false;
+
         RaycastHit[] hits;
 
         hits = Physics.RaycastAll(transform.position + (Vector3.up * 10), Vector3.down, 15);
