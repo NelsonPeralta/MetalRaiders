@@ -1337,15 +1337,15 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     }
 
     [PunRPC]
-    public void DisableAndExplodeProjectile(int output, int ind, Vector3 pos, bool caller = true)
+    public void DisableAndExplodeProjectile(int output, int ind, Vector3 pos,bool underWater, bool caller = true)
     {
         if (caller)
         {
-            instance._pv.RPC("DisableAndExplodeProjectile", RpcTarget.AllViaServer, output, ind, pos, false);
+            instance._pv.RPC("DisableAndExplodeProjectile", RpcTarget.AllViaServer, output, ind, pos, underWater, false);
         }
         else if (!caller)
         {
-            GrenadePool.instance.DisableExplosive((WeaponProperties.KillFeedOutput)output, ind, pos);
+            GrenadePool.instance.DisableExplosive((WeaponProperties.KillFeedOutput)output, ind, pos, underWater);
         }
     }
 

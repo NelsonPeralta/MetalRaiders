@@ -24,13 +24,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4680380374123366463}
+  serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2724425483926940349
 MonoBehaviour:
@@ -63,3 +63,4 @@ MonoBehaviour:
   plasmaClip: {fileID: 8300000, guid: 82cce6dcab73b6c4bb1ad58e4be9fe73, type: 3}
   barrelClip: {fileID: 8300000, guid: 021cb8e8159647547946b77ee15b8457, type: 3}
   ultraBindClip: {fileID: 8300000, guid: c63a8c27188dd8b4cbca4869f9ed2d8c, type: 3}
+  underWaterClip: {fileID: 8300000, guid: 18217d158314e7b43acc664bc3c97886, type: 3}

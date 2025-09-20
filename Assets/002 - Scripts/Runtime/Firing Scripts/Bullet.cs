@@ -30,7 +30,6 @@ public class Bullet : MonoBehaviourPunCallbacks
     public GameObject bulletTarget;
 
     public RaycastHit[] hits;
-    [SerializeField] LayerMask _layerMask;
 
     [Header("Bullet Info")]
     public int damage;
@@ -159,7 +158,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                 for (int i = _hitList.Count; i-- > 0;)
                 {
                     _tempRh = _hitList[i];
-                    Log.Print($"bullet hit: {_hitList[i].collider.name}");
+                    Log.Print($"bullet hit: {_hitList[i].collider.name} {_hitList[i].point}");
                     if (_tempRh.collider.transform.root == weaponProperties.player.transform) _hitList.RemoveAt(i);
                 }
 
@@ -417,9 +416,15 @@ public class Bullet : MonoBehaviourPunCallbacks
                         }
                     }
                     catch { }
-                    if (damage > 0) GameObjectPool.instance.SpawnPooledGenericHit(finalHitPoint, hitInfo.normal);
+                    if (damage > 0)
+                    {
+                        if (hitInfo.collider.gameObject.layer == 4) // water
+                            GameObjectPool.instance.SpawnSmallWaterEffect(finalHitPoint, hitInfo.normal);
+                        else
+                            GameObjectPool.instance.SpawnPooledGenericHit(finalHitPoint, hitInfo.normal);
+                    }
 
-                    if (finalHitObject.GetComponent<IDamageable>() == null && !finalHitObject.GetComponent<DontSpawnBulletHoleDecalHere>()) // avoids staying in empty space after glass is destroyed
+                    if (finalHitObject.layer != 4 && finalHitObject.GetComponent<IDamageable>() == null && !finalHitObject.GetComponent<DontSpawnBulletHoleDecalHere>()) // avoids staying in empty space after glass is destroyed
                     {
                         //PrintOnlyInEditor.Log($"SpawnBulletHole {hitInfo.transform.name}");
                         if (damage > 0) GameObjectPool.instance.SpawnBulletHole(finalHitPoint, hitInfo.normal);

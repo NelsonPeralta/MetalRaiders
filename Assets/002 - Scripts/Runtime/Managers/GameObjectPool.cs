@@ -47,7 +47,7 @@ public class GameObjectPool : MonoBehaviour
         _instance = this;
     }
 
-    
+
 
     private void Start()
     {
@@ -142,7 +142,7 @@ public class GameObjectPool : MonoBehaviour
             bulletMetalImpactList.Add(obj);
             obj.transform.parent = gameObject.transform;
 
-            Instantiate(waterSmallImpactPrefab, transform.position, transform.rotation);
+            obj = Instantiate(waterSmallImpactPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
             waterSmallImpactList.Add(obj);
             obj.transform.parent = gameObject.transform;
@@ -249,6 +249,7 @@ public class GameObjectPool : MonoBehaviour
 
     public GameObject SpawnBulletHole(Vector3 pos, Vector3 norm)
     {
+        Debug.Log("SpawnBulletHole");
         foreach (GameObject obj in bulletMetalImpactList)
             if (!obj.activeSelf)
             {
@@ -268,8 +269,8 @@ public class GameObjectPool : MonoBehaviour
             if (!obj.activeSelf)
             {
                 obj.transform.position = pos;
-                obj.transform.rotation = Quaternion.LookRotation(norm);
-                obj.transform.position += obj.transform.forward / 1000;
+                //obj.transform.rotation = Quaternion.LookRotation(norm);
+                //obj.transform.position += obj.transform.forward / 1000;
                 obj.SetActive(true);
 
                 return obj;

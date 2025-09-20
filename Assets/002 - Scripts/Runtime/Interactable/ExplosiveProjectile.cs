@@ -1,4 +1,5 @@
 using MathNet.Numerics;
+using MathNet.Numerics.LinearAlgebra.Storage;
 using Photon.Pun;
 using System.Collections;
 using System.Collections.Generic;
@@ -87,6 +88,8 @@ public class ExplosiveProjectile : MonoBehaviour
             GetComponent<Rigidbody>().collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
         }
     }
+
+
 
 
 
@@ -295,7 +298,10 @@ public class ExplosiveProjectile : MonoBehaviour
     void Explosion()
     {
         if (!_exploded)
+        {
+            Debug.Log($"Is under water {IsUnderwater()}");
             Debug.Log($"Explosion {_stuckPlayerPhotonId} {PhotonNetwork.IsMasterClient == true} {_player.photonId} {_exploded == true}");
+        }
 
         if (PhotonNetwork.IsMasterClient && !_exploded)
         {
@@ -317,7 +323,7 @@ public class ExplosiveProjectile : MonoBehaviour
             {
                 Debug.Log($"Explosion 2");
                 Debug.Log("Calling DisableAndExplodeProjectile");
-                NetworkGameManager.instance.DisableAndExplodeProjectile((int)_killFeedOutput, GrenadePool.instance.GetIndexOfExplosive(_killFeedOutput, gameObject), transform.position);
+                NetworkGameManager.instance.DisableAndExplodeProjectile((int)_killFeedOutput, GrenadePool.instance.GetIndexOfExplosive(_killFeedOutput, gameObject), transform.position, underWater: IsUnderwater());
             }
         }
         _exploded = true;
@@ -329,14 +335,16 @@ public class ExplosiveProjectile : MonoBehaviour
         if (!_exploded)
             _exploded = true;
         Debug.Log("Calling DisableAndExplodeProjectile");
-        NetworkGameManager.instance.DisableAndExplodeProjectile((int)_killFeedOutput, GrenadePool.instance.GetIndexOfExplosive(_killFeedOutput, gameObject), transform.position);
+        NetworkGameManager.instance.DisableAndExplodeProjectile((int)_killFeedOutput, GrenadePool.instance.GetIndexOfExplosive(_killFeedOutput, gameObject), transform.position, underWater: IsUnderwater());
     }
 
 
 
-    public void TriggerExplosion(Vector3 pos)
+    public void TriggerExplosion(Vector3 pos, bool underWater)
     {
-        if (_color == global::Explosion.Color.Yellow)
+        if (underWater)
+            GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, pos, col: global::Explosion.Color.Water, _type, GrenadePool.instance.underWaterClip, _killFeedOutput, stuck);
+        else if (_color == global::Explosion.Color.Yellow)
             GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, pos, _color, _type, GrenadePool.instance.fragClip, _killFeedOutput, stuck);
         else if (_color == global::Explosion.Color.Blue)
             GrenadePool.SpawnExplosion(player, damage: _damage, radius: _radius, expPower: _explosionPower, damageCleanNameSource: _sourceCleanName, pos, _color, _type, GrenadePool.instance.plasmaClip, _killFeedOutput, stuck);
@@ -401,5 +409,20 @@ public class ExplosiveProjectile : MonoBehaviour
         }
 
         _resetIgnoredColliders = 1;
+    }
+
+
+    private bool IsUnderwater()
+    {
+        RaycastHit[] hits;
+
+        hits = Physics.RaycastAll(transform.position + (Vector3.up * 10), Vector3.down, 15);
+
+        for (int i = 0; i < hits.Length; i++)
+        {
+            if (hits[i].collider.gameObject.layer == 4 && (hits[i].transform.position.y - transform.position.y > 0)) return true;
+        }
+
+        return false;
     }
 }

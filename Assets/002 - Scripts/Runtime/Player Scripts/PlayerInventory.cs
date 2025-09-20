@@ -462,7 +462,7 @@ public class PlayerInventory : MonoBehaviourPun
 
     public void Start()
     {
-        Debug.Log("PlayerInventory Start");
+        Log.Print("PlayerInventory Start");
         player.OnPlayerIdAssigned -= OnPlayerIdAndRewiredIdAssigned_Delegate;
         player.OnPlayerIdAssigned += OnPlayerIdAndRewiredIdAssigned_Delegate;
 
@@ -833,7 +833,7 @@ public class PlayerInventory : MonoBehaviourPun
     }
     public IEnumerator EquipStartingWeapon()
     {
-        Debug.Log("oneobjmode - EquipStartingWeapon");
+        Log.Print("oneobjmode - EquipStartingWeapon");
 
         _oddball.gameObject.SetActive(false);
         GetWeaponProperties("pr").currentOverheat = 0;
@@ -927,7 +927,7 @@ public class PlayerInventory : MonoBehaviourPun
 
 
 
-        Debug.Log(GetWeaponProperties(StartingWeapon));
+        Log.Print(GetWeaponProperties(StartingWeapon));
         GetWeaponProperties(StartingWeapon).animator.Play("Idle");
         GetWeaponProperties(StartingWeapon).spareAmmo = GetWeaponProperties(StartingWeapon).ammoCapacity * 3;
         try { GetWeaponProperties(StartingWeapon2).spareAmmo = GetWeaponProperties(StartingWeapon2).ammoCapacity * 3; } catch { }
@@ -976,7 +976,7 @@ public class PlayerInventory : MonoBehaviourPun
 
     void AssignRandomWeapons()
     {
-        Debug.Log("AssignRandomWeapons");
+        Log.Print("AssignRandomWeapons");
         var random = new System.Random();
         int ind = random.Next(allWeaponsInInventory.Length);
 
@@ -1056,7 +1056,7 @@ public class PlayerInventory : MonoBehaviourPun
     {
         if (MapCamera.instance.gameObject.activeSelf)
             return;
-        Debug.Log($"{player.name} Play Draw Sound");
+        Log.Print($"{player.name} Play Draw Sound");
         weaponDrawAudioSource.clip = activeWeapon.GetComponent<WeaponProperties>().draw;
         weaponDrawAudioSource.Play();
     }
@@ -1088,7 +1088,7 @@ public class PlayerInventory : MonoBehaviourPun
 
     void OnPLayerDeath_Delegate(Player player)
     {
-        Debug.Log("OnPLayerDeath_Delegate");
+        Log.Print("OnPLayerDeath_Delegate");
         _oddball.gameObject.SetActive(false); _flag.gameObject.SetActive(false);
         try { activeWeapon.animator.SetBool("Run", false); } catch { }
 
@@ -1124,7 +1124,7 @@ public class PlayerInventory : MonoBehaviourPun
     public FakeBulletTrail SpawnFakeBulletTrail(FakeTrailColor fakeTrailColor, int lenghtOfTrail, Quaternion spray, bool bipedIsMine,
         Vector3? muzzlePosition = null, Vector3? lookAtThisTarget = null, /*bool realTimeTravel = false,*/ WeaponProperties wp = null)
     {
-        Debug.Log($"SpawnFakeBulletTrail: {(FakeTrailColor)fakeTrailColor} {lenghtOfTrail}");
+        Log.Print($"SpawnFakeBulletTrail: {(FakeTrailColor)fakeTrailColor} {lenghtOfTrail}");
 
         outOfFakeBullets = (_fakeBulletTrailPool.Where(item => !item.gameObject.activeInHierarchy).Count() == 0);
 
@@ -1165,7 +1165,7 @@ public class PlayerInventory : MonoBehaviourPun
                         GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
                     }
 
-                    Debug.Log($"SpawnFakeBulletTrail: {lenghtOfTrail}");
+                    Log.Print($"SpawnFakeBulletTrail: {lenghtOfTrail}");
                     fbt.fakeBulletTrailDisable.timeBeforeDisabling = 0.1f;
                     fbt.scaleToChange.localScale = Vector3.one;
                     fbt.rotationToTarget.localRotation = Quaternion.identity;

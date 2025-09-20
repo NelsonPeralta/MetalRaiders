@@ -7,7 +7,7 @@ using UnityEngine;
 public class Explosion : MonoBehaviour
 {
     public enum Type { Grenade, RPG, Barrel, UltraBind }
-    public enum Color { Yellow, Blue, Purple }
+    public enum Color { Yellow, Blue, Purple, Water }
 
     public delegate void ExplosionEvent(Explosion explosion);
     public ExplosionEvent OnObjectAdded;
@@ -21,7 +21,7 @@ public class Explosion : MonoBehaviour
     {
         set
         {
-            _yellowModel.SetActive(value == Color.Yellow); _blueModel.SetActive(value == Color.Blue); _purpleModel.SetActive(value == Color.Purple);
+            _yellowModel.SetActive(value == Color.Yellow); _blueModel.SetActive(value == Color.Blue); _purpleModel.SetActive(value == Color.Purple); _waterModel.SetActive(value == Color.Water);
         }
     }
 
@@ -52,7 +52,7 @@ public class Explosion : MonoBehaviour
 
     List<GameObject> objectsHit = new List<GameObject>();
     bool _stuck;
-    [SerializeField] GameObject _yellowModel, _blueModel, _purpleModel;
+    [SerializeField] GameObject _yellowModel, _blueModel, _purpleModel, _waterModel;
     Type _type;
     float _defaultSpatialBlend, _defaultVolume;
 

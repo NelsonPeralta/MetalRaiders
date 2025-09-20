@@ -22,7 +22,7 @@ public class GrenadePool : MonoBehaviour
     [SerializeField] List<ExplosiveProjectile> _glProjectilePool = new List<ExplosiveProjectile>();
     [SerializeField] List<Explosion> _explosions = new List<Explosion>();
 
-    public AudioClip fragClip, plasmaClip, barrelClip, ultraBindClip;
+    public AudioClip fragClip, plasmaClip, barrelClip, ultraBindClip, underWaterClip;
 
 
     static GrenadePool _instance;
@@ -225,24 +225,24 @@ public class GrenadePool : MonoBehaviour
 
 
 
-    public void DisableExplosive(WeaponProperties.KillFeedOutput kfo, int ind, Vector3 pos)
+    public void DisableExplosive(WeaponProperties.KillFeedOutput kfo, int ind, Vector3 pos, bool underWater)
     {
         Log.Print($"DisableExplosive {PhotonNetwork.IsMasterClient} {kfo} {ind}");
         if (kfo == WeaponProperties.KillFeedOutput.Frag_Grenade)
         {
-            _fragGrenadePool[ind].GetComponent<ExplosiveProjectile>().TriggerExplosion(pos);
+            _fragGrenadePool[ind].GetComponent<ExplosiveProjectile>().TriggerExplosion(pos, underWater);
         }
         else if (kfo == WeaponProperties.KillFeedOutput.Plasma_Grenade)
         {
-            _stickyGrenadePool[ind].GetComponent<ExplosiveProjectile>().TriggerExplosion(pos);
+            _stickyGrenadePool[ind].GetComponent<ExplosiveProjectile>().TriggerExplosion(pos, underWater);
         }
         else if (kfo == WeaponProperties.KillFeedOutput.RPG)
         {
-            _rocketPool[ind].GetComponent<ExplosiveProjectile>().TriggerExplosion(pos);
+            _rocketPool[ind].GetComponent<ExplosiveProjectile>().TriggerExplosion(pos, underWater);
         }
         else if (kfo == WeaponProperties.KillFeedOutput.Grenade_Launcher)
         {
-            _glProjectilePool[ind].GetComponent<ExplosiveProjectile>().TriggerExplosion(pos);
+            _glProjectilePool[ind].GetComponent<ExplosiveProjectile>().TriggerExplosion(pos, underWater);
         }
     }
 
