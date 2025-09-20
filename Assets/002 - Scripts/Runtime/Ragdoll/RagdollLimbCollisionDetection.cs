@@ -37,15 +37,16 @@ public class RagdollLimbCollisionDetection : MonoBehaviour
             {
                 if (hits[i].collider.gameObject.layer == 4)
                 {
-                    Debug.Log($"RagdollLimbCollisionDetection splash check: {GetComponent<Rigidbody>().linearVelocity.magnitude}");
-                    if (GetComponent<Rigidbody>().mass > 3 && GetComponent<Rigidbody>().linearVelocity.magnitude > 12)
-                    {
-                        GameObjectPool.instance.SpawnBigWaterEffect(hits[i].point);
-                    }
-                    else
-                    {
-                        GameObjectPool.instance.SpawnSmallWaterEffect(hits[i].point);
-                    }
+                    //Debug.Log($"RagdollLimbCollisionDetection splash check: {GetComponent<Rigidbody>().linearVelocity.magnitude}");
+                    if (GetComponent<Rigidbody>().mass > 3)
+                        if (GetComponent<Rigidbody>().linearVelocity.magnitude > 12)
+                        {
+                            GameObjectPool.instance.SpawnBigWaterEffect(hits[i].point);
+                        }
+                        else
+                        {
+                            GameObjectPool.instance.SpawnSmallWaterEffect(hits[i].point);
+                        }
 
 
                 }

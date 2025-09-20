@@ -93,8 +93,11 @@ public class LootableWeapon : InteractableObject //IPunObservable*/
 
     float _collisionEffectsCooldown, _heat;
 
+    Vector3 _lastPos;
+
     private void Awake()
     {
+        _lastPos = Vector3.zero;
         _defaultTtl = _ttl;
         //spawnPointPosition = new Vector3((float)System.Math.Round(transform.position.x, 1), (float)System.Math.Round(transform.position.y, 1), (float)System.Math.Round(transform.position.z, 1));
         spawnPointRotation = transform.rotation;
@@ -141,6 +144,24 @@ public class LootableWeapon : InteractableObject //IPunObservable*/
                 }
             }
         }
+
+
+        if (_lastPos != Vector3.zero && _lastPos != transform.position)
+        {
+            RaycastHit[] hits;
+
+            hits = Physics.RaycastAll(_lastPos, (transform.position - _lastPos), (transform.position - _lastPos).magnitude);
+
+            for (int i = 0; i < hits.Length; i++)
+            {
+                Debug.Log($"RagdollLimbCollisionDetection splash check: {hits[i].collider.name}");
+                if (hits[i].collider.gameObject.layer == 4)
+                {
+                    GameObjectPool.instance.SpawnSmallWaterEffect(hits[i].point);
+                }
+            }
+        }
+        _lastPos = transform.position;
     }
 
     public void RandomAmmo()
@@ -287,6 +308,7 @@ public class LootableWeapon : InteractableObject //IPunObservable*/
 
     private void OnDisable()
     {
+        _lastPos = Vector3.zero;
         if (networkWeaponSpawnPoint && PhotonNetwork.InRoom && SceneManager.GetActiveScene().buildIndex > 0)
         {
             NetworkGameManager.instance.DisableLootableWeapon(spawnPointPosition);
