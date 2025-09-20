@@ -24,10 +24,10 @@ public class PlayerNamePlate : MonoBehaviour
 
             if (GameManager.colorDict.ContainsKey(rank.color))
             {
-                Debug.Log(_playerData.playerExtendedPublicData.honor);
+                Log.Print(_playerData.playerExtendedPublicData.honor);
                 rankIm.enabled = true;
 
-                Debug.Log(PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank.codename).SingleOrDefault().name);
+                Log.Print(PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank.codename).SingleOrDefault().name);
 
                 rankIm.sprite = PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank.codename).SingleOrDefault();
 

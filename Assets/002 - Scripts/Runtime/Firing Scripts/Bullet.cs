@@ -419,7 +419,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                     if (damage > 0)
                     {
                         if (hitInfo.collider.gameObject.layer == 4) // water
-                            GameObjectPool.instance.SpawnSmallWaterEffect(finalHitPoint, hitInfo.normal);
+                            GameObjectPool.instance.SpawnSmallWaterEffect(finalHitPoint);
                         else
                             GameObjectPool.instance.SpawnPooledGenericHit(finalHitPoint, hitInfo.normal);
                     }

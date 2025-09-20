@@ -47,6 +47,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
     private void Awake()
     {
+        _lastPos = Vector3.zero;
         if (GetComponent<AudioSource>())
             _defaultSpatialBlend = GetComponent<AudioSource>().spatialBlend;
     }
@@ -90,13 +91,32 @@ public class ExplosiveProjectile : MonoBehaviour
     }
 
 
-
+    Vector3 _lastPos;
 
 
 
     // Update is called once per frame
     void Update()
     {
+        if (_lastPos != Vector3.zero && _lastPos != transform.position)
+        {
+            RaycastHit[] hits;
+
+            hits = Physics.RaycastAll(_lastPos, (transform.position - _lastPos), (transform.position - _lastPos).magnitude);
+
+            for (int i = 0; i < hits.Length; i++)
+            {
+                //Debug.Log($"ExplosiveProjectile splash check: {hits[i].collider.name}");
+                if (hits[i].collider.gameObject.layer == 4)
+                {
+                    GameObjectPool.instance.SpawnSmallWaterEffect(hits[i].point);
+                }
+            }
+        }
+        _lastPos = transform.position;
+
+
+
         if (_ttl > 0)
         {
             _ttl -= Time.deltaTime;
@@ -420,7 +440,12 @@ public class ExplosiveProjectile : MonoBehaviour
 
         for (int i = 0; i < hits.Length; i++)
         {
-            if (hits[i].collider.gameObject.layer == 4 && (hits[i].transform.position.y - transform.position.y > 0)) return true;
+            if (hits[i].collider.gameObject.layer == 4)
+            {
+                print($"ExplosiveProjectile IsUnderwater {hits[i].transform.position.y} vs {transform.position.y}");
+                if ((hits[i].transform.position.y - transform.position.y > 0))
+                    return true;
+            }
         }
 
         return false;

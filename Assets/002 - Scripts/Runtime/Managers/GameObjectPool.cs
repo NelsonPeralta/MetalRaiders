@@ -263,7 +263,7 @@ public class GameObjectPool : MonoBehaviour
         return null;
     }
 
-    public GameObject SpawnSmallWaterEffect(Vector3 pos, Vector3 norm)
+    public GameObject SpawnSmallWaterEffect(Vector3 pos)
     {
         foreach (GameObject obj in waterSmallImpactList)
             if (!obj.activeSelf)
