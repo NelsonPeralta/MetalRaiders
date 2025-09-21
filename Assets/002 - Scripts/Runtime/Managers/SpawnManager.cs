@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Rewired;
@@ -206,7 +207,7 @@ public class SpawnManager : MonoBehaviour
             if (sp.spawnPointType == SpawnPoint.SpawnPointType.Computer)
                 availableSpawnPoints.Add(sp);
 
-        int ran = Random.Range(0, availableSpawnPoints.Count);
+        int ran = UnityEngine.Random.Range(0, availableSpawnPoints.Count);
 
         return availableSpawnPoints[ran].transform;
     }
@@ -214,7 +215,7 @@ public class SpawnManager : MonoBehaviour
     Transform GetCompletelyRandomSpawnpoint()
     {
         Log.Print($"GetCompletelyRandomSpawnpoint");
-        return genericSpawnPoints[Random.Range(0, genericSpawnPoints.Count)].transform;
+        return genericSpawnPoints[UnityEngine.Random.Range(0, genericSpawnPoints.Count)].transform;
     }
 
     public (Transform, bool) GetRandomSafeSpawnPoint(GameManager.Team team) // return a position and if the spawn is random or not
@@ -429,7 +430,7 @@ public class SpawnManager : MonoBehaviour
 
         if (availableSpawnPoints.Count > 0)
         {
-            int ran = Random.Range(0, availableSpawnPoints.Count);
+            int ran = UnityEngine.Random.Range(0, availableSpawnPoints.Count);
             Log.Print($"Returning {availableSpawnPoints[ran].name} spawn (danger level {availableSpawnPoints[ran].blockingLevel})");
 
             finalRes = (availableSpawnPoints[ran].transform, false);
@@ -442,7 +443,7 @@ public class SpawnManager : MonoBehaviour
         Collider[] hitColliders = Physics.OverlapSphere(finalRes.Item1.position, sphereColliderRange);
         foreach (var hitCollider in hitColliders)
         {
-            if (hitCollider.gameObject.tag.Equals("Spawn Point"))
+            if (hitCollider.gameObject.CompareTag("Spawn Point"))
             {
                 if (hitCollider.gameObject.GetComponent<SpawnPoint>())
                 {
@@ -457,7 +458,7 @@ public class SpawnManager : MonoBehaviour
                     else
                         level = GetBlockingLevel(finalRes.Item1, hitCollider.transform.position, 20, 20, 20);
 
-                    hitCollider.gameObject.GetComponent<SpawnPoint>().AddBlockingLevelEntry(Random.Range(-100, -200), level, 2);
+                    hitCollider.gameObject.GetComponent<SpawnPoint>().AddBlockingLevelEntry(UnityEngine.Random.Range(-100, -200), level, 2);
                 }
             }
         }
