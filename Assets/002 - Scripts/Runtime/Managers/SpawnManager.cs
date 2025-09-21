@@ -457,7 +457,7 @@ public class SpawnManager : MonoBehaviour
                         level = GetBlockingLevel(finalRes.Item1, hitCollider.transform.position, 15, 15, 15);
                     else
                         level = GetBlockingLevel(finalRes.Item1, hitCollider.transform.position, 20, 20, 20);
-
+                    if (level == 0) continue;
                     hitCollider.gameObject.GetComponent<SpawnPoint>().AddBlockingLevelEntry(UnityEngine.Random.Range(-100, -200), level, 2);
                 }
             }
