@@ -4,36 +4,8 @@
 TagManager:
   serializedVersion: 3
   tags:
-  - Pickable
-  - Attachment
-  - Player Inventory
-  - Player Camera
-  - Weapon Binder
-  - Weapon
-  - Casing Spawn Point
-  - Muzzleflash Light
-  - Muzzleflash Particles
-  - Spark Particles
-  - Bullet Spawn Point
-  - Bullet Renderer
-  - Grenade Spawn Point
-  - Player Informer
-  - Crosshairs
-  - Scope BG
-  - Weapon Sounds
-  - ObjectPool
-  - health_pack
   - player
-  - Components
-  - Raycast Origin
-  - Total Ammo Text
-  - Pickup Collider
-  - SFX
-  - Current Ammo Text
   - Spawn Point
-  - Spawn Manager
-  - oddball
-  - Bullet
   layers:
   - Default
   - TransparentFX

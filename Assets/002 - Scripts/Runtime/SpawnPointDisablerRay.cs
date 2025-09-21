@@ -20,7 +20,7 @@ public class SpawnPointDisablerRay : MonoBehaviour
 
     private void Awake()
     {
-        _id = Random.Range(0, 9999);
+        _id = Random.Range(-1, -99);
     }
 
     // Start is called before the first frame update
@@ -102,7 +102,7 @@ public class SpawnPointDisablerRay : MonoBehaviour
 
             _tempBlockLevel = Mathf.Max(0, _tempBlockLevel - blocksOfThree);
 
-            target.spawnPoint.AddBlockingLevelEntry(_id, _tempBlockLevel, SpawnPoint.SeenResetTime);
+            target.spawnPoint.AddBlockingLevelEntry(_id, _tempBlockLevel, 0.5f);
         }
 
         // Step 6: Reset timer

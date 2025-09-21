@@ -136,14 +136,20 @@ public class GameObjectPool : MonoBehaviour
 
 
 
-        for (int i = 0; i < CurrentRoomManager.instance.expectedNbPlayers * 20; i++)
+
+
+
+        for (int i = 0; i < CurrentRoomManager.instance.expectedNbPlayers * 50; i++)
         {
             GameObject obj = Instantiate(bulletMetalImpactPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
             bulletMetalImpactList.Add(obj);
             obj.transform.parent = gameObject.transform;
+        }
 
-            obj = Instantiate(waterSmallImpactPrefab, transform.position, transform.rotation);
+        for (int i = 0; i < CurrentRoomManager.instance.expectedNbPlayers * 20; i++)
+        {
+            GameObject obj = Instantiate(waterSmallImpactPrefab, transform.position, transform.rotation);
             obj.SetActive(false);
             waterSmallImpactList.Add(obj);
             obj.transform.parent = gameObject.transform;
@@ -154,7 +160,6 @@ public class GameObjectPool : MonoBehaviour
             waterBigImpactList.Add(obj);
             obj.transform.parent = gameObject.transform;
         }
-
 
         CurrentRoomManager.instance.AddSpawnedMappAddOn(null);
     }

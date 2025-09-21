@@ -105,6 +105,8 @@ public class SpawnManager : MonoBehaviour
                         var player = players[j];
                         var playerPos = player.transform.position;
 
+                        if (player.isDead) continue;
+
                         float sqrDist = (spawnPos - playerPos).sqrMagnitude;
 
                         if (sqrDist > 42f * 42f)
@@ -112,22 +114,25 @@ public class SpawnManager : MonoBehaviour
 
                         int level;
                         if (sqrDist > 35f * 35f)
-                            level = GetBlockingLevel(player, spawnPos, 3, 1, 3);
+                            level = GetBlockingLevel(player, spawnPos, 13, 11, 13);
                         else if (sqrDist > 30f * 30f)
-                            level = GetBlockingLevel(player, spawnPos, 4, 2, 4);
+                            level = GetBlockingLevel(player, spawnPos, 14, 12, 14);
                         else if (sqrDist > 25f * 25f)
-                            level = GetBlockingLevel(player, spawnPos, 5, 3, 5);
+                            level = GetBlockingLevel(player, spawnPos, 15, 13, 15);
                         else if (sqrDist > 20f * 20f)
-                            level = GetBlockingLevel(player, spawnPos, 6, 4, 6);
+                            level = GetBlockingLevel(player, spawnPos, 16, 14, 16);
                         else if (sqrDist > 15f * 15f)
-                            level = GetBlockingLevel(player, spawnPos, 7, 5, 7);
+                            level = GetBlockingLevel(player, spawnPos, 17, 15, 17);
                         else if (sqrDist > 10f * 10f)
-                            level = GetBlockingLevel(player, spawnPos, 8, 6, 8);
+                            level = GetBlockingLevel(player, spawnPos, 18, 16, 18);
                         else
-                            level = GetBlockingLevel(player, spawnPos, 9, 7, 9);
+                            level = GetBlockingLevel(player, spawnPos, 19, 17, 19);
+
+                        if (level == 0) continue;
 
                         int id = (i + 1) + ((j + 1) * 1000);
-                        spawnPoints[i].AddBlockingLevelEntry(id, level, SpawnPoint.SeenResetTime);
+                        //Debug.Log($"GetBlockingLevel {spawnPoints[i].name} {Mathf.Abs(spawnPos.y - playerPos.y)}");
+                        spawnPoints[i].AddBlockingLevelEntry(id, level, 0.5f);
                     }
                 }
 
@@ -138,12 +143,32 @@ public class SpawnManager : MonoBehaviour
 
     private int GetBlockingLevel(Player player, Vector3 spawnPos, int front, int side, int back)
     {
-        Vector3 toSpawn = (spawnPos - player.transform.position).normalized;
+        Vector3 playerPos = player.transform.position;
+        Vector3 toSpawn = (spawnPos - playerPos).normalized;
         float dot = Vector3.Dot(player.transform.forward, toSpawn);
 
-        if (dot > 0.866f) return front;   // Front ±30°
-        else if (dot > 0f) return side;   // Sides
-        else return back;                 // Back
+        float yDiff = Mathf.Abs(spawnPos.y - playerPos.y);
+        int verticalFact = yDiff < 2f ? 0 : Mathf.Clamp((int)Mathf.Floor(yDiff) - 2, 0, 99);
+        //Debug.Log($"GetBlockingLevel {verticalFact}");
+
+        if (dot > 0.866f) return Mathf.Clamp(front - verticalFact, 0, 99);   // Front ±30°
+        else if (dot > 0f) return Mathf.Clamp(side - verticalFact, 0, 99);   // Sides
+        else return Mathf.Clamp(back - verticalFact, 0, 99);                 // Back
+    }
+
+    private int GetBlockingLevel(Transform player, Vector3 spawnPos, int front, int side, int back)
+    {
+        Vector3 playerPos = player.transform.position;
+        Vector3 toSpawn = (spawnPos - playerPos).normalized;
+        float dot = Vector3.Dot(player.transform.forward, toSpawn);
+
+        float yDiff = Mathf.Abs(spawnPos.y - playerPos.y);
+        int verticalFact = yDiff < 2f ? 0 : Mathf.Clamp((int)Mathf.Floor(yDiff) - 2, 0, 99);
+        //Debug.Log($"GetBlockingLevel {verticalFact}");
+
+        if (dot > 0.866f) return Mathf.Clamp(front - verticalFact, 0, 99);   // Front ±30°
+        else if (dot > 0f) return Mathf.Clamp(side - verticalFact, 0, 99);   // Sides
+        else return Mathf.Clamp(back - verticalFact, 0, 99);                 // Back
     }
 
 
@@ -194,6 +219,7 @@ public class SpawnManager : MonoBehaviour
 
     public (Transform, bool) GetRandomSafeSpawnPoint(GameManager.Team team) // return a position and if the spawn is random or not
     {
+        (Transform, bool) finalRes = (GetCompletelyRandomSpawnpoint(), true);
         Log.Print($"GetRandomSafeSpawnPoint {team} {blueSpawnPoints.Count}");
 
         List<SpawnPoint> availableSpawnPoints = new List<SpawnPoint>();
@@ -405,10 +431,38 @@ public class SpawnManager : MonoBehaviour
         {
             int ran = Random.Range(0, availableSpawnPoints.Count);
             Log.Print($"Returning {availableSpawnPoints[ran].name} spawn (danger level {availableSpawnPoints[ran].blockingLevel})");
-            return (availableSpawnPoints[ran].transform, false);
+
+            finalRes = (availableSpawnPoints[ran].transform, false);
         }
 
-        return (GetCompletelyRandomSpawnpoint(), true);
+
+
+
+        int sphereColliderRange = 12;
+        Collider[] hitColliders = Physics.OverlapSphere(finalRes.Item1.position, sphereColliderRange);
+        foreach (var hitCollider in hitColliders)
+        {
+            if (hitCollider.gameObject.tag.Equals("Spawn Point"))
+            {
+                if (hitCollider.gameObject.GetComponent<SpawnPoint>())
+                {
+                    Debug.Log($"SpawnManager virtual contestion {hitCollider.name}");
+
+                    float sqrDist = (finalRes.Item1.position - hitCollider.transform.position).sqrMagnitude;
+                    int level;
+                    if (sqrDist > 8f * 8f)
+                        level = GetBlockingLevel(finalRes.Item1, hitCollider.transform.position, 10, 10, 10);
+                    else if (sqrDist > 5f * 5f)
+                        level = GetBlockingLevel(finalRes.Item1, hitCollider.transform.position, 15, 15, 15);
+                    else
+                        level = GetBlockingLevel(finalRes.Item1, hitCollider.transform.position, 20, 20, 20);
+
+                    hitCollider.gameObject.GetComponent<SpawnPoint>().AddBlockingLevelEntry(Random.Range(-100, -200), level, 2);
+                }
+            }
+        }
+
+        return finalRes;
     }
 
     public Transform GetSpawnPointAtPos(Vector3 p)
