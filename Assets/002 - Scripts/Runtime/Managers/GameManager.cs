@@ -549,7 +549,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
 
-    bool _playerDataRetrieved;
+    bool _playerDataRetrieved, _currentLevelHasWater;
     float _checkCooldown;
     ControllerType _activeControllerType;
 
@@ -562,7 +562,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
 
-
+    public bool currentLevelHasWater { get { return _currentLevelHasWater; } private set {  _currentLevelHasWater = value; } }
     public LayerMask bulletLayerMask, markLayerMask, ragdollHumpLayerMask, obstructionMask, reticuleFrictionMask, hitboxlayerMask, playerCapsuleLayerMask, thirdPersonMainCameraLayerMask;
 
 
@@ -876,6 +876,8 @@ public class GameManager : MonoBehaviourPunCallbacks
             //FindObjectOfType<GameTime>().timeRemaining = 0;
         }
         OnGameManagerFinishedLoadingScene_Late?.Invoke();
+
+        currentLevelHasWater = LEVELS_WITH_WATER.Contains(SceneManager.GetActiveScene().buildIndex);
     }
 
     // called third

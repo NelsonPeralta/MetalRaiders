@@ -29,12 +29,15 @@ public class AchievementManager : MonoBehaviour
 
             if (_sticksInCurrentGame == 3)
             {
-                Steamworks.SteamUserStats.GetAchievement("STICKY_FINGERS", out _achUnlocked);
-
-                if (!_achUnlocked)
+                if (GameManager.instance.connection == GameManager.NetworkType.Internet)
                 {
-                    Debug.Log("UNLOCKED ACHIVEMENT STICKY_FINGERS");
-                    UnlockAchievement("STICKY_FINGERS");
+                    Steamworks.SteamUserStats.GetAchievement("STICKY_FINGERS", out _achUnlocked);
+
+                    if (!_achUnlocked)
+                    {
+                        Debug.Log("UNLOCKED ACHIVEMENT STICKY_FINGERS");
+                        UnlockAchievement("STICKY_FINGERS");
+                    }
                 }
             }
         }
@@ -139,9 +142,12 @@ public class AchievementManager : MonoBehaviour
 
     public static void UnlockAchievement(string an)
     {
-        Log.Print($"UnlockAchievement {an}");
-        Steamworks.SteamUserStats.SetAchievement(an);
-        Steamworks.SteamUserStats.StoreStats();
+        if (GameManager.instance.connection == GameManager.NetworkType.Internet)
+        {
+            Log.Print($"UnlockAchievement {an}");
+            Steamworks.SteamUserStats.SetAchievement(an);
+            Steamworks.SteamUserStats.StoreStats();
+        }
     }
 
     public static void ResetTempAchivementVariables()

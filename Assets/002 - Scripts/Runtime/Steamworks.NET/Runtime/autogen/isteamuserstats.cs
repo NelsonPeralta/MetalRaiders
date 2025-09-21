@@ -69,6 +69,9 @@ namespace Steamworks {
 		/// <para> Achievement flag accessors</para>
 		/// </summary>
 		public static bool GetAchievement(string pchName, out bool pbAchieved) {
+
+			if (GameManager.instance.connection == GameManager.NetworkType.Local) { pbAchieved = false; return false; }
+
 			InteropHelp.TestIfAvailableClient();
 			using (var pchName2 = new InteropHelp.UTF8StringHandle(pchName)) {
 				return NativeMethods.ISteamUserStats_GetAchievement(CSteamAPIContext.GetSteamUserStats(), pchName2, out pbAchieved);

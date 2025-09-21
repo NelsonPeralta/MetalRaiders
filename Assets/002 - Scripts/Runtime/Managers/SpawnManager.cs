@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Rewired;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
@@ -54,8 +55,97 @@ public class SpawnManager : MonoBehaviour
 
     private void Start()
     {
+        _udpateSpawnPointsData = 0.1f;
         oddballSpawnPoint = FindObjectOfType<OddballSpawnPoint>();
     }
+
+
+
+    // Class-level reusable list
+
+
+
+    float _udpateSpawnPointsData;
+    private void Update()
+    {
+        if (!CurrentRoomManager.instance.gameStarted || CurrentRoomManager.instance.gameOver)
+            return;
+
+        if (_udpateSpawnPointsData > 0)
+        {
+            _udpateSpawnPointsData -= Time.deltaTime;
+
+            if (_udpateSpawnPointsData <= 0f)
+            {
+                List<SpawnPoint> spawnPoints = null;
+
+                if (GameManager.instance.teamMode == GameManager.TeamMode.None)
+                {
+                    spawnPoints = spawnManagerInstance.genericSpawnPoints;
+                }
+                else
+                {
+                    _tempListOfSpawns.Clear();
+                    _tempListOfSpawns.AddRange(spawnManagerInstance.redSpawnPoints);
+                    _tempListOfSpawns.AddRange(spawnManagerInstance.blueSpawnPoints);
+                    spawnPoints = _tempListOfSpawns;
+                }
+
+
+
+
+
+                var players = GameManager.instance.GetAllPhotonPlayers();
+
+                for (int i = 0; i < spawnPoints.Count; i++)
+                {
+                    for (int j = 0; j < players.Count; j++)
+                    {
+                        var spawnPos = spawnPoints[i].transform.position;
+                        var player = players[j];
+                        var playerPos = player.transform.position;
+
+                        float sqrDist = (spawnPos - playerPos).sqrMagnitude;
+
+                        if (sqrDist > 42f * 42f)
+                            continue;
+
+                        int level;
+                        if (sqrDist > 35f * 35f)
+                            level = GetBlockingLevel(player, spawnPos, 3, 1, 3);
+                        else if (sqrDist > 30f * 30f)
+                            level = GetBlockingLevel(player, spawnPos, 4, 2, 4);
+                        else if (sqrDist > 25f * 25f)
+                            level = GetBlockingLevel(player, spawnPos, 5, 3, 5);
+                        else if (sqrDist > 20f * 20f)
+                            level = GetBlockingLevel(player, spawnPos, 6, 4, 6);
+                        else if (sqrDist > 15f * 15f)
+                            level = GetBlockingLevel(player, spawnPos, 7, 5, 7);
+                        else if (sqrDist > 10f * 10f)
+                            level = GetBlockingLevel(player, spawnPos, 8, 6, 8);
+                        else
+                            level = GetBlockingLevel(player, spawnPos, 9, 7, 9);
+
+                        int id = (i + 1) + ((j + 1) * 1000);
+                        spawnPoints[i].AddBlockingLevelEntry(id, level, SpawnPoint.SeenResetTime);
+                    }
+                }
+
+                _udpateSpawnPointsData = 0.1f;
+            }
+        }
+    }
+
+    private int GetBlockingLevel(Player player, Vector3 spawnPos, int front, int side, int back)
+    {
+        Vector3 toSpawn = (spawnPos - player.transform.position).normalized;
+        float dot = Vector3.Dot(player.transform.forward, toSpawn);
+
+        if (dot > 0.866f) return front;   // Front ±30°
+        else if (dot > 0f) return side;   // Sides
+        else return back;                 // Back
+    }
+
 
     public Transform GetSpawnPointAtIndex(int i, GameManager.Team team)
     {

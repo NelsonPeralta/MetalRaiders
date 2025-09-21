@@ -147,7 +147,7 @@ public class LootableWeapon : InteractableObject //IPunObservable*/
         }
 
 
-        if (GameManager.LEVELS_WITH_WATER.Contains(SceneManager.GetActiveScene().buildIndex))
+        if (GameManager.instance.currentLevelHasWater)
         {
             if (_lastPos != Vector3.zero && _lastPos != transform.position)
             {
