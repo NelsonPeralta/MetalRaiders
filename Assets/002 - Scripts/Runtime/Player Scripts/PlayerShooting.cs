@@ -796,7 +796,7 @@ public class PlayerShooting : MonoBehaviourPun
                     bullet.gameObject.GetComponent<Bullet>().range = (int)weaponToShoot.range;
                     bullet.gameObject.GetComponent<Bullet>().speed = (int)weaponToShoot.bulletSpeed;
 
-                    if (weaponToShoot.hybridHitscan && weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet && player.aimAssist.redReticuleIsOn) { bullet.gameObject.GetComponent<Bullet>().speed = 999; Log.Print("hybrid hitscan working"); }
+                    if (weaponToShoot.hybridHitscan /*&& weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet*/ && player.aimAssist.redReticuleIsOn) { bullet.gameObject.GetComponent<Bullet>().speed = 999; Log.Print("hybrid hitscan working"); }
 
                     if (overcharge) bullet.gameObject.GetComponent<Bullet>().speed = (int)(weaponToShoot.bulletSpeed * 0.65f);
                     //bullet.gameObject.GetComponent<Bullet>().playerRewiredID = playerRewiredID;
