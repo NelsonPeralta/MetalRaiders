@@ -74747,12 +74747,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6447288362964123378, guid: e53cb99c962035042aa16ab7761f818c,
+        type: 3}
+      propertyPath: audioSource
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 6447288362964254560, guid: e53cb99c962035042aa16ab7761f818c,
         type: 3}
       propertyPath: m_Name
       value: Bush (With Noise)
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 6447288362964254560, guid: e53cb99c962035042aa16ab7761f818c,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents:
+    - {fileID: 6447288362964123377, guid: e53cb99c962035042aa16ab7761f818c, type: 3}
+    - {fileID: 6447288362964123376, guid: e53cb99c962035042aa16ab7761f818c, type: 3}
+    - {fileID: 6447288362964123383, guid: e53cb99c962035042aa16ab7761f818c, type: 3}
+    - {fileID: 6447288362964123378, guid: e53cb99c962035042aa16ab7761f818c, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
