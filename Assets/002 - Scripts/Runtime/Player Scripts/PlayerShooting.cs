@@ -456,44 +456,40 @@ public class PlayerShooting : MonoBehaviourPun
     }
 
 
-
     int _ignoreShootCounter;
     List<RaycastHit> fakeBulletTrailRaycasthits = new List<RaycastHit>(16);
     readonly RaycastHit[] _fakeTrailHitsBuffer = new RaycastHit[16];
 
     void shoooo(bool isLeftWeapon = false, bool overcharge = false, bool fakeBulForPB = false)
     {
-        // Cache frequently used components / properties to avoid repeated GetComponent calls
         var gwp = playerController.GetComponent<GeneralWeapProperties>();
         gwp.ResetLocalTransform();
 
-        var pcPlayerComp = playerController.GetComponent<Player>();
-        if (pcPlayerComp.isDead || pcPlayerComp.isRespawning)
+        var pcPlayer = playerController.GetComponent<Player>();
+        if (pcPlayer.isDead || pcPlayer.isRespawning)
             return;
 
-        var activeWeapon = playerController.pInventory.activeWeapon;
-        var activeWeaponType = playerController.pInventory.activeWeapon.weaponType;
-
-        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || activeWeaponType == WeaponProperties.WeaponType.Heavy)
+        if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On ||
+            playerController.pInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
         {
-            var aimAssist = pcPlayerComp.aimAssist;
-            var tpsCtrl = playerController.gwProperties.tpsBulletRotationToCameraCenterControl;
+            var tpsCtrl = gwp.tpsBulletRotationToCameraCenterControl;
             tpsCtrl.localRotation = Quaternion.identity;
 
+            var aimAssist = pcPlayer.aimAssist;
             if (!aimAssist.redReticuleIsOn && !aimAssist.invisibleAimAssistOn)
             {
                 Log.Print(() => "Third Person Mode NO aim assist");
-                tpsCtrl.LookAt(playerController.player.playerCamera.playerCameraCenterPointCheck.target.position);
+                tpsCtrl.LookAt(pcPlayer.playerCamera.playerCameraCenterPointCheck.target.position);
             }
             else
             {
                 Log.Print(() => "Third Person Mode aim assist");
-                tpsCtrl.LookAt(pcPlayerComp.aimAssist.closestHbToCrosshairCenter.transform.position);
+                tpsCtrl.LookAt(aimAssist.closestHbToCrosshairCenter.transform.position);
             }
         }
 
         playerController.SetCurrentlyShootingReset();
-        playerController.player.assignActorPlayerTargetOnShootingSphere.TriggerBehaviour();
+        pcPlayer.assignActorPlayerTargetOnShootingSphere.TriggerBehaviour();
 
         int counter = 1;
         WeaponProperties weaponToShoot = pInventory.activeWeapon.GetComponent<WeaponProperties>();
@@ -501,178 +497,104 @@ public class PlayerShooting : MonoBehaviourPun
 
         if (weaponToShoot.isShotgun)
         {
-            counter = weaponToShoot.numberOfPellets;
-            // you're overwriting counter with pelletSpawnPoints.Count in original; preserve that:
             counter = gwp.pelletSpawnPoints.Count;
-            if (weaponToShoot.isShotgun)
-            {
-                // pre-fill quats list with identity if original did it (preserve original behavior)
-                for (int j = 0; j < gwp.pelletSpawnPoints.Count; j++)
-                    quats.Add(Quaternion.Euler(Vector3.zero));
-            }
+            for (int j = 0; j < gwp.pelletSpawnPoints.Count; j++)
+                quats.Add(Quaternion.Euler(Vector3.zero));
         }
 
-        // Loop through pellets / shots
         for (int i = 0; i < counter; i++)
         {
-            if (weaponToShoot.ammoProjectileType != WeaponProperties.AmmoProjectileType.Bullet &&
-                weaponToShoot.ammoProjectileType != WeaponProperties.AmmoProjectileType.Plasma)
-                continue;
-
-            Player player = playerController.GetComponent<Player>();
-            Quaternion ranSprayQuat = weaponToShoot.GetRandomSprayRotation();
-
-            if (playerController.isAiming && weaponToShoot.hipSprayOnly)
-                ranSprayQuat = Quaternion.identity;
-
-            if (weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet || (fakeBulForPB && GameManager.instance.nbLocalPlayersPreset > 1))
+            if (weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet ||
+                weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
             {
-                if (weaponToShoot == playerController.player.playerInventory.thirdWeapon)
-                    Log.Print(() => "spawning FAKE bullet");
+                Player player = pcPlayer;
+                Quaternion ranSprayQuat = weaponToShoot.GetRandomSprayRotation();
+                if (playerController.isAiming && weaponToShoot.hipSprayOnly)
+                    ranSprayQuat = Quaternion.identity;
 
-                // perform fake bullet trail logic (was using RaycastAll + LINQ)
+                if (weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Bullet ||
+                    (fakeBulForPB && GameManager.instance.nbLocalPlayersPreset > 1))
                 {
-                    // RaycastNonAlloc into buffer to avoid allocations
-                    int hitCount = Physics.RaycastNonAlloc(
-                        player.mainCamera.transform.position,
-                        player.mainCamera.transform.forward,
-                        _fakeTrailHitsBuffer,
-                        playerController.pInventory.activeWeapon.range,
-                        _fakeBulletTrailCollisionLayerMask
-                    );
+                    if (weaponToShoot == pcPlayer.playerInventory.thirdWeapon)
+                        Log.Print(() => "spawning FAKE bullet");
 
-                    // reuse list: clear and populate from buffer, skipping ManCannon (GetComponent check)
+                    // RaycastNonAlloc for zero allocations
+                    int hitCount = Physics.RaycastNonAlloc(player.mainCamera.transform.position,
+                                                           player.mainCamera.transform.forward,
+                                                           _fakeTrailHitsBuffer,
+                                                           weaponToShoot.range,
+                                                           _fakeBulletTrailCollisionLayerMask);
+
                     fakeBulletTrailRaycasthits.Clear();
                     for (int h = 0; h < hitCount; h++)
                     {
                         var rh = _fakeTrailHitsBuffer[h];
-                        // preserve original filtering of ManCannon if present
-                        if (rh.collider != null && rh.collider.GetComponent<ManCannon>() != null) continue;
-                        fakeBulletTrailRaycasthits.Add(rh);
+                        if (rh.collider != null && rh.collider.transform.root != player.transform)
+                            fakeBulletTrailRaycasthits.Add(rh);
                     }
 
                     if (fakeBulletTrailRaycasthits.Count <= 0)
                     {
-                        // no colliders found -> spawn max length fake trail
                         pInventory.SpawnFakeBulletTrail(fakeBulForPB ? PlayerInventory.FakeTrailColor.red : PlayerInventory.FakeTrailColor.yellow,
-                            (int)weaponToShoot.range,
-                            ranSprayQuat,
-                            player.isMine,
+                            (int)weaponToShoot.range, ranSprayQuat, player.isMine,
                             muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position);
                     }
                     else
                     {
-                        // remove hits that originate from this player's root
-                        for (int j = fakeBulletTrailRaycasthits.Count - 1; j >= 0; j--)
-                        {
-                            if (fakeBulletTrailRaycasthits[j].collider != null &&
-                                fakeBulletTrailRaycasthits[j].collider.transform.root == player.transform)
-                            {
-                                fakeBulletTrailRaycasthits.RemoveAt(j);
-                            }
-                        }
-
-                        // sort in-place by squared distance (preserves same order as Distance)
                         var camPos = player.mainCamera.transform.position;
-                        fakeBulletTrailRaycasthits.Sort((a, b) =>
+                        fakeBulletTrailRaycasthits.Sort((a, b) => (a.point - camPos).sqrMagnitude.CompareTo((b.point - camPos).sqrMagnitude));
+
+                        var firstHit = fakeBulletTrailRaycasthits[0].point;
+                        var muzzlePos = weaponToShoot.tpsMuzzleFlash.transform.position;
+
+                        if (Vector3.Dot(firstHit - camPos, firstHit - muzzlePos) > 0)
                         {
-                            float da = (a.point - camPos).sqrMagnitude;
-                            float db = (b.point - camPos).sqrMagnitude;
-                            return da.CompareTo(db);
-                        });
-
-                        if (fakeBulletTrailRaycasthits.Count > 0)
-                        {
-                            // preserve original debug prints and branching logic
-                            //Log.Print("There is a collider at the center of our main camera. " +
-                            //    $"The dot product is: {Vector3.Dot(fakeBulletTrailRaycasthits[0].point - player.mainCamera.transform.position, fakeBulletTrailRaycasthits[0].point - playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position)}");
-
-                            //Log.Print($"The distance between the muzzle and the hit at the center of the camera is: " +
-                            //    $"{Vector3.Distance(playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position, fakeBulletTrailRaycasthits[0].point)}");
-
-                            var firstPoint = fakeBulletTrailRaycasthits[0].point;
-                            var muzzlePos = playerController.pInventory.activeWeapon.tpsMuzzleFlash.transform.position;
-                            if (Vector3.Dot(firstPoint - player.mainCamera.transform.position, firstPoint - muzzlePos) > 0)
+                            if (Vector3.Distance(muzzlePos, firstHit) > 4)
                             {
-                                if (Vector3.Distance(muzzlePos, firstPoint) > 4f)
-                                {
-                                    pInventory.SpawnFakeBulletTrail(
-                                        fakeBulForPB ? PlayerInventory.FakeTrailColor.red : PlayerInventory.FakeTrailColor.yellow,
-                                        (int)Vector3.Distance(muzzlePos, firstPoint),
-                                        ranSprayQuat,
-                                        player.isMine,
-                                        muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position,
-                                        lookAtThisTarget: (playerController.player.aimAssist.targetPointPosition != Vector3.zero ? playerController.player.aimAssist.targetPointPosition : firstPoint)
-                                    );
-                                }
-                                else
-                                {
-                                    // do not show fake trail if too close (preserve original behavior)
-                                }
-                            }
-                            else
-                            {
-                                pInventory.SpawnFakeBulletTrail(
-                                    fakeBulForPB ? PlayerInventory.FakeTrailColor.red : PlayerInventory.FakeTrailColor.yellow,
-                                    (int)playerController.pInventory.activeWeapon.range,
-                                    ranSprayQuat,
-                                    player.isMine,
-                                    muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position
-                                );
+                                pInventory.SpawnFakeBulletTrail(fakeBulForPB ? PlayerInventory.FakeTrailColor.red : PlayerInventory.FakeTrailColor.yellow,
+                                    (int)Vector3.Distance(muzzlePos, firstHit),
+                                    ranSprayQuat, player.isMine,
+                                    muzzlePosition: muzzlePos,
+                                    lookAtThisTarget: (pcPlayer.aimAssist.targetPointPosition != Vector3.zero ? pcPlayer.aimAssist.targetPointPosition : firstHit));
                             }
                         }
                         else
                         {
-                            pInventory.SpawnFakeBulletTrail(
-                                fakeBulForPB ? PlayerInventory.FakeTrailColor.red : PlayerInventory.FakeTrailColor.yellow,
-                                (int)playerController.pInventory.activeWeapon.range,
-                                ranSprayQuat,
-                                player.isMine,
-                                muzzlePosition: weaponToShoot.tpsMuzzleFlash.transform.position
-                            );
+                            pInventory.SpawnFakeBulletTrail(fakeBulForPB ? PlayerInventory.FakeTrailColor.red : PlayerInventory.FakeTrailColor.yellow,
+                                (int)weaponToShoot.range,
+                                ranSprayQuat, player.isMine,
+                                muzzlePosition: muzzlePos);
                         }
                     }
                 }
-            }
 
-            // --- projectile spawning logic (unchanged) ---
-            if (player.isMine || weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
-            {
-                GameObject bullet = null;
-
-                if (!fakeBulForPB)
+                if (player.isMine || weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
                 {
-                    GameObjectPool.BulletType bulletType = GameObjectPool.BulletType.normal;
-                    if (weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
+                    GameObject bullet = null;
+
+                    if (!fakeBulForPB)
                     {
-                        switch (weaponToShoot.plasmaColor)
+                        GameObjectPool.BulletType bulletType = GameObjectPool.BulletType.normal;
+                        if (weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Plasma)
                         {
-                            case WeaponProperties.PlasmaColor.Blue: bulletType = GameObjectPool.BulletType.blue_plasma_round; break;
-                            case WeaponProperties.PlasmaColor.Green: bulletType = GameObjectPool.BulletType.green_plasma_round; break;
-                            case WeaponProperties.PlasmaColor.Shard: bulletType = GameObjectPool.BulletType.shard_round; break;
-                            default: bulletType = GameObjectPool.BulletType.normal; break;
+                            switch (weaponToShoot.plasmaColor)
+                            {
+                                case WeaponProperties.PlasmaColor.Blue: bulletType = GameObjectPool.BulletType.blue_plasma_round; break;
+                                case WeaponProperties.PlasmaColor.Green: bulletType = GameObjectPool.BulletType.green_plasma_round; break;
+                                case WeaponProperties.PlasmaColor.Shard: bulletType = GameObjectPool.BulletType.shard_round; break;
+                            }
                         }
+                        bullet = GameObjectPool.instance.SpawnPooledBullet(bulletType);
                     }
-                    bullet = GameObjectPool.instance.SpawnPooledBullet(bulletType);
-                }
-                else
-                {
-                    Log.Print(() => $"Shooting Plasma bullet 0 {fakeBulForPB == true} {overcharge} {weaponToShoot.targetTracking}");
-                    if (GameManager.instance.nbLocalPlayersPreset == 1)
+                    else if (GameManager.instance.nbLocalPlayersPreset == 1)
                     {
-                        Log.Print(() => $"Shooting Plasma bullet 1 {fakeBulForPB == true} {overcharge} {weaponToShoot.targetTracking}");
                         bullet = GameObjectPool.instance.SpawnPooledBullet(BulletType.red_plasma_round);
                         bullet.transform.localScale = Vector3.one;
-
                         var bComp = bullet.GetComponent<Bullet>();
-                        if (bComp != null)
-                        {
-                            bComp.damage = 0;
-                            bComp.speed = 150;
-                            bComp.range = 100;
-                            bComp.weaponProperties = weaponToShoot;
-                        }
-
+                        bComp.damage = 0;
+                        bComp.speed = 150;
+                        bComp.range = 100;
+                        bComp.weaponProperties = weaponToShoot;
                         bullet.transform.position = gwp.bulletSpawnPoint.transform.position;
                         bullet.transform.rotation = gwp.bulletSpawnPoint.transform.rotation;
                         bullet.SetActive(true);
@@ -680,143 +602,106 @@ public class PlayerShooting : MonoBehaviourPun
                     }
                     else if (GameManager.instance.nbLocalPlayersPreset > 1)
                     {
-                        Log.Print(() => $"Shooting Plasma bullet 2 {fakeBulForPB == true} {overcharge} {weaponToShoot.targetTracking}");
                         return;
                     }
-                    else
-                    {
-                        Log.Print(() => $"Shooting Plasma bullet 3 {fakeBulForPB == true} {overcharge} {weaponToShoot.targetTracking}");
-                    }
-                }
 
-                Log.Print(() => $"Shooting Plasma bullet {fakeBulForPB == true} {overcharge} {weaponToShoot.targetTracking}");
-                bullet.transform.localScale = Vector3.one;
-
-                var bulletComp = bullet.GetComponent<Bullet>();
-                if (bulletComp != null) bulletComp.weaponProperties = weaponToShoot;
-
-                if (overcharge) bullet.transform.localScale = Vector3.one * 5f;
-
-                if (bulletComp != null)
-                {
+                    bullet.transform.localScale = Vector3.one;
+                    var bulletComp = bullet.GetComponent<Bullet>();
+                    bulletComp.weaponProperties = weaponToShoot;
                     bulletComp.overcharged = false;
                     bulletComp.trackingTarget = null;
-                }
 
-                if (weaponToShoot.targetTracking)
-                {
-                    Log.Print(() => $"Bullet 1");
-                    if (!weaponToShoot.overcharge)
+                    if (weaponToShoot.targetTracking)
                     {
-                        Log.Print(() => $"Bullet 2");
-                        if (bulletComp != null) bulletComp.trackingTarget = trackingTarget;
-                    }
-                    else
-                    {
-                        Log.Print(() => $"Bullet 3");
-                        if (overcharge)
+                        if (!weaponToShoot.overcharge)
+                            bulletComp.trackingTarget = trackingTarget;
+                        else if (overcharge)
                         {
-                            Log.Print(() => $"Bullet 4");
-                            if (bulletComp != null)
-                            {
-                                bulletComp.trackingTarget = trackingTarget;
-                                bulletComp.overcharged = overcharge;
-                                bulletComp.damage = 25;
-                            }
+                            bulletComp.trackingTarget = trackingTarget;
+                            bulletComp.overcharged = overcharge;
+                            bulletComp.damage = 25;
                         }
                     }
-                }
-                Log.Print(() => $"Active weapon has target tracking: {weaponToShoot.targetTracking}. PlayerShooting script has tracking target {trackingTarget}. {overcharge}");
 
-                Log.Print(() => bullet);
-                Log.Print(() => weaponToShoot);
+                    if (!pcPlayer.aimAssist.redReticuleIsOn && !pcPlayer.aimAssist.invisibleAimAssistOn)
+                        gwp.ResetLocalTransform();
 
-                var disableComp = bullet.GetComponent<DisableAfterXSeconds>();
-                if (disableComp != null) disableComp.enabled = false;
-
-                if (!pcPlayerComp.aimAssist.redReticuleIsOn && !pcPlayerComp.aimAssist.invisibleAimAssistOn)
-                    gwp.ResetLocalTransform();
-
-                try
-                {
                     if (weaponToShoot.isShotgun)
                         quats[i] = UnityEngine.Random.rotation;
                     else
                         gwp.bulletSpawnPoint.transform.localRotation *= ranSprayQuat;
-                }
-                catch { }
 
-                if (weaponToShoot.isShotgun)
-                {
-                    quats[i] = UnityEngine.Random.rotation;
-                    bullet.transform.position = gwp.pelletSpawnPoints[i].position;
-                    bullet.transform.rotation = gwp.pelletSpawnPoints[i].rotation;
-                    bullet.transform.rotation = Quaternion.RotateTowards(gwp.pelletSpawnPoints[i].rotation, quats[i], weaponToShoot.bulletSpray);
-                }
-                else
-                {
-                    bullet.transform.position = gwp.bulletSpawnPoint.transform.position;
-                    bullet.transform.rotation = gwp.bulletSpawnPoint.transform.rotation;
-                }
-
-                // cache bullet component operations
-                var bComp2 = bullet.GetComponent<Bullet>();
-                if (bComp2 != null)
-                {
-                    bComp2.sourcePlayer = playerController.GetComponent<Player>();
-                    bComp2.weaponProperties = weaponToShoot;
-                    bComp2.damage = (int)(playerController.GetComponent<Player>().playerInventory.activeWeapon.damage * (player.isDualWielding ? 0.75f : 1));
-                    if (overcharge) bComp2.damage *= 5;
-                    bComp2.range = (int)weaponToShoot.range;
-                    bComp2.speed = (int)weaponToShoot.bulletSpeed;
-
-                    if (weaponToShoot.hybridHitscan && player.aimAssist.redReticuleIsOn)
+                    if (weaponToShoot.isShotgun)
                     {
-                        bComp2.speed = 999;
-                        Log.Print(() => "hybrid hitscan working");
+                        bullet.transform.position = gwp.pelletSpawnPoints[i].position;
+                        bullet.transform.rotation = gwp.pelletSpawnPoints[i].rotation;
+                        bullet.transform.rotation = Quaternion.RotateTowards(gwp.pelletSpawnPoints[i].rotation, quats[i], weaponToShoot.bulletSpray);
+                    }
+                    else
+                    {
+                        bullet.transform.position = gwp.bulletSpawnPoint.transform.position;
+                        bullet.transform.rotation = gwp.bulletSpawnPoint.transform.rotation;
                     }
 
-                    if (overcharge) bComp2.speed = (int)(weaponToShoot.bulletSpeed * 0.65f);
+                    bulletComp.sourcePlayer = pcPlayer;
+                    bulletComp.weaponProperties = weaponToShoot;
+                    bulletComp.damage = (int)(weaponToShoot.damage * (player.isDualWielding ? 0.75f : 1));
+                    if (overcharge) bulletComp.damage *= 5;
+                    bulletComp.range = (int)weaponToShoot.range;
+                    bulletComp.speed = (int)weaponToShoot.bulletSpeed;
+                    if (weaponToShoot.hybridHitscan && player.aimAssist.redReticuleIsOn)
+                        bulletComp.speed = 999;
+                    if (overcharge)
+                        bulletComp.speed = (int)(weaponToShoot.bulletSpeed * 0.65f);
+
+                    bullet.SetActive(true);
+                    if (weaponToShoot.plasmaColor != WeaponProperties.PlasmaColor.Shard)
+                    {
+                        weaponToShoot.currentOverheat = Mathf.Clamp(weaponToShoot.currentOverheat + weaponToShoot.overheatPerShot, 0, 100);
+                        if (overcharge) weaponToShoot.currentOverheat = 100;
+                    }
                 }
 
-                Log.Print(() => $"bullet time test. Spawned at: {Time.time}");
-                bullet.SetActive(true);
-
-                if (weaponToShoot.plasmaColor != WeaponProperties.PlasmaColor.Shard)
-                {
-                    weaponToShoot.currentOverheat = Mathf.Clamp(weaponToShoot.currentOverheat + weaponToShoot.overheatPerShot, 0, 100);
-                    if (overcharge) weaponToShoot.currentOverheat = 100;
-                }
+                weaponToShoot.SpawnMuzzleflash();
             }
-            // End projectile spawning logic
-
-            weaponToShoot.SpawnMuzzleflash();
-        } // end for
+            else if (weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket ||
+                     weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Grenade)
+            {
+                if (pcPlayer.isMine)
+                {
+                    var spawnPoint = gwp.bulletSpawnPoint.transform;
+                    if (weaponToShoot.ammoProjectileType == WeaponProperties.AmmoProjectileType.Rocket)
+                    {
+                        PV.RPC("SpawnFakeExplosiveProjectile_RPC", RpcTarget.AllViaServer,
+                            GrenadePool.GetAvailableRocketAtIndex(pcPlayer.playerDataCell.photonRoomIndex),
+                            spawnPoint.position, spawnPoint.rotation.eulerAngles);
+                    }
+                    else
+                    {
+                        PV.RPC("SpawnFakeExplosiveProjectile_RPC", RpcTarget.AllViaServer,
+                            GrenadePool.GetAvailableGrenadeLauncherProjectileAtIndex(pcPlayer.playerDataCell.photonRoomIndex),
+                            spawnPoint.position, spawnPoint.rotation.eulerAngles);
+                    }
+                }
+                weaponToShoot.SpawnMuzzleflash();
+            }
+        }
 
         if (!PV.IsMine)
             _ignoreShootCounter++;
 
         if (PV.IsMine)
-        {
-            if (!overcharge)
-            {
-                Log.Print(() => "removing 1 loaded ammo");
-                weaponToShoot.loadedAmmo -= 1;
-            }
-            else
-                weaponToShoot.loadedAmmo -= 10;
-        }
+            weaponToShoot.loadedAmmo -= overcharge ? 10 : 1;
 
         try
         {
-            if (!playerController.player.playerInventory.isDualWielding)
+            if (!pcPlayer.playerInventory.isDualWielding)
                 weaponToShoot.GetComponent<Animator>().Play("Fire", 0, 0f);
             else
                 weaponToShoot.GetComponent<Animator>().Play("dw fire", 0, 0f);
         }
-        catch (System.Exception e) { Log.PrintError(() => e); }
+        catch (System.Exception e) { Log.PrintError(()=>e); }
 
-        Log.Print(() => "Calling Recoil()");
         weaponToShoot.Recoil();
 
         if (!isLeftWeapon)
@@ -832,6 +717,8 @@ public class PlayerShooting : MonoBehaviourPun
 
         OnBulletSpawned?.Invoke(this);
     }
+
+
 
 
 
