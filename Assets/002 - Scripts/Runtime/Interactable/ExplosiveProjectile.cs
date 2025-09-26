@@ -13,7 +13,6 @@ public class ExplosiveProjectile : MonoBehaviour
 {
     public Player player { get { return _player; } set { _player = value; } }
     //public int throwForce { get { return _throwForce; } set { _throwForce = value; } }
-    public bool useConstantForce { get { return _useConstantForce; } set { _useConstantForce = value; } }
     public GameObject model { get { return _model; } }
     public GameObject visualIndicator { get { return _visualIndicator; } }
     public GameObject visualIndicatorDuplicate { get { return _visualIndicatorDuplicate; } }
@@ -23,7 +22,6 @@ public class ExplosiveProjectile : MonoBehaviour
     [SerializeField] int _damage, _radius, /*_throwForce,*/ _explosionPower, _stuckPlayerPhotonId;
     [SerializeField] string _sourceCleanName;
     [SerializeField] WeaponProperties.KillFeedOutput _killFeedOutput;
-    [SerializeField] bool _useConstantForce;
     [SerializeField] float _defaultExplosionDelayOnImpact;
     [SerializeField] Transform explosionPrefab;
     [SerializeField] AudioClip _collisionSound;

@@ -19,6 +19,8 @@ public class PlayerOddballWorldUiMarker : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (CurrentRoomManager.instance.gameOver) return;
+
         if (GameManager.instance.teamMode == GameManager.TeamMode.None)
             _skullTag.SetActive(player.playerInventory.playerOddballActive);
         else

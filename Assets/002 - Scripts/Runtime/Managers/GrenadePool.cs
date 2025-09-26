@@ -167,8 +167,7 @@ public class GrenadePool : MonoBehaviour
         _instance._rocketPool[index].GetComponent<Rigidbody>().linearVelocity = Vector3.zero; _instance._rocketPool[index].GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         _instance._rocketPool[index].gameObject.SetActive(true);
 
-        if (!_instance._rocketPool[index].useConstantForce)
-            _instance._rocketPool[index].GetComponent<Rigidbody>().AddForce(_instance._rocketPool[index].gameObject.transform.forward * WeaponProperties.ROCKET_LAUNCHER_CONTINUOUS_FORCE);
+        _instance._rocketPool[index].GetComponent<Rigidbody>().AddForce(_instance._rocketPool[index].gameObject.transform.forward * WeaponProperties.ROCKET_LAUNCHER_CONTINUOUS_FORCE);
     }
 
     public static void SpawnGrenadeLauncherProjectile(Player p, int index, Vector3 pos, Vector3 rot)
@@ -189,8 +188,7 @@ public class GrenadePool : MonoBehaviour
         _instance._glProjectilePool[index].transform.rotation = Quaternion.Euler(rot);
         _instance._glProjectilePool[index].GetComponent<Rigidbody>().linearVelocity = Vector3.zero; _instance._glProjectilePool[index].GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         _instance._glProjectilePool[index].gameObject.SetActive(true);
-        if (!_instance._glProjectilePool[index].useConstantForce)
-            _instance._glProjectilePool[index].GetComponent<Rigidbody>().AddForce(_instance._glProjectilePool[index].gameObject.transform.forward * WeaponProperties.ROCKET_LAUNCHER_CONTINUOUS_FORCE);
+        _instance._glProjectilePool[index].GetComponent<Rigidbody>().AddForce(_instance._glProjectilePool[index].gameObject.transform.forward * WeaponProperties.ROCKET_LAUNCHER_CONTINUOUS_FORCE);
     }
 
 
@@ -257,11 +255,11 @@ public class GrenadePool : MonoBehaviour
     {
         foreach (Explosion obj in instance._explosions)
         {
-            Log.Print(() =>$"SpawnExplosion. KFO: {obj.gameObject.activeInHierarchy} {obj.gameObject.activeSelf}");
+            Log.Print(() => $"SpawnExplosion. KFO: {obj.gameObject.activeInHierarchy} {obj.gameObject.activeSelf}");
 
             if (!obj.gameObject.activeInHierarchy)
             {
-                Log.Print(() =>$"SpawnExplosion. KFO: {(WeaponProperties.KillFeedOutput)kfo} damage: {damage} stuck: {stuck}");
+                Log.Print(() => $"SpawnExplosion. KFO: {(WeaponProperties.KillFeedOutput)kfo} damage: {damage} stuck: {stuck}");
                 obj.GetComponent<AudioSource>().clip = ac;
                 obj.player = source;
                 obj.killFeedOutput = kfo;
