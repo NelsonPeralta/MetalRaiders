@@ -338,7 +338,7 @@ public class Bullet : MonoBehaviourPunCallbacks
             transform.position = finalHitPoint;
 
             _spawnDir = finalHitPoint - _spawnDir;
-            Debug.Log($"BULLET CheckForFinalHit {finalHitObject.name} {damage}");
+            Log.Print(() =>$"BULLET CheckForFinalHit {finalHitObject.name} {damage}");
 
             if (weaponProperties.degradingDamage && finalHitDistance >= weaponProperties.degradingDamageStart)
                 damage = weaponProperties.degradedDamage;
@@ -394,7 +394,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                     if (weaponProperties.isHeadshotCapable && (hitbox.isHead || hitbox.isGroin))
                     {
-                        Debug.Log("asdf5");
+                        Log.Print(() =>"asdf5");
 
                         int maxShieldPoints = player.maxHitPoints - player.maxHealthPoints;
 
@@ -416,7 +416,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                     //if (sourcePlayer.PV.IsMine)
                     {
-                        Debug.Log("asdf6");
+                        Log.Print(() =>"asdf6");
 
 
                         if (player.hasArmor)
@@ -447,7 +447,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                         {
                             if (finalHitDamageable == null)
                             {
-                                //Debug.Log($"No IDamageeable script on {finalHitObject.name}");
+                                //Log.Print(() =>$"No IDamageeable script on {finalHitObject.name}");
                             }
                             else
                             {
@@ -457,7 +457,7 @@ public class Bullet : MonoBehaviourPunCallbacks
                                 }
                                 catch (Exception e)
                                 {
-                                    Debug.Log(finalHitObject.name);
+                                    Log.Print(() =>finalHitObject.name);
                                     Debug.LogException(e);
                                     //finalHitDamageable.Damage(damage);
                                 }

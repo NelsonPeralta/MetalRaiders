@@ -261,7 +261,7 @@ public class GameObjectPool : MonoBehaviour
 
     public GameObject SpawnBulletHole(Vector3 pos, Vector3 norm)
     {
-        Debug.Log("SpawnBulletHole");
+        Log.Print(() =>"SpawnBulletHole");
         foreach (GameObject obj in bulletMetalImpactList)
             if (!obj.activeSelf)
             {
