@@ -133,102 +133,151 @@ public class Bullet : MonoBehaviourPunCallbacks
 
 
 
-    List<RaycastHit> _hitList = new List<RaycastHit>();
+
+
+
+
+    // Reuse buffers to avoid allocations
+    RaycastHit[] _hitsBuffer = new RaycastHit[16]; // adjust size if needed
+    int _hitCount;
+    readonly List<RaycastHit> _hitList = new List<RaycastHit>(16);
     RaycastHit _tempRh;
+
     void ShootRay()
     {
         _prePos = transform.position;
-        _nextPos = transform.position + transform.TransformDirection(Vector3.forward) * speed * Time.deltaTime;
-        //transform.Translate(Vector3.forward * Time.deltaTime * bulletSpeed); // Moves the bullet at 'bulletSpeed' units per second
-
+        _nextPos = _prePos + transform.TransformDirection(Vector3.forward) * speed * Time.deltaTime;
         _dTravalled = Vector3.Distance(_prePos, _nextPos);
 
+        // Raycast non-alloc
+        _hitCount = Physics.RaycastNonAlloc(
+            _prePos,
+            (_nextPos - _prePos).normalized,
+            _hitsBuffer,
+            _dTravalled,
+            GameManager.instance.bulletLayerMask
+        );
 
-
-
-
-
-        RaycastHit[] hits;
-        _hitList = Physics.RaycastAll(_prePos, (_nextPos - _prePos).normalized, maxDistance: _dTravalled, layerMask: GameManager.instance.bulletLayerMask).ToList();
-        _hitList.RemoveAll(hit => hit.collider.GetComponent<ManCannon>());
-
-        if (_hitList.Count > 0)
+        // Clear and repopulate list
+        _hitList.Clear();
+        for (int i = 0; i < _hitCount; i++)
         {
-            if (_ignoreOriginPlayerTime > 0)
-                for (int i = _hitList.Count; i-- > 0;)
-                {
-                    _tempRh = _hitList[i];
-                    Log.Print($"bullet hit: {_hitList[i].collider.name} {_hitList[i].point}");
-                    if (_tempRh.collider.transform.root == weaponProperties.player.transform) _hitList.RemoveAt(i);
-                }
+            var hit = _hitsBuffer[i];
 
+            // skip ManCannon objects
+            if (hit.collider.GetComponent<ManCannon>() != null) continue;
 
+            _hitList.Add(hit);
+        }
 
+        if (_hitList.Count == 0) return;
 
-            if (_hitList.Count > 0)
+        // Filter out own player if needed
+        if (_ignoreOriginPlayerTime > 0)
+        {
+            for (int i = _hitList.Count; i-- > 0;)
             {
-                _hitList = _hitList.OrderBy(x => Vector2.Distance(_prePos, x.point)).ToList();
-
-
-
-
-                _tempRh = _hitList[0];
-                float _distanceFromSpawnToHit = Vector3.Distance(originalPos, _tempRh.point);
-
-                if (_distanceFromSpawnToHit <= weaponProperties.range)
+                _tempRh = _hitList[i];
+                Log.Print("bullet hit: " + _tempRh.collider.name + " " + _tempRh.point);
+                if (_tempRh.collider.transform.root == weaponProperties.player.transform)
                 {
-                    ObjectHit newHit = new ObjectHit(_tempRh.collider.gameObject, _tempRh, _tempRh.point, Vector3.Distance(playerPosWhenBulletShot, _tempRh.point));
-                    objectsHit.Add(newHit);
-                }
-
-                if (objectsHit.Count > 0 && !damageDealt)
-                {
-                    if (damage > 0) CheckForFinalHit();
-                    Log.Print($"bullet time test. Despawned at: {Time.time}");
+                    _hitList.RemoveAt(i);
                 }
             }
         }
 
+        if (_hitList.Count == 0) return;
 
+        // Sort by distance (in-place to avoid allocations)
+        _hitList.Sort((a, b) =>
+        {
+            float da = (_prePos - a.point).sqrMagnitude;
+            float db = (_prePos - b.point).sqrMagnitude;
+            return da.CompareTo(db);
+        });
 
-        return;
-        //RaycastHit[] m_Results = new RaycastHit[5];
-        //Ray r = new Ray(_prePos, (_nextPos - _prePos).normalized);
+        // Closest hit
+        _tempRh = _hitList[0];
+        float _distanceFromSpawnToHit = Vector3.Distance(originalPos, _tempRh.point);
 
+        if (_distanceFromSpawnToHit <= weaponProperties.range)
+        {
+            ObjectHit newHit = new ObjectHit(
+                _tempRh.collider.gameObject,
+                _tempRh,
+                _tempRh.point,
+                Vector3.Distance(playerPosWhenBulletShot, _tempRh.point)
+            );
+            objectsHit.Add(newHit);
+        }
 
-        //RaycastHit fhit;
-        //if (Physics.Raycast(r.origin, r.direction, out fhit, maxDistance: _dTravalled, layerMask: GameManager.instance.bulletLayerMask))
-        //{
-        //    _addToHits = true;
-        //    Debug.Log($"Bullet hit: {fhit.collider.gameObject.name}. LAYER: {fhit.collider.gameObject.layer}. Root: {fhit.transform.root.name}. Check :{_ignoreOriginPlayerTime}");
-
-
-
-        //    if (fhit.collider.GetComponent<IDamageable>() != null || fhit.collider)
-        //    {
-        //        if (fhit.transform.root.GetComponent<Player>())
-        //            if (fhit.transform.root.GetComponent<Player>() == weaponProperties.transform.root.GetComponent<Player>() && _ignoreOriginPlayerTime > 0)
-        //                _addToHits = false;
-
-
-
-        //        GameObject hit = fhit.collider.gameObject;
-        //        float _distanceFromSpawnToHit = Vector3.Distance(originalPos, fhit.point);
-
-        //        if (_distanceFromSpawnToHit <= weaponProperties.range && _addToHits)
-        //        {
-        //            ObjectHit newHit = new ObjectHit(hit, fhit, fhit.point, Vector3.Distance(playerPosWhenBulletShot, fhit.point));
-        //            objectsHit.Add(newHit);
-        //        }
-        //    }
-
-        //    if (objectsHit.Count > 0)
-        //    {
-        //        CheckForFinalHit();
-        //        gameObject.SetActive(false);
-        //    }
-        //}
+        if (objectsHit.Count > 0 && !damageDealt)
+        {
+            if (damage > 0) CheckForFinalHit();
+            Log.Print("bullet time test. Despawned at: " + Time.time);
+        }
     }
+
+
+
+
+
+    //List<RaycastHit> _hitList = new List<RaycastHit>();
+    //RaycastHit _tempRh;
+    //void ShootRay()
+    //{
+    //    _prePos = transform.position;
+    //    _nextPos = transform.position + transform.TransformDirection(Vector3.forward) * speed * Time.deltaTime;
+    //    //transform.Translate(Vector3.forward * Time.deltaTime * bulletSpeed); // Moves the bullet at 'bulletSpeed' units per second
+
+    //    _dTravalled = Vector3.Distance(_prePos, _nextPos);
+
+
+
+
+
+
+    //    RaycastHit[] hits;
+    //    _hitList = Physics.RaycastAll(_prePos, (_nextPos - _prePos).normalized, maxDistance: _dTravalled, layerMask: GameManager.instance.bulletLayerMask).ToList();
+    //    _hitList.RemoveAll(hit => hit.collider.GetComponent<ManCannon>());
+
+    //    if (_hitList.Count > 0)
+    //    {
+    //        if (_ignoreOriginPlayerTime > 0)
+    //            for (int i = _hitList.Count; i-- > 0;)
+    //            {
+    //                _tempRh = _hitList[i];
+    //                Log.Print($"bullet hit: {_hitList[i].collider.name} {_hitList[i].point}");
+    //                if (_tempRh.collider.transform.root == weaponProperties.player.transform) _hitList.RemoveAt(i);
+    //            }
+
+
+
+
+    //        if (_hitList.Count > 0)
+    //        {
+    //            _hitList = _hitList.OrderBy(x => Vector2.Distance(_prePos, x.point)).ToList();
+
+
+
+
+    //            _tempRh = _hitList[0];
+    //            float _distanceFromSpawnToHit = Vector3.Distance(originalPos, _tempRh.point);
+
+    //            if (_distanceFromSpawnToHit <= weaponProperties.range)
+    //            {
+    //                ObjectHit newHit = new ObjectHit(_tempRh.collider.gameObject, _tempRh, _tempRh.point, Vector3.Distance(playerPosWhenBulletShot, _tempRh.point));
+    //                objectsHit.Add(newHit);
+    //            }
+
+    //            if (objectsHit.Count > 0 && !damageDealt)
+    //            {
+    //                if (damage > 0) CheckForFinalHit();
+    //                Log.Print($"bullet time test. Despawned at: {Time.time}");
+    //            }
+    //        }
+    //    }
+    //}
 
 
 

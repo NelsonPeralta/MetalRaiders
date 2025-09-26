@@ -1119,181 +1119,237 @@ public class PlayerInventory : MonoBehaviourPun
 
 
     public enum FakeTrailColor { yellow, red }
-    bool outOfFakeBullets;
     Vector3 _realTimeTravelScale = new Vector3(2, 2, 0.5f);
     public FakeBulletTrail SpawnFakeBulletTrail(FakeTrailColor fakeTrailColor, int lenghtOfTrail, Quaternion spray, bool bipedIsMine,
         Vector3? muzzlePosition = null, Vector3? lookAtThisTarget = null, /*bool realTimeTravel = false,*/ WeaponProperties wp = null)
     {
-        Log.Print($"SpawnFakeBulletTrail: {(FakeTrailColor)fakeTrailColor} {lenghtOfTrail}");
+        Log.Print("SpawnFakeBulletTrail: " + fakeTrailColor + " " + lenghtOfTrail);
 
-        outOfFakeBullets = (_fakeBulletTrailPool.Where(item => !item.gameObject.activeInHierarchy).Count() == 0);
+        // choose the pool once
+        var pool = (fakeTrailColor == FakeTrailColor.yellow) ? _fakeBulletTrailPool : _fakeRedBulletTrailPool;
+        int cnt = pool.Count;
 
-        if (outOfFakeBullets)
+        // precalc repeated values
+        float scaleFactor = lenghtOfTrail * 0.12f;
+        float zScale = Mathf.Clamp((float)lenghtOfTrail, 0f, 999f);
+        Vector3 scaleVec = new Vector3(scaleFactor, scaleFactor, zScale);
+        Vector3 one = Vector3.one;
+        Quaternion identity = Quaternion.identity;
+
+
+        for (int i = 0; i < cnt; i++)
         {
-            GameManager.GetRootPlayer().killFeedManager.EnterNewFeed("Out of trails");
-        }
+            FakeBulletTrail fbt = pool[i];
+            if (fbt.gameObject.activeInHierarchy) continue;
 
-        if (fakeTrailColor == FakeTrailColor.yellow)
-            foreach (FakeBulletTrail fbt in _fakeBulletTrailPool)
+            // disable Bullet component if present (no try/catch)
+            Bullet bullet = fbt.GetComponent<Bullet>();
+            if (bullet != null) bullet.enabled = false;
+
+            // set layer based on player.rid and biped ownership
+            if (bipedIsMine)
             {
-                if (!fbt.gameObject.activeInHierarchy)
+                int ll;
+                switch (player.rid)
                 {
-                    try { fbt.GetComponent<Bullet>().enabled = false; } catch { }
-
-                    if (bipedIsMine)
-                    {
-                        int ll = 0;
-
-                        if (player.rid == 0)
-                            ll = 25;
-                        else if (player.rid == 1)
-                            ll = 27;
-                        else if (player.rid == 2)
-                            ll = 29;
-                        else if (player.rid == 3)
-                            ll = 31;
-
-                        GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, ll);
-                    }
-                    else
-                    {
-                        GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
-                    }
-
-                    if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
-                    {
-                        GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
-                    }
-
-                    Log.Print($"SpawnFakeBulletTrail: {lenghtOfTrail}");
-                    fbt.fakeBulletTrailDisable.timeBeforeDisabling = 0.1f;
-                    fbt.scaleToChange.localScale = Vector3.one;
-                    fbt.rotationToTarget.localRotation = Quaternion.identity;
-                    fbt.sprayRotation.localRotation = Quaternion.identity;
-
-
-
-
-                    //if (realTimeTravel)
-                    //{
-                    //    //fbt.GetComponent<Bullet>().weaponProperties = wp;
-                    //    //fbt.GetComponent<Bullet>().damage = 0;
-                    //    ////fbt.GetComponent<Bullet>().speed = 120;
-                    //    ////fbt.GetComponent<Bullet>().trailOnly = true;
-                    //    //fbt.GetComponent<Bullet>().enabled = true;
-                    //    ////Debug.Break();
-                    //}
-                    //else
-                    //{
-                    fbt.scaleToChange.localScale = new Vector3(lenghtOfTrail * 0.12f, lenghtOfTrail * 0.12f, Mathf.Clamp(lenghtOfTrail, 0, 999));
-                    fbt.sprayRotation.localRotation *= spray;
-                    //}
-
-
-
-                    fbt.gameObject.SetActive(true);
-                    fbt.transform.parent = null;
-                    outOfFakeBullets = false;
-
-
-
-                    if (muzzlePosition != null && muzzlePosition != Vector3.zero /*&& !realTimeTravel*/)
-                    {
-                        fbt.transform.position = (Vector3)muzzlePosition;
-                        fbt.scaleToChange.localScale = Vector3.one;
-                        fbt.scaleToChange.localScale = new Vector3(lenghtOfTrail * 0.12f, lenghtOfTrail * 0.12f, Mathf.Clamp(lenghtOfTrail, 0, 999));
-                    }
-
-                    //if (realTimeTravel)
-                    //{
-                    //    fbt.scaleToChange.localScale = _realTimeTravelScale;
-                    //    fbt.fakeBulletTrailDisable.timeBeforeDisabling = 2;
-                    //}
-
-                    if (lookAtThisTarget != null && lookAtThisTarget != Vector3.zero)
-                    {
-                        fbt.rotationToTarget.LookAt((Vector3)lookAtThisTarget);
-                    }
-
-
-
-
-                    return fbt;
-                    break;
+                    case 0: ll = 25; break;
+                    case 1: ll = 27; break;
+                    case 2: ll = 29; break;
+                    default: ll = 31; break; // covers rid == 3 and any other values
                 }
+                GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, ll);
             }
-        else if (fakeTrailColor == FakeTrailColor.red)
-        {
-            foreach (FakeBulletTrail fbt in _fakeRedBulletTrailPool)
+            else
             {
-                if (!fbt.gameObject.activeInHierarchy)
-                {
-                    try { fbt.GetComponent<Bullet>().enabled = false; } catch { }
-
-                    if (bipedIsMine)
-                    {
-                        int ll = 0;
-
-                        if (player.rid == 0)
-                            ll = 25;
-                        else if (player.rid == 1)
-                            ll = 27;
-                        else if (player.rid == 2)
-                            ll = 29;
-                        else if (player.rid == 3)
-                            ll = 31;
-
-                        GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, ll);
-                    }
-                    else
-                    {
-                        GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
-                    }
-
-                    if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
-                    {
-                        GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
-                    }
-
-                    Log.Print($"SpawnFakeBulletTrail: {lenghtOfTrail}");
-                    fbt.fakeBulletTrailDisable.timeBeforeDisabling = 0.1f;
-                    fbt.scaleToChange.localScale = Vector3.one;
-                    fbt.rotationToTarget.localRotation = Quaternion.identity;
-                    fbt.sprayRotation.localRotation = Quaternion.identity;
-
-
-                    fbt.scaleToChange.localScale = new Vector3(lenghtOfTrail * 0.12f, lenghtOfTrail * 0.12f, Mathf.Clamp(lenghtOfTrail, 0, 999));
-                    fbt.sprayRotation.localRotation *= spray;
-
-
-
-                    fbt.gameObject.SetActive(true);
-                    fbt.transform.parent = null;
-                    outOfFakeBullets = false;
-
-
-
-                    if (muzzlePosition != null && muzzlePosition != Vector3.zero /*&& !realTimeTravel*/)
-                    {
-                        fbt.transform.position = (Vector3)muzzlePosition;
-                        fbt.scaleToChange.localScale = Vector3.one;
-                        fbt.scaleToChange.localScale = new Vector3(lenghtOfTrail * 0.12f, lenghtOfTrail * 0.12f, Mathf.Clamp(lenghtOfTrail, 0, 999));
-                    }
-
-
-                    if (lookAtThisTarget != null && lookAtThisTarget != Vector3.zero)
-                    {
-                        fbt.rotationToTarget.LookAt((Vector3)lookAtThisTarget);
-                    }
-
-
-                    return fbt;
-                    break;
-                }
+                GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
             }
+
+            // override to 0 if third person or heavy weapon (preserves original ordering)
+            if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On ||
+                activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
+            {
+                GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
+            }
+
+            Log.Print("SpawnFakeBulletTrail: " + lenghtOfTrail);
+
+            fbt.fakeBulletTrailDisable.timeBeforeDisabling = 0.1f;
+            fbt.scaleToChange.localScale = one;
+            fbt.rotationToTarget.localRotation = identity;
+            fbt.sprayRotation.localRotation = identity;
+
+            fbt.scaleToChange.localScale = scaleVec;
+            fbt.sprayRotation.localRotation *= spray;
+
+            fbt.gameObject.SetActive(true);
+            fbt.transform.parent = null;
+
+            if (muzzlePosition.HasValue && muzzlePosition.Value != Vector3.zero)
+            {
+                fbt.transform.position = muzzlePosition.Value;
+                fbt.scaleToChange.localScale = one;
+                fbt.scaleToChange.localScale = scaleVec;
+            }
+
+            if (lookAtThisTarget.HasValue && lookAtThisTarget.Value != Vector3.zero)
+            {
+                fbt.rotationToTarget.LookAt(lookAtThisTarget.Value);
+            }
+
+            return fbt;
         }
 
         return null;
+
+
+
+
+
+
+        // OLD CODE
+        {
+
+
+            //Log.Print($"SpawnFakeBulletTrail: {(FakeTrailColor)fakeTrailColor} {lenghtOfTrail}");
+
+            //if (fakeTrailColor == FakeTrailColor.yellow)
+            //    foreach (FakeBulletTrail fbt in _fakeBulletTrailPool)
+            //    {
+            //        if (!fbt.gameObject.activeInHierarchy)
+            //        {
+            //            try { fbt.GetComponent<Bullet>().enabled = false; } catch { }
+
+            //            if (bipedIsMine)
+            //            {
+            //                int ll = 0;
+
+            //                if (player.rid == 0)
+            //                    ll = 25;
+            //                else if (player.rid == 1)
+            //                    ll = 27;
+            //                else if (player.rid == 2)
+            //                    ll = 29;
+            //                else if (player.rid == 3)
+            //                    ll = 31;
+
+            //                GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, ll);
+            //            }
+            //            else
+            //            {
+            //                GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
+            //            }
+
+            //            if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
+            //            {
+            //                GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
+            //            }
+
+            //            Log.Print($"SpawnFakeBulletTrail: {lenghtOfTrail}");
+            //            fbt.fakeBulletTrailDisable.timeBeforeDisabling = 0.1f;
+            //            fbt.scaleToChange.localScale = Vector3.one;
+            //            fbt.rotationToTarget.localRotation = Quaternion.identity;
+            //            fbt.sprayRotation.localRotation = Quaternion.identity;
+            //            fbt.scaleToChange.localScale = new Vector3(lenghtOfTrail * 0.12f, lenghtOfTrail * 0.12f, Mathf.Clamp(lenghtOfTrail, 0, 999));
+            //            fbt.sprayRotation.localRotation *= spray;
+
+
+
+            //            fbt.gameObject.SetActive(true);
+            //            fbt.transform.parent = null;
+
+
+
+            //            if (muzzlePosition != null && muzzlePosition != Vector3.zero /*&& !realTimeTravel*/)
+            //            {
+            //                fbt.transform.position = (Vector3)muzzlePosition;
+            //                fbt.scaleToChange.localScale = Vector3.one;
+            //                fbt.scaleToChange.localScale = new Vector3(lenghtOfTrail * 0.12f, lenghtOfTrail * 0.12f, Mathf.Clamp(lenghtOfTrail, 0, 999));
+            //            }
+
+            //            if (lookAtThisTarget != null && lookAtThisTarget != Vector3.zero)
+            //            {
+            //                fbt.rotationToTarget.LookAt((Vector3)lookAtThisTarget);
+            //            }
+
+
+
+
+            //            return fbt;
+            //            break;
+            //        }
+            //    }
+            //else if (fakeTrailColor == FakeTrailColor.red)
+            //{
+            //    foreach (FakeBulletTrail fbt in _fakeRedBulletTrailPool)
+            //    {
+            //        if (!fbt.gameObject.activeInHierarchy)
+            //        {
+            //            try { fbt.GetComponent<Bullet>().enabled = false; } catch { }
+
+            //            if (bipedIsMine)
+            //            {
+            //                int ll = 0;
+
+            //                if (player.rid == 0)
+            //                    ll = 25;
+            //                else if (player.rid == 1)
+            //                    ll = 27;
+            //                else if (player.rid == 2)
+            //                    ll = 29;
+            //                else if (player.rid == 3)
+            //                    ll = 31;
+
+            //                GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, ll);
+            //            }
+            //            else
+            //            {
+            //                GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
+            //            }
+
+            //            if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || activeWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
+            //            {
+            //                GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
+            //            }
+
+            //            Log.Print($"SpawnFakeBulletTrail: {lenghtOfTrail}");
+            //            fbt.fakeBulletTrailDisable.timeBeforeDisabling = 0.1f;
+            //            fbt.scaleToChange.localScale = Vector3.one;
+            //            fbt.rotationToTarget.localRotation = Quaternion.identity;
+            //            fbt.sprayRotation.localRotation = Quaternion.identity;
+
+
+            //            fbt.scaleToChange.localScale = new Vector3(lenghtOfTrail * 0.12f, lenghtOfTrail * 0.12f, Mathf.Clamp(lenghtOfTrail, 0, 999));
+            //            fbt.sprayRotation.localRotation *= spray;
+
+
+
+            //            fbt.gameObject.SetActive(true);
+            //            fbt.transform.parent = null;
+
+
+
+            //            if (muzzlePosition != null && muzzlePosition != Vector3.zero /*&& !realTimeTravel*/)
+            //            {
+            //                fbt.transform.position = (Vector3)muzzlePosition;
+            //                fbt.scaleToChange.localScale = Vector3.one;
+            //                fbt.scaleToChange.localScale = new Vector3(lenghtOfTrail * 0.12f, lenghtOfTrail * 0.12f, Mathf.Clamp(lenghtOfTrail, 0, 999));
+            //            }
+
+
+            //            if (lookAtThisTarget != null && lookAtThisTarget != Vector3.zero)
+            //            {
+            //                fbt.rotationToTarget.LookAt((Vector3)lookAtThisTarget);
+            //            }
+
+
+            //            return fbt;
+            //            break;
+            //        }
+            //    }
+            //}
+
+            //return null;
+        }
     }
 
     public void TriggerStartGameBehaviour()
