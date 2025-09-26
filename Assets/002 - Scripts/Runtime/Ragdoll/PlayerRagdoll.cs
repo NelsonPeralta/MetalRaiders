@@ -115,10 +115,10 @@ public class PlayerRagdoll : Ragdoll
 
     public void PrintRigibodiesVelocities()
     {
-        Log.Print("PrintRigibodiesVelocities");
+        Log.Print(() => "PrintRigibodiesVelocities");
         foreach (Rigidbody rb in GetComponentsInChildren<Rigidbody>(true).Where(item => item.GetComponent<RagdollLimb>() != null))
         {
-            Log.Print($"ResetRigidbodieVelocities {rb.name} {rb.linearVelocity} {rb.angularVelocity}");
+            Log.Print(() => $"ResetRigidbodieVelocities {rb.name} {rb.linearVelocity} {rb.angularVelocity}");
         }
     }
 }

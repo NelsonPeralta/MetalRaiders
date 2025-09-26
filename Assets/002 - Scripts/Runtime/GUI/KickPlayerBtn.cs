@@ -15,13 +15,13 @@ public class KickPlayerBtn : MonoBehaviour
 
     public void SetPlayerDataCell(ScriptObjPlayerData sopd)
     {
-        Log.Print("SetPlayerDataCell");
+        Log.Print(() => "SetPlayerDataCell");
         if (GameManager.instance.connection == GameManager.NetworkType.Internet && PhotonNetwork.IsMasterClient)
         {
             if (!sopd.local && sopd.rewiredId == 0)
             {
                 _playerData = sopd;
-                Log.Print($"KickPlayerBtn {name} show");
+                Log.Print(() => $"KickPlayerBtn {name} show");
             }
             else
             {
@@ -30,7 +30,7 @@ public class KickPlayerBtn : MonoBehaviour
         }
         else
         {
-            Log.Print($"KickPlayerBtn {name} hide");
+            Log.Print(() => $"KickPlayerBtn {name} hide");
             gameObject.SetActive(false);
         }
     }
@@ -39,7 +39,7 @@ public class KickPlayerBtn : MonoBehaviour
     {
         if (_playerData)
         {
-            Log.Print($"Kick Player: {_playerData.playerExtendedPublicData.player_id}");
+            Log.Print(() => $"Kick Player: {_playerData.playerExtendedPublicData.player_id}");
 
             NetworkGameManager.instance.KickPlayerWithDatabaseId(_playerData.playerExtendedPublicData.player_id);
         }

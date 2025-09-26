@@ -205,7 +205,7 @@ public class ReloadScript : MonoBehaviourPun
     {
         if (pController.pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
         {
-            Log.Print("ReloadAnimation");
+            Log.Print(() => "ReloadAnimation");
             if (PV.IsMine)
                 for (int i = 0; i < pController.pInventory.allWeaponsInInventory.Length; i++)
                     if (pController.pInventory.allWeaponsInInventory[i].GetComponent<WeaponProperties>() == wp)
@@ -248,7 +248,7 @@ public class ReloadScript : MonoBehaviourPun
 
         if (pController.pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Shell)
         {
-            Log.Print("ReloadAnimation");
+            Log.Print(() => "ReloadAnimation");
 
             int ammoNeededToReload = pController.pInventory.activeWeapon.ammoCapacity - pController.pInventory.activeWeapon.loadedAmmo;
             int ammoToReload = 0;
@@ -273,7 +273,7 @@ public class ReloadScript : MonoBehaviourPun
         }
         if (pController.pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Single)
         {
-            Log.Print("ReloadAnimation");
+            Log.Print(() => "ReloadAnimation");
             if (PV.IsMine)
                 for (int i = 0; i < pController.pInventory.allWeaponsInInventory.Length; i++)
                     if (pController.pInventory.allWeaponsInInventory[i].gameObject == pController.pInventory.activeWeapon.gameObject)

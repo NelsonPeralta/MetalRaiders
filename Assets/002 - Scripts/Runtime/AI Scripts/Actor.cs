@@ -117,7 +117,7 @@ abstract public class Actor : Biped
 
                 _targetPlayer = value;
 
-                if (_targetPlayer) Log.Print($"targetplayer changed: {value.name}");
+                if (_targetPlayer) Log.Print(() => $"targetplayer changed: {value.name}");
             }
         }
     }
@@ -219,7 +219,7 @@ abstract public class Actor : Biped
         transform.parent = SwarmManager.instance.transform;
         gameObject.SetActive(false);
 
-        Log.Print($"Adding {name} {transform.position} to instantiation_position_Biped_Dict");
+        Log.Print(() => $"Adding {name} {transform.position} to instantiation_position_Biped_Dict");
         originalSpawnPosition = transform.position;
         GameManager.instance.instantiation_position_Biped_Dict.Add(transform.position, this); GameManager.instance.instantiation_position_Biped_Dict = GameManager.instance.instantiation_position_Biped_Dict;
     }
@@ -318,7 +318,7 @@ abstract public class Actor : Biped
 
     public void Damage(int damage, int playerWhoShotPDI, string damageSource = null, bool isHeadshot = false, int weIndx = -1)
     {
-        Log.Print($"Actor Damage: {damageSource}");
+        Log.Print(() => $"Actor Damage: {damageSource}");
         //{ // Hit Marker Handling
         //    Player p = GameManager.GetPlayerWithPhotonView(playerWhoShotPDI);
 
@@ -594,7 +594,7 @@ abstract public class Actor : Biped
 
                 if (_meleeCooldown <= 0 && !isFlinching && !isBoosting && !isDodging)
                 {
-                    Log.Print($"trying to melee {targetTransform.name}");
+                    Log.Print(() => $"trying to melee {targetTransform.name}");
                     if (targetTransform.GetComponent<Player>() || targetTransform.root.GetComponent<Player>())
                         Melee();
                 }
@@ -831,7 +831,7 @@ abstract public class Actor : Biped
         }
         else
         {
-            Log.Print($"SetNewTargetPlayerWithPid {pid}");
+            Log.Print(() => $"SetNewTargetPlayerWithPid {pid}");
             targetHitpoints = PhotonView.Find(pid).GetComponent<Player>().GetComponent<HitPoints>();
         }
     }
@@ -929,18 +929,18 @@ abstract public class Actor : Biped
 
     bool CheckIfSideIsClear(bool right = false)
     {
-        Log.Print("CheckIfSideIsClear");
+        Log.Print(() => "CheckIfSideIsClear");
         if (!right)
         {
             foreach (Collider c in Physics.OverlapSphere(_leftChecks[2].position, 1, _overlapSphereMask))
-                Log.Print(c.name);
+                Log.Print(() => c.name);
 
             if (Physics.OverlapSphere(_leftChecks[2].position, 1, _overlapSphereMask).Length > 0) return false;
         }
         else
         {
             foreach (Collider c in Physics.OverlapSphere(_leftChecks[2].position, 1, _overlapSphereMask))
-                Log.Print(c.name);
+                Log.Print(() => c.name);
 
             if (Physics.OverlapSphere(_rightChecks[2].position, 1, _overlapSphereMask).Length > 0) return false;
         }
@@ -959,7 +959,7 @@ abstract public class Actor : Biped
     {
         base.SpawnUltraBindExplosion();
 
-        Log.Print("Actor SpawnUltraBindExplosion");
+        Log.Print(() => "Actor SpawnUltraBindExplosion");
         GrenadePool.SpawnExplosion(_targetPlayer.GetComponent<Player>(), damage: 999, radius: 2, GameManager.DEFAULT_EXPLOSION_POWER, damageCleanNameSource: "Ultra Bind", targetTrackingCorrectTarget.position, Explosion.Color.Purple, Explosion.Type.UltraBind, GrenadePool.instance.ultraBindClip, WeaponProperties.KillFeedOutput.Ultra_Bind);
 
 
@@ -985,7 +985,7 @@ abstract public class Actor : Biped
         }
         else if (!callRPC)
         {
-            Log.Print("AssignPlayerOnBulletNearby Processing");
+            Log.Print(() => "AssignPlayerOnBulletNearby Processing");
 
             targetTransform = PhotonView.Find(playerPhotonId).GetComponent<Player>().transform;
             targetHitpoints = PhotonView.Find(playerPhotonId).GetComponent<Player>().GetComponent<HitPoints>();

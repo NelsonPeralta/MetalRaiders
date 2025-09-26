@@ -295,7 +295,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedLobby()
     {
-        Log.Print("LAUNCHER OnJoinedLobby");
+        Log.Print(() => "LAUNCHER OnJoinedLobby");
 
         Scene currentScene = SceneManager.GetActiveScene();
 
@@ -654,7 +654,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     // Runs only when OTHER player joined room.
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
-        Log.Print("Other player joined room");
+        Log.Print(() => "Other player joined room");
         Debug.Log("LAUNCHER OnPlayerEnteredRoom");
 
         CreatePrimitiveDataCellsFromRoomDataWhenJoiningRoom_Online(JoinType.AnotherPlayerJoinedARoom);
@@ -683,7 +683,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnMasterClientSwitched(Photon.Realtime.Player newMasterClient)
     {
-        Log.Print($"OnMasterClientSwitched {newMasterClient.NickName} {PhotonNetwork.IsMasterClient}");
+        Log.Print(() => $"OnMasterClientSwitched {newMasterClient.NickName} {PhotonNetwork.IsMasterClient}");
 
 
         GameManager.instance.gameMode = GameMode.Versus;
@@ -732,7 +732,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         {
             if (GameManager.instance.teamMode == TeamMode.None)
             {
-                Log.Print($"{s.steamId} {s.rewiredId} will get spawn {c}");
+                Log.Print(() => $"{s.steamId} {s.rewiredId} will get spawn {c}");
                 NetworkGameManager.instance.SetPlayerDataCellStartingSpawnPositionIndex(s.steamId, s.rewiredId, c);
                 c++;
             }
@@ -741,13 +741,13 @@ public class Launcher : MonoBehaviourPunCallbacks
                 int blue = 0;
                 if (s.team == Team.Red)
                 {
-                    Log.Print($"{s.steamId} {s.rewiredId} will get spawn {c} Red Team");
+                    Log.Print(() => $"{s.steamId} {s.rewiredId} will get spawn {c} Red Team");
                     NetworkGameManager.instance.SetPlayerDataCellStartingSpawnPositionIndex(s.steamId, s.rewiredId, c);
                     c++;
                 }
                 else if (s.team == Team.Blue)
                 {
-                    Log.Print($"{s.steamId} {s.rewiredId} will get spawn {blue} Blue Team");
+                    Log.Print(() => $"{s.steamId} {s.rewiredId} will get spawn {blue} Blue Team");
                     NetworkGameManager.instance.SetPlayerDataCellStartingSpawnPositionIndex(s.steamId, s.rewiredId, blue);
                     blue++;
                 }
@@ -835,7 +835,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
-        Log.Print("OnRoomListUpdate");
+        Log.Print(() => "OnRoomListUpdate");
         _roomsCached.Clear();
 
         foreach (Transform trans in roomListContent)
@@ -1240,7 +1240,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             test.Sort((a, b) => a.supposedRoomIndex.CompareTo(b.supposedRoomIndex));
             for (int i = 0; i < test.Count; i++)
             {
-                Log.Print($"CreateDataCellsFromRoomDataWhenJoiningRoom_Online {test[i].steamName} {test[i].supposedRoomIndex} will become {i}");
+                Log.Print(() => $"CreateDataCellsFromRoomDataWhenJoiningRoom_Online {test[i].steamName} {test[i].supposedRoomIndex} will become {i}");
                 test[i] = (test[i].steamIdd, test[i].steamName, test[i].supposedRoomIndex, i + 1, test[i].nbLocalPlayers);
             }
             // DO NOT DELETE THIS
@@ -1297,14 +1297,14 @@ public class Launcher : MonoBehaviourPunCallbacks
             int _count = CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied && item.rewiredId == 0).ToList().Count;
             for (int i = 1; i <= CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied && item.rewiredId == 0).ToList().Count; i++)
             {
-                Log.Print($"Launcher {CurrentRoomManager.GetDataCellWithPhotonRoomIndex(i).nbLocalPlayers}");
+                Log.Print(() => $"Launcher {CurrentRoomManager.GetDataCellWithPhotonRoomIndex(i).nbLocalPlayers}");
                 if (CurrentRoomManager.GetDataCellWithPhotonRoomIndex(i).nbLocalPlayers > 1)
                 {
                     List<ScriptObjPlayerData> _inviteDataCells = CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied &&
                     item.rewiredId > 0 &&
                        item.steamId == CurrentRoomManager.GetDataCellWithPhotonRoomIndex(i).steamId).ToList();
 
-                    Log.Print($"Launcher {_inviteDataCells.Count}");
+                    Log.Print(() => $"Launcher {_inviteDataCells.Count}");
                     for (int j = 0; j < _inviteDataCells.Count; j++)
                     {
                         _count++;
@@ -1326,7 +1326,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void FetchExtendedPlayerStats()
     {
-        Log.Print("FetchExtendedPlayerStats");
+        Log.Print(() => "FetchExtendedPlayerStats");
         foreach (ScriptObjPlayerData s in CurrentRoomManager.instance.playerDataCells.Where(x => x.occupied && x.rewiredId == 0))
         {
             WebManager.webManagerInstance.SetPlayerListItemInRoom(s.steamId);
@@ -1347,7 +1347,7 @@ public class Launcher : MonoBehaviourPunCallbacks
         }
         else
         {
-            Log.Print($"CreateNameplates local: {_nbLocalPlayersInputed.text} {GameManager.instance.nbLocalPlayersPreset}");
+            Log.Print(() => $"CreateNameplates local: {_nbLocalPlayersInputed.text} {GameManager.instance.nbLocalPlayersPreset}");
             if (_nbLocalPlayersInputed.text.Equals("")) _nbLocalPlayersInputed.text = "1";
             for (int i = 0; i < int.Parse(_nbLocalPlayersInputed.text.ToString()); i++)
                 Instantiate(_namePlatePrefab, _namePlatesParent).GetComponent<PlayerNamePlate>().Setup($"player{i + 1}", i);
@@ -1424,7 +1424,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public static void CreateLocalModePlayerDataCells()
     {
-        Log.Print($"CreateLocalModePlayerDataCells {GameManager.instance.nbLocalPlayersPreset}");
+        Log.Print(() => $"CreateLocalModePlayerDataCells {GameManager.instance.nbLocalPlayersPreset}");
 
         for (int i = 0; i < GameManager.instance.nbLocalPlayersPreset; i++)
         {
@@ -1498,10 +1498,10 @@ public class Launcher : MonoBehaviourPunCallbacks
                             //PrintOnlyInEditor.Log($"FindMasterClientAndToggleIcon: {child.GetComponent<PlayerNamePlate>().playerDataCell.playerExtendedPublicData.player_id}");
                             if (child.GetComponent<PlayerNamePlate>().playerDataCell)
                             {
-                                Log.Print($"FindMasterClientAndToggleIcon: {child.GetComponent<PlayerNamePlate>().playerDataCell.steamId} " +
-                                    $"VS {PhotonNetwork.MasterClient.NickName}");
-                                Log.Print(child.GetComponent<PlayerNamePlate>().playerDataCell.steamId == long.Parse(PhotonNetwork.MasterClient.NickName));
-                                Log.Print(child.GetComponent<PlayerNamePlate>().playerDataCell.rewiredId == 0);
+                                //Log.Print($"FindMasterClientAndToggleIcon: {child.GetComponent<PlayerNamePlate>().playerDataCell.steamId} " +
+                                //    $"VS {PhotonNetwork.MasterClient.NickName}");
+                                Log.Print(() => child.GetComponent<PlayerNamePlate>().playerDataCell.steamId == long.Parse(PhotonNetwork.MasterClient.NickName));
+                                Log.Print(() => child.GetComponent<PlayerNamePlate>().playerDataCell.rewiredId == 0);
 
                                 if (child.GetComponent<PlayerNamePlate>().playerDataCell.steamId == long.Parse(PhotonNetwork.MasterClient.NickName)
                                     && child.GetComponent<PlayerNamePlate>().playerDataCell.rewiredId == 0)

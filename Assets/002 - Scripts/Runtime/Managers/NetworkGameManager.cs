@@ -69,14 +69,14 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         if (caller && PhotonNetwork.IsMasterClient)
         {
             Dictionary<string, string> ps = new Dictionary<string, string>();
-            Log.Print("SendGameParams MASTER");
+            Log.Print(() => "SendGameParams MASTER");
 
             if (GameManager.instance.teamMode == GameManager.TeamMode.Classic && SceneManager.GetActiveScene().buildIndex == 0)
                 for (int i = 0; i < PhotonNetwork.CurrentRoom.PlayerCount; i++)
                 {
                     if (CurrentRoomManager.GetLocalPlayerData(i).team == GameManager.Team.None)
                     {
-                        Log.Print("Correcting Teams because a player joined");
+                        Log.Print(() => "Correcting Teams because a player joined");
                         ps.Add("reevaluateteams", "");
                     }
                 }
@@ -99,7 +99,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
         else if (!caller)
         {
-            Log.Print("SendGameParams CLIENT");
+            Log.Print(() => "SendGameParams CLIENT");
             if (!PhotonNetwork.IsMasterClient)
             {
                 try { GameManager.instance.gameMode = (GameManager.GameMode)System.Enum.Parse(typeof(GameManager.GameMode), p["gamemode"]); } catch (System.Exception e) { Debug.Log(e); }
@@ -178,7 +178,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         else if (!caller)
         {
             if (CurrentRoomManager.instance.gameOver) return;
-            Log.Print("NetworkGameManager EndGame");
+            Log.Print(() => "NetworkGameManager EndGame");
 
             if (GameManager.instance.gameMode == GameManager.GameMode.Versus)
                 MultiplayerManager.instance.EndGame();
@@ -209,7 +209,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         if (caller)
         {
-            Log.Print("_nbPlayersSet");
+            Log.Print(() => "_nbPlayersSet");
             _pv.RPC("AddPlayerSetCount", RpcTarget.AllViaServer, false);
         }
         else if (!caller)
@@ -443,7 +443,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient)
         {
-            Log.Print($"oneobjmode - ResetOneObjRoundOver");
+            Log.Print(() => $"oneobjmode - ResetOneObjRoundOver");
             _pv.RPC("ResetOneObjRoundOver_RPC", RpcTarget.AllViaServer);
         }
     }
@@ -533,13 +533,13 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void SpawnNetworkWeapon_RPC(int firstWeapIndex, Vector3 spp, Vector3 fDir, int firstWeapCurrAmmo, int firstWeapSpareAmmo)
     {
-        Log.Print("SpawnNetworkWeapon_RPC");
+        Log.Print(() => "SpawnNetworkWeapon_RPC");
         LootableWeapon _firstWeapon = WeaponPool.instance.GetLootableWeapon(GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory[firstWeapIndex].GetComponent<WeaponProperties>().codeName);
-        Log.Print("SpawnNetworkWeapon_RPC 1");
+        Log.Print(() => "SpawnNetworkWeapon_RPC 1");
 
         if (_firstWeapon != null)
         {
-            Log.Print($"SPAWING WEAPON");
+            Log.Print(() => $"SPAWING WEAPON");
 
             _firstWeapon.name = _firstWeapon.name.Replace("(Clone)", "");
             _firstWeapon.transform.position = spp;
@@ -552,8 +552,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             _firstWeapon.gameObject.SetActive(true);
             _firstWeapon.GetComponent<Rigidbody>().AddForce(fDir * 200);
         }
-        else Log.Print($"COULD NOT SPAWN WEAPON CORRECTLY");
-        Log.Print("SpawnNetworkWeapon_RPC 2");
+        else Log.Print(() => $"COULD NOT SPAWN WEAPON CORRECTLY");
+        Log.Print(() => "SpawnNetworkWeapon_RPC 2");
     }
 
     [PunRPC]
@@ -830,7 +830,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         MultiplayerManager.instance.AddPlayerPoint(pid);
         if (GameManager.instance.oneObjMode == GameManager.OneObjMode.On)
         {
-            Log.Print("oneobjmode - AddPlayerPoint_RPC");
+            Log.Print(() => "oneobjmode - AddPlayerPoint_RPC");
 
 
             if (GameManager.instance.OneObjModeRoundCounter == GameManager.MAX_NB_OF_ROUNDS - 1)
@@ -879,7 +879,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             if (GameTime.instance.timeRemaining > overshield.tts)
             {
                 int timeToNextSpawn = overshield.tts - (GameTime.instance.timeElapsed % overshield.tts);
-                Log.Print($"LootOvershield {overshield.tts} {GameTime.instance.timeElapsed} {GameTime.instance.timeElapsed % overshield.tts} {timeToNextSpawn}");
+                Log.Print(() => $"LootOvershield {overshield.tts} {GameTime.instance.timeElapsed} {GameTime.instance.timeElapsed % overshield.tts} {timeToNextSpawn}");
                 Debug.Log($"Spawning overshield in {timeToNextSpawn} seconds");
 
                 StartCoroutine(StartOverShieldRespawn_Coroutine(timeToNextSpawn));
@@ -991,12 +991,12 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
         if (caller && PhotonNetwork.IsMasterClient)
         {
-            Log.Print($"EquipOddballToPlayer_RPC call");
+            Log.Print(() => $"EquipOddballToPlayer_RPC call");
             _pv.RPC("EquipOddballToPlayer_RPC", RpcTarget.All, playerPhotonView, false);
         }
         else if (!caller)
         {
-            Log.Print($"EquipOddballToPlayer_RPC non-caller");
+            Log.Print(() => $"EquipOddballToPlayer_RPC non-caller");
             GameManager.instance.oddballSkull.DisableOddball();
             GameManager.instance.oddballSkull.PlayBallTakenClip();
             GameManager.GetPlayerWithPhotonView(playerPhotonView).playerInventory.EquipOddball();
@@ -1015,7 +1015,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
         else if (!caller)
         {
-            Log.Print("EquipFlagToPlayer_RPC");
+            Log.Print(() => "EquipFlagToPlayer_RPC");
 
             //GameManager.GetPlayerWithPhotonView(playerPhotonView).playerInventory.HideFlag();
 
@@ -1055,7 +1055,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
         else if (!caller)
         {
-            Log.Print($"AddForceToOddball {calculatedPower} {rad}");
+            Log.Print(() => $"AddForceToOddball {calculatedPower} {rad}");
             //GameManager.instance.oddballSkull.rb.AddForce(dir * calculatedPower, mode: ForceMode.Impulse);
             GameManager.instance.oddballSkull.rb.AddExplosionForce(calculatedPower, pos, rad, 3.0F);
         }
@@ -1066,14 +1066,14 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         if (caller && !masterCall) // step 1
         {
-            Log.Print("AskMasterClientToSpawnOddball");
+            Log.Print(() => "AskMasterClientToSpawnOddball");
             _pv.RPC("AskMasterClientToSpawnOddball", RpcTarget.AllViaServer, pos, dir, false, false);
         }
         else if (!caller && !masterCall) // step 2
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                Log.Print("MASTER CALL AskMasterClientToSpawnOddball");
+                Log.Print(() => "MASTER CALL AskMasterClientToSpawnOddball");
                 _pv.RPC("AskMasterClientToSpawnOddball", RpcTarget.AllViaServer, pos, dir, false, true);
             }
         }
@@ -1112,14 +1112,14 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         if (initialCall && !masterCall) // step 1. When any player has either captured or died with the flag
         {
-            Log.Print("AskMasterClientToSpawnFlag");
+            Log.Print(() => "AskMasterClientToSpawnFlag");
             _pv.RPC("AskMasterClientToSpawnFlag", RpcTarget.AllViaServer, pos, dir, flagTeam, false, false);
         }
         else if (!initialCall && !masterCall) // step 2
         {
             if (PhotonNetwork.IsMasterClient)
             {
-                Log.Print("MASTER CALL AskMasterClientToSpawnFlag");
+                Log.Print(() => "MASTER CALL AskMasterClientToSpawnFlag");
                 _pv.RPC("AskMasterClientToSpawnFlag", RpcTarget.AllViaServer, pos, dir, flagTeam, false, true);
             }
         }
@@ -1199,7 +1199,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         if (GameTime.instance.timeElapsed > 5)
         {
 
-            Log.Print($"UpdateAmmo for {GameManager.GetPlayerWithPhotonView(playerPid)} {ammo}. Sender: {sender}");
+            Log.Print(() => $"UpdateAmmo for {GameManager.GetPlayerWithPhotonView(playerPid)} {ammo}. Sender: {sender}");
             if (GameManager.GetPlayerWithPhotonView(playerPid).isMine && sender)
             {
                 instance._pv.RPC("UpdateAmmo", RpcTarget.All, playerPid, wIndex, ammo, isSpare, isThirdWeapon, false);
@@ -1279,7 +1279,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             instance._pv.RPC("TriggerPlayerOverheatWeapon", RpcTarget.AllViaServer, playerPhotonId, weaponKillFeedOutputInt, leftHand, false);
         else if (!caller)
         {
-            Log.Print($"TriggerPlayerOverheatWeapon {leftHand}");
+            Log.Print(() => $"TriggerPlayerOverheatWeapon {leftHand}");
             GameManager.GetPlayerWithPhotonView(playerPhotonId).playerController.Descope();
 
             foreach (GameObject weaponGo in GameManager.GetPlayerWithPhotonView(playerPhotonId).playerInventory.allWeaponsInInventory)
@@ -1328,10 +1328,10 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         SpawnManager.spawnManagerInstance.ReserveSpawnPoint(pos);
 
-        Log.Print($"oneobjmode ReserveSpawnPoint_RPC {playerPhotonId} {controllerID} -> {SpawnManager.spawnManagerInstance.GetSpawnPointAtPos(pos).name}");
+        Log.Print(() => $"oneobjmode ReserveSpawnPoint_RPC {playerPhotonId} {controllerID} -> {SpawnManager.spawnManagerInstance.GetSpawnPointAtPos(pos).name}");
         foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
         {
-            Log.Print($"oneobjmode ReserveSpawnPoint_RPC {p.photonId} {p.rid}");
+            Log.Print(() => $"oneobjmode ReserveSpawnPoint_RPC {p.photonId} {p.rid}");
             if (p.photonId == playerPhotonId && p.rid == controllerID) p.UpdateReservedSpawnPoint(pos, isRandom);
         }
     }
@@ -1359,11 +1359,11 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
         else if (!caller)
         {
-            Log.Print($"KickPlayerWithDatabaseId RPC called {playerDbId}");
+            Log.Print(() => $"KickPlayerWithDatabaseId RPC called {playerDbId}");
 
             if (CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.player_id == playerDbId)
             {
-                Log.Print($"I am kicked");
+                Log.Print(() => $"I am kicked");
 
                 if (SceneManager.GetActiveScene().buildIndex == 0)
                 {
@@ -1382,7 +1382,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void ResetOneObjRoundOver_RPC()
     {
-        Log.Print($"oneobjmode - ResetOneObjRoundOver_RPC");
+        Log.Print(() => $"oneobjmode - ResetOneObjRoundOver_RPC");
         GameManager.instance.OneObjModeRoundOver = false;
     }
 }

@@ -104,7 +104,7 @@ public class AlienShooter : Actor
         if (caller)
         {
             GetComponent<PhotonView>().RPC("RibbianMelee", RpcTarget.All, false);
-            Log.Print($"Master client is trying to melee {targetTransform.name}");
+            Log.Print(() => $"Master client is trying to melee {targetTransform.name}");
             if (targetTransform.GetComponent<Player>())
                 targetTransform.GetComponent<Player>().Damage(33, false, pid);
             else if (targetTransform.root.GetComponent<Player>())

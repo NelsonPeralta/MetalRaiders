@@ -135,7 +135,7 @@ public class PlayerInventory : MonoBehaviourPun
         {
             if (value)
             {
-                Log.Print($"showing third weapon");
+                Log.Print(() => $"showing third weapon");
                 pController.SetDrawingThirdWeapon();
                 pController.Descope();
                 value.gameObject.SetActive(true);
@@ -186,7 +186,7 @@ public class PlayerInventory : MonoBehaviourPun
             }
             else
             {
-                Log.Print($"third weapon becomes null");
+                Log.Print(() => $"third weapon becomes null");
                 if (_thirdWeapon != null)
                 {
                     if (_thirdWeapon.weaponType == WeaponProperties.WeaponType.Heavy)
@@ -209,7 +209,7 @@ public class PlayerInventory : MonoBehaviourPun
 
 
 
-                    Log.Print($"hiding third weapon");
+                    Log.Print(() => $"hiding third weapon");
                     _thirdWeapon.OnCurrentAmmoChanged -= OnActiveWeaponAmmoChanged;
                     _thirdWeapon.gameObject.SetActive(false);
 
@@ -227,7 +227,7 @@ public class PlayerInventory : MonoBehaviourPun
 
             if (value && value.weaponType == WeaponProperties.WeaponType.Heavy && GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
             {
-                Log.Print("setting up third person");
+                Log.Print(() => "setting up third person");
                 pController.SetDrawingWeaponCooldown();
 
 
@@ -462,7 +462,7 @@ public class PlayerInventory : MonoBehaviourPun
 
     public void Start()
     {
-        Log.Print("PlayerInventory Start");
+        Log.Print(() => "PlayerInventory Start");
         player.OnPlayerIdAssigned -= OnPlayerIdAndRewiredIdAssigned_Delegate;
         player.OnPlayerIdAssigned += OnPlayerIdAndRewiredIdAssigned_Delegate;
 
@@ -657,7 +657,7 @@ public class PlayerInventory : MonoBehaviourPun
 
         if (pController.pInventory.holsteredWeapon != null && !player.isDead && !player.isRespawning)
         {
-            Log.Print("SwitchWeapons");
+            Log.Print(() => "SwitchWeapons");
 
             if (hasEnnemyFlag) PV.RPC("SwitchWeapons_RPC", RpcTarget.All, (int)SwitchWeapons_Mode.dropFlag);
             else if (playerOddballActive) PV.RPC("SwitchWeapons_RPC", RpcTarget.All, (int)SwitchWeapons_Mode.dropOddball);
@@ -717,7 +717,7 @@ public class PlayerInventory : MonoBehaviourPun
 
         if (player.isMine) // Do locally right now if its mine
         {
-            Log.Print($"SwitchWeapons_RPC {isDualWielding} {(SwitchWeapons_Mode)mode}");
+            Log.Print(() => $"SwitchWeapons_RPC {isDualWielding} {(SwitchWeapons_Mode)mode}");
             if ((SwitchWeapons_Mode)mode == SwitchWeapons_Mode.dropFlag)
             {
                 try { OnActiveWeaponChanged?.Invoke(this); } catch { }
@@ -760,10 +760,10 @@ public class PlayerInventory : MonoBehaviourPun
     [PunRPC]
     void AssignWeapon(string codeName, bool actWeap = true)
     {
-        Log.Print($"{player.name} AssignWeapon");
+        Log.Print(() => $"{player.name} AssignWeapon");
         if (!PV.IsMine)
         {
-            Log.Print($"AssignWeapon {codeName}");
+            Log.Print(() => $"AssignWeapon {codeName}");
             pController.SetDrawingWeaponCooldown();
 
             foreach (GameObject weap in allWeaponsInInventory)
@@ -790,7 +790,7 @@ public class PlayerInventory : MonoBehaviourPun
 
                     if (actWeap) // activeWeapon
                     {
-                        Log.Print($"AssignWeapon {codeName} actWeap");
+                        Log.Print(() => $"AssignWeapon {codeName} actWeap");
 
                         _activeWeapon = weap.GetComponent<WeaponProperties>();
                         _activeWeapon.loadedAmmo = _activeWeapon.ammoCapacity;
@@ -833,7 +833,7 @@ public class PlayerInventory : MonoBehaviourPun
     }
     public IEnumerator EquipStartingWeapon()
     {
-        Log.Print("oneobjmode - EquipStartingWeapon");
+        Log.Print(() => "oneobjmode - EquipStartingWeapon");
 
         _oddball.gameObject.SetActive(false);
         GetWeaponProperties("pr").currentOverheat = 0;
@@ -927,7 +927,7 @@ public class PlayerInventory : MonoBehaviourPun
 
 
 
-        Log.Print(GetWeaponProperties(StartingWeapon));
+        Log.Print(() => GetWeaponProperties(StartingWeapon));
         GetWeaponProperties(StartingWeapon).animator.Play("Idle");
         GetWeaponProperties(StartingWeapon).spareAmmo = GetWeaponProperties(StartingWeapon).ammoCapacity * 3;
         try { GetWeaponProperties(StartingWeapon2).spareAmmo = GetWeaponProperties(StartingWeapon2).ammoCapacity * 3; } catch { }
@@ -976,7 +976,7 @@ public class PlayerInventory : MonoBehaviourPun
 
     void AssignRandomWeapons()
     {
-        Log.Print("AssignRandomWeapons");
+        Log.Print(() => "AssignRandomWeapons");
         var random = new System.Random();
         int ind = random.Next(allWeaponsInInventory.Length);
 
@@ -1056,7 +1056,7 @@ public class PlayerInventory : MonoBehaviourPun
     {
         if (MapCamera.instance.gameObject.activeSelf)
             return;
-        Log.Print($"{player.name} Play Draw Sound");
+        Log.Print(() => $"{player.name} Play Draw Sound");
         weaponDrawAudioSource.clip = activeWeapon.GetComponent<WeaponProperties>().draw;
         weaponDrawAudioSource.Play();
     }
@@ -1088,7 +1088,7 @@ public class PlayerInventory : MonoBehaviourPun
 
     void OnPLayerDeath_Delegate(Player player)
     {
-        Log.Print("OnPLayerDeath_Delegate");
+        Log.Print(() => "OnPLayerDeath_Delegate");
         _oddball.gameObject.SetActive(false); _flag.gameObject.SetActive(false);
         try { activeWeapon.animator.SetBool("Run", false); } catch { }
 
@@ -1123,7 +1123,7 @@ public class PlayerInventory : MonoBehaviourPun
     public FakeBulletTrail SpawnFakeBulletTrail(FakeTrailColor fakeTrailColor, int lenghtOfTrail, Quaternion spray, bool bipedIsMine,
         Vector3? muzzlePosition = null, Vector3? lookAtThisTarget = null, /*bool realTimeTravel = false,*/ WeaponProperties wp = null)
     {
-        Log.Print("SpawnFakeBulletTrail: " + fakeTrailColor + " " + lenghtOfTrail);
+        Log.Print(() => "SpawnFakeBulletTrail: " + fakeTrailColor + " " + lenghtOfTrail);
 
         // choose the pool once
         var pool = (fakeTrailColor == FakeTrailColor.yellow) ? _fakeBulletTrailPool : _fakeRedBulletTrailPool;
@@ -1171,7 +1171,7 @@ public class PlayerInventory : MonoBehaviourPun
                 GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
             }
 
-            Log.Print("SpawnFakeBulletTrail: " + lenghtOfTrail);
+            Log.Print(() => "SpawnFakeBulletTrail: " + lenghtOfTrail);
 
             fbt.fakeBulletTrailDisable.timeBeforeDisabling = 0.1f;
             fbt.scaleToChange.localScale = one;
@@ -1210,7 +1210,7 @@ public class PlayerInventory : MonoBehaviourPun
         {
 
 
-            //Log.Print($"SpawnFakeBulletTrail: {(FakeTrailColor)fakeTrailColor} {lenghtOfTrail}");
+            //Log.Print(() => $"SpawnFakeBulletTrail: {(FakeTrailColor)fakeTrailColor} {lenghtOfTrail}");
 
             //if (fakeTrailColor == FakeTrailColor.yellow)
             //    foreach (FakeBulletTrail fbt in _fakeBulletTrailPool)
@@ -1244,7 +1244,7 @@ public class PlayerInventory : MonoBehaviourPun
             //                GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
             //            }
 
-            //            Log.Print($"SpawnFakeBulletTrail: {lenghtOfTrail}");
+            //            Log.Print(() => $"SpawnFakeBulletTrail: {lenghtOfTrail}");
             //            fbt.fakeBulletTrailDisable.timeBeforeDisabling = 0.1f;
             //            fbt.scaleToChange.localScale = Vector3.one;
             //            fbt.rotationToTarget.localRotation = Quaternion.identity;
@@ -1311,7 +1311,7 @@ public class PlayerInventory : MonoBehaviourPun
             //                GameManager.SetBulletTrailLayer(fbt.layerChangeTarget.gameObject, 0);
             //            }
 
-            //            Log.Print($"SpawnFakeBulletTrail: {lenghtOfTrail}");
+            //            Log.Print(() => $"SpawnFakeBulletTrail: {lenghtOfTrail}");
             //            fbt.fakeBulletTrailDisable.timeBeforeDisabling = 0.1f;
             //            fbt.scaleToChange.localScale = Vector3.one;
             //            fbt.rotationToTarget.localRotation = Quaternion.identity;
@@ -1439,7 +1439,7 @@ public class PlayerInventory : MonoBehaviourPun
 
     void OnPlayerIdAndRewiredIdAssigned_Delegate(Player p)
     {
-        Log.Print($"PlayerInventory OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} {player.isMine} {GameManager.instance.gameType}");
+        Log.Print(() => $"PlayerInventory OnPlayerIdAndRewiredIdAssigned_Delegate {transform.root.name} {player.isMine} {GameManager.instance.gameType}");
 
 
         foreach (GameObject w in allWeaponsInInventory)
@@ -1522,7 +1522,7 @@ public class PlayerInventory : MonoBehaviourPun
     {
         if (PV.IsMine && thirdWeapon)
         {
-            Log.Print("DropThirdWeapon");
+            Log.Print(() => "DropThirdWeapon");
             NetworkGameManager.SpawnNetworkWeapon(thirdWeapon, player.weaponDropPoint.position, player.weaponDropPoint.forward, currAmmo: thirdWeapon.loadedAmmo, spareAmmo: thirdWeapon.spareAmmo);
             PV.RPC("RemoveThirdWeapon_RPC", RpcTarget.All);
         }
@@ -1547,7 +1547,7 @@ public class PlayerInventory : MonoBehaviourPun
     {
         if (dw)
         {
-            Log.Print("PickupThirdWeapon RPC");
+            Log.Print(() => "PickupThirdWeapon RPC");
             LootableWeapon weaponToLoot = WeaponPool.instance.weaponPool.Where(item => item.spawnPointPosition == collidingWeaponPosition).FirstOrDefault();
 
             foreach (GameObject w in allWeaponsInInventory)

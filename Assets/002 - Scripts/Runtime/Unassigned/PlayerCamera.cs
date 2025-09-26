@@ -103,7 +103,7 @@ public class PlayerCamera : MonoBehaviour
         mainCam.transform.parent = null;
         mainCam.transform.position = _playerCameraHolder.position;
 
-        Log.Print($"PlayerCamera: {Vector3.Angle(transform.forward, mainCam.transform.forward)}");
+        Log.Print(() => $"PlayerCamera: {Vector3.Angle(transform.forward, mainCam.transform.forward)}");
 
         if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On)
         {
@@ -316,14 +316,14 @@ public class PlayerCamera : MonoBehaviour
     public void RotateCameraToRotation(Vector3 dirr)
     {
         //if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off)
-        Log.Print("RotateCameraToRotation");
+        Log.Print(() => "RotateCameraToRotation");
         {
             mainCam.transform.parent = null;
             mainCam.transform.position = _playerCameraHolder.position;
             mainCam.transform.localRotation = Quaternion.identity;
 
-            Log.Print($"PlayerCamera: {dirr} | {mainCam.transform.forward} {Vector3.Angle(dirr, mainCam.transform.forward)}");
-            Log.Print($"PlayerCamera: {dirr} | {mainCam.transform.forward} {Vector3.SignedAngle(mainCam.transform.forward, dirr, mainCam.transform.up)}");
+            Log.Print(() => $"PlayerCamera: {dirr} | {mainCam.transform.forward} {Vector3.Angle(dirr, mainCam.transform.forward)}");
+            Log.Print(() => $"PlayerCamera: {dirr} | {mainCam.transform.forward} {Vector3.SignedAngle(mainCam.transform.forward, dirr, mainCam.transform.up)}");
 
             //leftRightRotation = Vector3.Angle(dirr, mainCam.transform.forward);
             leftRightRotation = Vector3.SignedAngle(mainCam.transform.forward, dirr, mainCam.transform.up);
@@ -478,13 +478,13 @@ public class PlayerCamera : MonoBehaviour
 
     public void EnableThirdPersonLayerMask()
     {
-        Log.Print("EnableThirdPersonLayerMask");
+        Log.Print(() => "EnableThirdPersonLayerMask");
         mainCam.cullingMask = GameManager.instance.thirdPersonMainCameraLayerMask;
     }
 
     public void SetupThirdPersonCamera()
     {
-        Log.Print("SetupThirdPersonCamera");
+        Log.Print(() => "SetupThirdPersonCamera");
         _thirdPersonCameraPivot.transform.parent = null;
         _thirdPersonAimingComponentsOffset.transform.localPosition = new Vector3(0, 0, 2.4f);
         EnableThirdPersonLayerMask();

@@ -20,18 +20,18 @@ public class AssignActorPlayerTargetOnShootingSphere : MonoBehaviour
 
     public void TriggerBehaviour()
     {
-        Log.Print("TriggerBehaviour");
+        Log.Print(() => "TriggerBehaviour");
 
         if (_cooldown > 0 || !PhotonNetwork.IsMasterClient || GameManager.instance.gameMode == GameManager.GameMode.Versus) return;
 
-        Log.Print("TriggerBehaviour");
+        Log.Print(() => "TriggerBehaviour");
 
         RaycastHit[] _hits_ = Physics.RaycastAll(transform.position, transform.forward, player.playerInventory.activeWeapon.range * 0.7f, layerMask: _layerMask, queryTriggerInteraction: QueryTriggerInteraction.Collide);
 
         if (_hits_.Length > 0)
             for (int i = 0; i < _hits_.Length; i++)
             {
-                Log.Print($"AssignActorPlayerTargetOnShootingSphere {_hits_[i].transform.name}");
+                Log.Print(() => $"AssignActorPlayerTargetOnShootingSphere {_hits_[i].transform.name}");
                 if (_hits_[i].transform.GetComponent<AssignActorPlayerTargetOnShootingSphereTarget>())
                     _hits_[i].transform.GetComponent<AssignActorPlayerTargetOnShootingSphereTarget>().actor.AssignPlayerOnBulletNearby(player.photonId);
 

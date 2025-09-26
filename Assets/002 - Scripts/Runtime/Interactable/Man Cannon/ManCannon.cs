@@ -38,7 +38,7 @@ public class ManCannon : MonoBehaviour
                         rb.GetComponent<PlayerMovement>().blockPlayerMoveInput = _blockMovementTime;
                         rb.GetComponent<PlayerMovement>().blockedMovementType = PlayerMovement.BlockedMovementType.ManCannon;
 
-                        Log.Print($"ManCannon dir {transform.up * power}");
+                        Log.Print(() => $"ManCannon dir {transform.up * power}");
                         Debug.Log($"ManCannon BEFORE! {rb.linearDamping} {rb.angularDamping} ||| {rb.linearVelocity} {rb.angularVelocity}");
                         rb.linearVelocity = Vector3.zero;
                         rb.angularVelocity = Vector3.zero;
@@ -56,7 +56,7 @@ public class ManCannon : MonoBehaviour
 
                 //if (!_invisible)
                 {
-                    Log.Print($"ManCannon dir {transform.up * power}");
+                    Log.Print(() => $"ManCannon dir {transform.up * power}");
                     //Debug.Log($"ManCannon LAUNCH! {rb.drag} {rb.angularDrag} ||| {rb.velocity} {rb.angularVelocity}");
                     rb.linearVelocity = Vector3.zero;
                     rb.angularVelocity = Vector3.zero;

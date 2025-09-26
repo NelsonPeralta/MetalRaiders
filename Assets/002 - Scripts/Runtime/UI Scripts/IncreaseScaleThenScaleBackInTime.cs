@@ -13,7 +13,7 @@ public class IncreaseScaleThenScaleBackInTime : MonoBehaviour
     private void Awake()
     {
         originalScale = transform.localScale;
-        Log.Print($"IncreaseScaleThenScaleBackInTime Awake {originalScale} {name}");
+        Log.Print(() => $"IncreaseScaleThenScaleBackInTime Awake {originalScale} {name}");
     }
     //private void OnEnable()
     //{
@@ -42,7 +42,7 @@ public class IncreaseScaleThenScaleBackInTime : MonoBehaviour
 
     IEnumerator ScaleOverTime(float time, float destScale)
     {
-        Log.Print("IncreaseScaleThenScaleBackInTime ScaleOverTime");
+        Log.Print(() => "IncreaseScaleThenScaleBackInTime ScaleOverTime");
         Vector3 _orSc = new Vector3(originalScale.x * 4, originalScale.y * 4, originalScale.z * 4);
         Vector3 destinationScale = new Vector3(destScale, destScale, destScale);
         destinationScale = originalScale;
@@ -51,8 +51,8 @@ public class IncreaseScaleThenScaleBackInTime : MonoBehaviour
 
         do
         {
-            Log.Print(Vector3.Lerp(_orSc, destinationScale, currentTime / time));
-            Log.Print(name);
+            Log.Print(() => Vector3.Lerp(_orSc, destinationScale, currentTime / time));
+            Log.Print(() => name);
             transform.localScale = Vector3.Lerp(_orSc, destinationScale, currentTime / time);
             currentTime += Time.deltaTime;
             yield return null;

@@ -169,14 +169,14 @@ public class Melee : MonoBehaviour
             if (_pushIfAbleList.Count > 0 && player.isMine)
             {
                 HitPoints hp = _pushIfAbleList[0];
-                Log.Print($"MELEE distance to tar: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
+                Log.Print(() => $"MELEE distance to tar: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
 
                 if (hp.meleeMagnetism && Vector3.Distance(hp.transform.position, player.mainCamera.transform.position) <=
                     (Player.MELEE_DAMAGE_DISTANCE + 1
                     + (player.playerInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword ? 2.5f : 0))
                      + ((GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || player.playerInventory.isHoldingHeavy) ? Mathf.Abs(PlayerCamera.THIRD_PERSON_LOCAL_OFFSET.z) : 0))
                 {
-                    Log.Print($"Melee PushIfAble. Cur dis: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
+                    Log.Print(() => $"Melee PushIfAble. Cur dis: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
 
                     _lookAtPosition = new Vector3(hp.biped.targetTrackingCorrectTarget.transform.position.x,
                                                 movement.transform.position.y,
@@ -225,7 +225,7 @@ public class Melee : MonoBehaviour
                 Vector3 dir = (hp.transform.position - player.transform.position);
                 RaycastHit hit;
 
-                Log.Print($"Melee Damage cur dis: {Vector3.Distance(hp.transform.position, movement.transform.position)}");
+                Log.Print(() => $"Melee Damage cur dis: {Vector3.Distance(hp.transform.position, movement.transform.position)}");
 
 
 
@@ -235,9 +235,9 @@ public class Melee : MonoBehaviour
         + ((GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.On || player.playerInventory.isHoldingHeavy) ? Mathf.Abs(PlayerCamera.THIRD_PERSON_LOCAL_OFFSET.z) : 0)
         , _obstructionMask))
                 {
-                    Log.Print($"Melee obstruction {hit.transform.name} " +
-                        $" HB Dis{Vector3.Distance(hp.transform.position, movement.transform.position)}" +
-                        $" Obs Dis: {hit.distance}");
+                    //Log.Print($"Melee obstruction {hit.transform.name} " +
+                    //    $" HB Dis{Vector3.Distance(hp.transform.position, movement.transform.position)}" +
+                    //    $" Obs Dis: {hit.distance}");
 
                     if (hit.distance < Vector3.Distance(hp.transform.position, movement.transform.position))
                         _trulyObstructed = true;
@@ -249,7 +249,7 @@ public class Melee : MonoBehaviour
                     && !_trulyObstructed)
                 {
 
-                    Log.Print($"Melee DAMAGE. Cur dis: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
+                    Log.Print(() => $"Melee DAMAGE. Cur dis: {Vector3.Distance(hp.transform.position, player.mainCamera.transform.position)}");
                     //PrintOnlyInEditor.Log($"Melee found no true obstruction. Angle: " +
                     //    $"{Vector3.SignedAngle(hp.biped.targetTrackingCorrectTarget.transform.forward, player.transform.position - hp.biped.targetTrackingCorrectTarget.transform.position, Vector3.up)}");
 
@@ -299,17 +299,17 @@ public class Melee : MonoBehaviour
             }
             else
             {
-                Log.Print("MeleeDamage None");
+                Log.Print(() => "MeleeDamage None");
                 RaycastHit hit;
                 // Does the ray intersect any objects excluding the player layer. Ex: weapons, wall, trash cans
                 if (Physics.Raycast(player.mainCamera.transform.position,
                     player.mainCamera.transform.TransformDirection(Vector3.forward), out hit, Player.MELEE_DAMAGE_DISTANCE / 2, _meleeMask))
                 {
-                    Log.Print($"Melee raycast hit: {hit.transform.name}");
+                    Log.Print(() => $"Melee raycast hit: {hit.transform.name}");
 
                     if (hit.transform.gameObject.GetComponent<Rigidbody>())
                     {
-                        Log.Print($"Melee pushing: {hit.transform.name}");
+                        Log.Print(() => $"Melee pushing: {hit.transform.name}");
                         hit.transform.gameObject.GetComponent<Rigidbody>().AddForce(player.mainCamera.transform.TransformDirection(Vector3.forward).normalized * 300);
 
                         GameObjectPool.instance.SpawnWeaponSmokeCollisionObject(hit.point, SoundManager.instance.concretePunchHit);

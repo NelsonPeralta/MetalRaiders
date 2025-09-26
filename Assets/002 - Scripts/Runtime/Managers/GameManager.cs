@@ -228,7 +228,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         get { return _gameType; }
         set
         {
-            Log.Print($"Gameype: {value}");
+            Log.Print(() => $"Gameype: {value}");
             _gameType = value;
 
             //if (value == GameType.GunGame || value == GameType.Hill || value == GameType.Oddball)
@@ -254,7 +254,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             TeamMode _prev = _teamMode;
 
             _teamMode = value;
-            Log.Print($"teamMode: {value}");
+            Log.Print(() => $"teamMode: {value}");
 
             Launcher.instance.teamModeText.text = $"Team Mode: {teamMode.ToString()}";
             if (value == TeamMode.None)
@@ -382,7 +382,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         set
         {
-            Log.Print($"oneobjmode - OneObjModeRoundCounter {_oneObjModeRoundCounter} {value}");
+            Log.Print(() => $"oneobjmode - OneObjModeRoundCounter {_oneObjModeRoundCounter} {value}");
             if (_oneObjModeRoundCounter != value && _oneObjModeRoundCounter < MAX_NB_OF_ROUNDS - 1)
             {
                 _oneObjModeRoundCounter = value;
@@ -397,7 +397,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         set
         {
             //if (PhotonNetwork.IsMasterClient)
-            Log.Print($"oneobjmode - OnOneObjRoundOverLocalEvent {value}");
+            Log.Print(() => $"oneobjmode - OnOneObjRoundOverLocalEvent {value}");
 
             if (value)
             {
@@ -408,7 +408,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             {
                 if (SceneManager.GetActiveScene().buildIndex > 0 && _oneObjModeRoundCounter < GameManager.MAX_NB_OF_ROUNDS && !value && value != _oneObjModeRoundOver)
                 {
-                    Log.Print($"oneobjmode - OnOneObjRoundOverLocalEvent {value}");
+                    Log.Print(() => $"oneobjmode - OnOneObjRoundOverLocalEvent {value}");
 
                     GameTime.instance.ResetOneObjRoundTime();
                     if (NetworkGameManager.instance.overshield) NetworkGameManager.instance.overshield.gameObject.SetActive(true);
@@ -663,7 +663,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called second
     void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
     {
-        Log.Print($"Game Manager OnSceneLoaded {name}");
+        Log.Print(() => $"Game Manager OnSceneLoaded {name}");
         string[] names = QualitySettings.names;
         for (int i = 0; i < names.Length; i++)
         {
@@ -701,7 +701,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         if (scene.buildIndex == 0)
         {
-            Log.Print($"Game Manager OnSceneLoaded  {name} =0");
+            Log.Print(() => $"Game Manager OnSceneLoaded  {name} =0");
 
             oddballSkull = null; redFlag = blueFlag = null;
             //Debug.Break();
@@ -729,10 +729,10 @@ public class GameManager : MonoBehaviourPunCallbacks
             if (RagdollPool.instance) { RagdollPool.instance.ragdollPoolList.Clear(); RagdollPool.instance = null; }
 
 
-            Log.Print($"GAMEMANAGER ONSCENELOADED {name}");
-            Log.Print($"GameManager MenuManager {MenuManager.Instance.name}");
+            Log.Print(() => $"GAMEMANAGER ONSCENELOADED {name}");
+            Log.Print(() => $"GameManager MenuManager {MenuManager.Instance.name}");
 
-            foreach (PreviousScenePayload psp in previousScenePayloads) { Log.Print($"GAMEMANAGER ONSCENELOADED: {psp}"); }
+            foreach (PreviousScenePayload psp in previousScenePayloads) { Log.Print(() => $"GAMEMANAGER ONSCENELOADED: {psp}"); }
 
             if (previousScenePayloads.Contains(PreviousScenePayload.ResetPlayerDataCells))
             {
@@ -816,8 +816,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         }
         else if (scene.buildIndex > 0) // We're in the game scene
         {
-            Log.Print("GAME MANAGER ONSCENELOADED Over 0");
-            Log.Print($"GameManager MenuManager {MenuManager.Instance}");
+            Log.Print(() => "GAME MANAGER ONSCENELOADED Over 0");
+            Log.Print(() => $"GameManager MenuManager {MenuManager.Instance}");
             if (gameMode == GameMode.Coop) Instantiate(_actorAddonsPoolPrefab);
 
 
@@ -941,10 +941,10 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         Ping ping = new Ping(ip);
         yield return new WaitForSeconds(1f);
-        Log.Print(ping.time);
+        Log.Print(() => ping.time);
         if (ping.isDone && ping.time != -1)
         {
-            Log.Print($"Pinged Google in: {ping.time}");
+            Log.Print(() => $"Pinged Google in: {ping.time}");
 
 
             SteamManager.Instance.Init();
@@ -986,7 +986,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
                 if (CurrentRoomManager.instance.roomGameStartCountdown <= 0)
                 {
-                    Log.Print("LOADING LEVEL");
+                    Log.Print(() => "LOADING LEVEL");
                     if (PhotonNetwork.IsMasterClient)
                         PhotonNetwork.LoadLevel(Launcher.instance.levelToLoadIndex);
                 }
@@ -1198,7 +1198,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     List<Transform> _SetLayerRecursivelyList = new List<Transform>();
     public static void SetLayerRecursively(GameObject go, int layerNumber, List<int>? ignoreList = null) // do not use runtime. Use as a 1-time
     {
-        Log.Print($"SetLayerRecursively {go.name} {layerNumber}");
+        Log.Print(() => $"SetLayerRecursively {go.name} {layerNumber}");
         instance._SetLayerRecursivelyList.Clear();
 
         if (ignoreList == null)
@@ -1255,8 +1255,8 @@ public class GameManager : MonoBehaviourPunCallbacks
         Debug.Log("SenErrorEmailReport Sent");
     }
 
-    public void EnableCameraMaskLayer(Camera camera, string layerName) { Log.Print("PlayerCamera: EnableCameraMaskLayer"); camera.cullingMask |= 1 << LayerMask.NameToLayer($"{layerName}"); }
-    public void DisableCameraMaskLayer(Camera camera, string layerName) { Log.Print("PlayerCamera: DisableCameraMaskLayer"); camera.cullingMask &= ~(1 << LayerMask.NameToLayer($"{layerName}")); }
+    public void EnableCameraMaskLayer(Camera camera, string layerName) { Log.Print(() => "PlayerCamera: EnableCameraMaskLayer"); camera.cullingMask |= 1 << LayerMask.NameToLayer($"{layerName}"); }
+    public void DisableCameraMaskLayer(Camera camera, string layerName) { Log.Print(() => "PlayerCamera: DisableCameraMaskLayer"); camera.cullingMask &= ~(1 << LayerMask.NameToLayer($"{layerName}")); }
     public void ToggleCameraMaskLayer(Camera camera, string layerName) { camera.cullingMask ^= 1 << LayerMask.NameToLayer("SomeLayer"); }
     public void LeaveCurrentRoomAndLoadLevelZero()
     {
@@ -1439,7 +1439,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
 
     {
-        Log.Print("OnDisconnected");
+        Log.Print(() => "OnDisconnected");
         //GameManager.instance.connection = GameManager.Connection.Local;
     }
 
@@ -1655,7 +1655,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void CreateTeamsBecausePlayerJoined()
     {
-        Log.Print("CreateTeamsBecausePlayerJoined");
+        Log.Print(() => "CreateTeamsBecausePlayerJoined");
 
         Dictionary<string, int> _teamDict = new Dictionary<string, int>();
 
@@ -1707,7 +1707,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         // Waiting 0.1 seconds is a ghetto solution, but works
         yield return new WaitForSeconds(1);
 
-        Log.Print($"LoadTimeOutOpenErrorMenu_Coroutine {name}");
+        Log.Print(() => $"LoadTimeOutOpenErrorMenu_Coroutine {name}");
         MenuManager.Instance.OpenMainMenu();
         MenuManager.Instance.OpenErrorMenu("A player could not load level");
         //Debug.Break();
@@ -1716,9 +1716,9 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     IEnumerator ResetMapAddOnsAndFlag_Coroutine()
     {
-        Log.Print($"oneobjmode - ResetMapHazards 1");
+        Log.Print(() => $"oneobjmode - ResetMapHazards 1");
         yield return new WaitForSeconds(DELAY_BEFORE_NEXT_ROUND - 1);
-        Log.Print($"oneobjmode - ResetMapHazards 2");
+        Log.Print(() => $"oneobjmode - ResetMapHazards 2");
 
         AudioListener.volume = 0;
 
@@ -1761,11 +1761,11 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     IEnumerator SpawnPlayersForNewRoundAndResetRound_Coroutine()
     {
-        Log.Print($"oneobjmode - SpawnPlayersForNewRoundAndResetRound_Coroutine 1");
+        Log.Print(() => $"oneobjmode - SpawnPlayersForNewRoundAndResetRound_Coroutine 1");
 
         yield return new WaitForSeconds(DELAY_BEFORE_NEXT_ROUND);
 
-        Log.Print($"oneobjmode - SpawnPlayersForNewRoundAndResetRound_Coroutine 2");
+        Log.Print(() => $"oneobjmode - SpawnPlayersForNewRoundAndResetRound_Coroutine 2");
         foreach (Player p in _allPlayers)
         {
             p.PV.RPC("TellPlayerToRespawn", RpcTarget.AllViaServer);
@@ -1816,7 +1816,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             foreach (Player p in _allPlayers)
             {
                 Vector3 nsp = SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].startingSpawnPosInd, CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].team).position;
-                Log.Print($"{SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].startingSpawnPosInd, CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].team)}");
+                Log.Print(() => $"{SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].startingSpawnPosInd, CurrentRoomManager.instance.playerDataCells[CurrentRoomManager.instance.playerDataCells.IndexOf(p.playerDataCell)].team)}");
                 NetworkGameManager.instance.ReserveSpawnPoint(p.photonId, p.controllerId, nsp, false);
             }
 
@@ -1854,7 +1854,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
     public void RecalculateExpectedNbPlayersUsingPlayerCustomProperties()
     {
-        Log.Print($"RecalculateExpectedNbPlayersUsingPlayerCustomProperties {PhotonNetwork.InRoom}");
+        Log.Print(() => $"RecalculateExpectedNbPlayersUsingPlayerCustomProperties {PhotonNetwork.InRoom}");
         if (GameManager.instance.connection == NetworkType.Internet)
         {
 
@@ -1863,7 +1863,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                 int expextedPlayers = 0;
                 foreach (Photon.Realtime.Player p in PhotonNetwork.CurrentRoom.Players.Values.ToList())
                 {
-                    Log.Print($"Player {p.NickName} has {p.CustomProperties["localPlayerCount"]} total players");
+                    Log.Print(() => $"Player {p.NickName} has {p.CustomProperties["localPlayerCount"]} total players");
                     expextedPlayers += (int)p.CustomProperties["localPlayerCount"];
 
                     try

@@ -58,7 +58,7 @@ public class KillFeedItem : MonoBehaviour
 
     public void TriggerBehaviour()
     {
-        Log.Print("Killfeed TriggerBehaviour");
+        Log.Print(() => "Killfeed TriggerBehaviour");
         transform.localScale = _oLocalScale;
         _disableCountdown = PlayerMedals.MEDAL_TTL;
         _scaleCounter = 0;

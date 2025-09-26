@@ -194,7 +194,7 @@ public class MenuGamePadCursor : MonoBehaviour
 
             var escapeTargets = parent.GetComponentsInChildren<EscapeButtonTarget>(false);
 
-            Log.Print($"{escapeTargets.Length}");
+            Log.Print(() => $"{escapeTargets.Length}");
 
             if (escapeTargets.Length > 0)
             {
@@ -278,7 +278,7 @@ public class MenuGamePadCursor : MonoBehaviour
         {
 
 
-            Log.Print($"MenuGamePadCursor {_eventSystemRaycastResults.Count} {_preEentSystemRaycastResults.Count}");
+            Log.Print(() => $"MenuGamePadCursor {_eventSystemRaycastResults.Count} {_preEentSystemRaycastResults.Count}");
 
 
             for (int i = _preEentSystemRaycastResults.Count - 1; i >= 0; i--)
@@ -341,7 +341,7 @@ public class MenuGamePadCursor : MonoBehaviour
                         _buttonUnderCursor.GetComponent<Image>().sprite = _buttonUnderCursorUnselectedSprite;
                         if (_buttonUnderCursor.GetComponent<EventTrigger>())
                         {
-                            Log.Print($"MenuGamePadCursor OnPointerExit {_buttonUnderCursor.gameObject.name} {_buttonUnderCursor.gameObject.activeSelf}");
+                            Log.Print(() => $"MenuGamePadCursor OnPointerExit {_buttonUnderCursor.gameObject.name} {_buttonUnderCursor.gameObject.activeSelf}");
 
                             if (SceneManager.GetActiveScene().buildIndex == 0 && MenuManager.Instance.GetOpenMenu().Equals("armory") && !_buttonUnderCursor.gameObject.activeSelf)
                             {

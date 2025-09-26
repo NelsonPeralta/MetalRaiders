@@ -79,11 +79,11 @@ public class RagdollPool : MonoBehaviour
 
         for (int i = (photonRoomIndex - 1) * RAGDOLLS_PER_PLAYER; i < (photonRoomIndex * RAGDOLLS_PER_PLAYER); i++)
         {
-            Log.Print($"GetPooledPlayerRagdoll {i} is active:{ragdollPoolList[i].gameObject.activeSelf} {ragdollPoolList[i].name} {ragdollPoolList[i].inUse}");
+            Log.Print(() => $"GetPooledPlayerRagdoll {i} is active:{ragdollPoolList[i].gameObject.activeSelf} {ragdollPoolList[i].name} {ragdollPoolList[i].inUse}");
 
             if (!ragdollPoolList[i].inUse)
             {
-                Log.Print($"GetPooledPlayerRagdoll returnin {i}");
+                Log.Print(() => $"GetPooledPlayerRagdoll returnin {i}");
                 ragdollPoolList[i].inUse = true;
                 obj = ragdollPoolList[i].gameObject;
                 if (_ragdollsNotInUse == 1) _ragInd = i;
@@ -95,13 +95,13 @@ public class RagdollPool : MonoBehaviour
         // preparing a ragdoll when the last one ready has been taken
         if (_ragdollsNotInUse == 1)
         {
-            Log.Print($"Pre-Preparing a ragdoll");
+            Log.Print(() => $"Pre-Preparing a ragdoll");
             for (int i = (photonRoomIndex - 1) * RAGDOLLS_PER_PLAYER; i < (photonRoomIndex * RAGDOLLS_PER_PLAYER); i++)
             {
 
                 if (ragdollPoolList[i].inUse && _ragInd != i)
                 {
-                    Log.Print($"Pre-Preparing a ragdoll {i}");
+                    Log.Print(() => $"Pre-Preparing a ragdoll {i}");
                     if (ragdollPoolList[i].changeLayerCoroutine != null) StopCoroutine(ragdollPoolList[i].changeLayerCoroutine);
                     if (ragdollPoolList[i].resetRagdollCoroutine != null) StopCoroutine(ragdollPoolList[i].resetRagdollCoroutine);
                     if (ragdollPoolList[i].resetInUseCoroutine != null) StopCoroutine(ragdollPoolList[i].resetInUseCoroutine);

@@ -38,7 +38,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         }
     }
     public int nextWaveDelay;
-    public int ranClipInt { get { return _ranClipInt; } set { _ranClipInt = value; Log.Print($"ranclip set to {value}"); } }
+    public int ranClipInt { get { return _ranClipInt; } set { _ranClipInt = value; Log.Print(() => $"ranclip set to {value}"); } }
 
 
     [SerializeField] GameObject zombiePrefab;
@@ -556,7 +556,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         if (currentWave % 5 == 0)
         {
             ranClipInt = Random.Range(0, bossMusicsIntros.Length); if (bossMusicsIntros.Length == 1) ranClipInt = 0;
-            Log.Print($"StartNewWave_Coroutine {currentWave} {ranClipInt} {bossMusicsIntros.Length}");
+            Log.Print(() => $"StartNewWave_Coroutine {currentWave} {ranClipInt} {bossMusicsIntros.Length}");
             AddClip(bossMusicsIntros[ranClipInt]);
             AddClip(bossMusicLoops[ranClipInt]);
         }
@@ -985,7 +985,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     public void EndWave()
     {
         Debug.Log("EndWave_RPC");
-        Log.Print($"EndWave_RPC {currentWave} {ranClipInt}");
+        Log.Print(() => $"EndWave_RPC {currentWave} {ranClipInt}");
         if (currentWave % 5 == 0 && currentWave > 1) AddClip(bossMusicOutros[ranClipInt]);
 
         OnWaveEnd?.Invoke(this);
@@ -1247,7 +1247,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         int targetPhotonId, aiPhotonId = -1;
         try { targetPhotonId = GetRandomPlayerPhotonId(); } catch { targetPhotonId = 0; }
-        Log.Print($"SpawnActorsFromDropship: targetPhotonId {targetPhotonId}");
+        Log.Print(() => $"SpawnActorsFromDropship: targetPhotonId {targetPhotonId}");
 
 
         foreach (SpawnPoint sp in ad.ribbianSpawnPoints)

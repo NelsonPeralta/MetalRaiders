@@ -62,14 +62,14 @@ public class WeaponPool : MonoBehaviourPun
 
     public LootableWeapon GetLootableWeapon(string weaponCodeName)
     {
-        Log.Print($"GetLootableWeapon {weaponCodeName} {_spawnedWeapons.Count}");
+        Log.Print(() => $"GetLootableWeapon {weaponCodeName} {_spawnedWeapons.Count}");
         for (int i = 0; i < _spawnedWeapons.Count; i++)
         {
             if (_spawnedWeapons[i].codeName.Equals(weaponCodeName) && !_spawnedWeapons[i].gameObject.activeInHierarchy
                 && _spawnedWeapons[i].transform.parent == transform)
             {
                 //_spawnedWeapons.Remove(weapon);
-                Log.Print($"GetLootableWeapon RETURNING {weaponCodeName}");
+                Log.Print(() => $"GetLootableWeapon RETURNING {weaponCodeName}");
                 return _spawnedWeapons[i];
             }
         }
@@ -82,7 +82,7 @@ public class WeaponPool : MonoBehaviourPun
         //        return weapon;
         //    }
         //}
-        Log.Print($"GetLootableWeapon RETURNING NULL");
+        Log.Print(() => $"GetLootableWeapon RETURNING NULL");
         return null;
     }
 

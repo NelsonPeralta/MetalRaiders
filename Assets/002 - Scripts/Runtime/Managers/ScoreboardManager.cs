@@ -126,7 +126,7 @@ public class ScoreboardManager : MonoBehaviour
 
     public void SetScoreboardRows()
     {
-        Log.Print($"SetScoreboardRows {GameManager.instance.GetAllPhotonPlayers().Count}");
+        Log.Print(() => $"SetScoreboardRows {GameManager.instance.GetAllPhotonPlayers().Count}");
         for (int i = 0; i < GameManager.instance.GetAllPhotonPlayers().Count; i++)
         {
             if (CurrentRoomManager.instance.playerDataCells[i].occupied)
@@ -155,7 +155,7 @@ public class ScoreboardManager : MonoBehaviour
         {
             if (row && row.playerScoreStruct)
             {
-                Log.Print($"ScoreboardManager adding {Array.IndexOf(CurrentRoomManager.instance.playerDataCells.ToArray(), row.playerScoreStruct)}  {row.playerScoreStruct.playerCurrentGameScore.score}");
+                Log.Print(() => $"ScoreboardManager adding {Array.IndexOf(CurrentRoomManager.instance.playerDataCells.ToArray(), row.playerScoreStruct)}  {row.playerScoreStruct.playerCurrentGameScore.score}");
                 _sorted.Add(Array.IndexOf(CurrentRoomManager.instance.playerDataCells.ToArray(), row.playerScoreStruct), row.playerScoreStruct.playerCurrentGameScore.score);
             }
         }
@@ -174,7 +174,7 @@ public class ScoreboardManager : MonoBehaviour
                     {
                         if (Array.IndexOf(CurrentRoomManager.instance.playerDataCells.ToArray(), row.playerScoreStruct) == _sorted.ElementAt(i).Key)
                         {
-                            Log.Print($"{row.playerScoreStruct.playerExtendedPublicData.username} is equal to key: {_sorted.ElementAt(i).Key}");
+                            Log.Print(() => $"{row.playerScoreStruct.playerExtendedPublicData.username} is equal to key: {_sorted.ElementAt(i).Key}");
 
                             if (GameManager.instance.teamMode == GameManager.TeamMode.None)
                                 row.transform.SetAsLastSibling();

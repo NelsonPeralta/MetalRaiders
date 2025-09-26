@@ -42,8 +42,8 @@ public class OddballSpawnPoint : MonoBehaviour
 
                 if (_check < 0)
                 {
-                    Log.Print($"OddballSpawnPoint {_oddball.thisRoot.transform.parent == null} {_oddball.gameObject.activeInHierarchy} " +
-                        $"{Vector3.Distance(transform.position, _oddball.rb.transform.position)} {GameManager.instance.GetAllPhotonPlayers().Where(item => item.playerInventory.playerOddballActive).Count()}");
+                    //Log.Print($"OddballSpawnPoint {_oddball.thisRoot.transform.parent == null} {_oddball.gameObject.activeInHierarchy} " +
+                    //    $"{Vector3.Distance(transform.position, _oddball.rb.transform.position)} {GameManager.instance.GetAllPhotonPlayers().Where(item => item.playerInventory.playerOddballActive).Count()}");
 
                     if (_oddball.rb.transform.position.y < -20)
                     {
@@ -54,7 +54,7 @@ public class OddballSpawnPoint : MonoBehaviour
                         && GameManager.instance.GetAllPhotonPlayers().Where(item => item.playerInventory.playerOddballActive).Count() == 0)
                     {
                         _resetBall++;
-                        Log.Print($"oddball has disapeared for {_resetBall / DEFAULT_CHECK_TIME} ticks");
+                        Log.Print(() => $"oddball has disapeared for {_resetBall / DEFAULT_CHECK_TIME} ticks");
 
                         if (_resetBall >= 10)
                         {
@@ -66,7 +66,7 @@ public class OddballSpawnPoint : MonoBehaviour
                         && GameManager.instance.GetAllPhotonPlayers().Where(item => item.playerInventory.playerOddballActive).Count() == 0)
                     {
                         _resetBall++;
-                        Log.Print($"oddball is away for {_resetBall / DEFAULT_CHECK_TIME} ticks");
+                        Log.Print(() => $"oddball is away for {_resetBall / DEFAULT_CHECK_TIME} ticks");
 
                         if (_resetBall >= 30)
                         {
@@ -86,7 +86,7 @@ public class OddballSpawnPoint : MonoBehaviour
 
     public void SpawnOddball()
     {
-        Log.Print("SpawnOddball");
+        Log.Print(() => "SpawnOddball");
         _resetBall = 0;
         StartCoroutine(SpawnOddball_Coroutine());
     }
@@ -103,7 +103,7 @@ public class OddballSpawnPoint : MonoBehaviour
 
         yield return new WaitForSeconds(1);
 
-        Log.Print("SpawnOddball_Coroutine");
+        Log.Print(() => "SpawnOddball_Coroutine");
         _oddball.thisRoot.gameObject.SetActive(true);
     }
 }

@@ -1,44 +1,48 @@
+using System;
 using System.Diagnostics;
+using UnityEngine;
 
 public static class Log
 {
-    [Conditional("UNITY_EDITOR")]
-    public static void Print(object message)
-    {
-        if (GameManager.instance)
-            if (GameManager.instance.disableAllLogs == false)
-                UnityEngine.Debug.Log(message);
-    }
+    public static bool Enabled =>
+        GameManager.instance && !GameManager.instance.disableAllLogs;
 
     [Conditional("UNITY_EDITOR")]
-    public static void PrintWarning(object message)
+    public static void Print(Func<object> message)
     {
-        if (GameManager.instance.disableAllLogs == false)
-            UnityEngine.Debug.LogWarning(message);
+        if (Enabled)
+            UnityEngine.Debug.Log(message());
     }
 
     [Conditional("UNITY_EDITOR")]
-    public static void PrintError(object message)
+    public static void PrintWarning(Func<object> message)
     {
-        if (GameManager.instance.disableAllLogs == false)
-            UnityEngine.Debug.LogError(message);
+        if (Enabled)
+            UnityEngine.Debug.LogWarning(message());
     }
 
-    public static void PrintInBuildAlso(object message)
+    [Conditional("UNITY_EDITOR")]
+    public static void PrintError(Func<object> message)
     {
-        if (GameManager.instance.disableAllLogs == false)
-            UnityEngine.Debug.Log(message);
+        if (Enabled)
+            UnityEngine.Debug.LogError(message());
     }
 
-    public static void PrintWarningInBuildAlso(object message)
+    public static void PrintInBuildAlso(Func<object> message)
     {
-        if (GameManager.instance.disableAllLogs == false)
-            UnityEngine.Debug.LogWarning(message);
+        if (Enabled)
+            UnityEngine.Debug.Log(message());
     }
 
-    public static void PrintErrorInBuildAlso(object message)
+    public static void PrintWarningInBuildAlso(Func<object> message)
     {
-        if (GameManager.instance.disableAllLogs == false)
-            UnityEngine.Debug.LogError(message);
+        if (Enabled)
+            UnityEngine.Debug.LogWarning(message());
+    }
+
+    public static void PrintErrorInBuildAlso(Func<object> message)
+    {
+        if (Enabled)
+            UnityEngine.Debug.LogError(message());
     }
 }

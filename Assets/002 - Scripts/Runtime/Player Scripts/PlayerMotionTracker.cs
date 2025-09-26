@@ -32,7 +32,7 @@ public class PlayerMotionTracker : MonoBehaviourPun
                 {
                     if (i < GameManager.instance.GetAllPhotonPlayers().Count)
                     {
-                        Log.Print($"PlayerMotionTracker Setup {i} : {GameManager.instance.GetAllPhotonPlayers().ElementAt(i).name}");
+                        Log.Print(() => $"PlayerMotionTracker Setup {i} : {GameManager.instance.GetAllPhotonPlayers().ElementAt(i).name}");
                         _motionTrackerDotsList[i].biped = GameManager.instance.GetAllPhotonPlayers().ElementAt(i).GetComponent<Biped>();
 
                         if (_motionTrackerDotsList[i].biped == null) Debug.LogError($"Could not setup MT {i}. There is no Player in GetAllPhotonPlayers({i})");
@@ -45,7 +45,7 @@ public class PlayerMotionTracker : MonoBehaviourPun
                 {
                     if (SwarmManager.instance.actorsAliveList.Count > 0 && (i - 8 < SwarmManager.instance.actorsAliveList.Count))
                     {
-                        Log.Print($"PlayerMotionTracker assigning actor {i - 8} for MT {i}. Total Actors: {SwarmManager.instance.actorsAliveList.Count}");
+                        Log.Print(() => $"PlayerMotionTracker assigning actor {i - 8} for MT {i}. Total Actors: {SwarmManager.instance.actorsAliveList.Count}");
                         _motionTrackerDotsList[i].biped = SwarmManager.instance.actorsAliveList[i - 8];
                         if (_motionTrackerDotsList[i].biped == null) Debug.LogError($"Could not setup MT {i}");
                     }

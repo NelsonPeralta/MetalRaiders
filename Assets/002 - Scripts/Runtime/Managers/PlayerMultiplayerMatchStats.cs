@@ -49,7 +49,7 @@ public class PlayerMultiplayerMatchStats : MonoBehaviourPunCallbacks
                 OnPlayerScoreChanged?.Invoke(this);
             }
 
-            Log.Print($"PlayerMultiplayerMatchStats new val: {value}");
+            Log.Print(() => $"PlayerMultiplayerMatchStats new val: {value}");
 
             //_score = _score;
         }

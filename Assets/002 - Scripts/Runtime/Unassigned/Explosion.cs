@@ -141,12 +141,12 @@ public class Explosion : MonoBehaviour
             //Add force to nearby rigidbodies
             if (rb != null && !rb.isKinematic) // does not actually detect rb in player root, grenade jumping is handled in player script
             {
-                Log.Print($"Explosion force added to: {rb.name} {rb.transform.root.name}");
-                Log.Print($"Explosion force added to: {calculatedPower} {rb.GetComponent<LootableWeapon>() != null} {rb.GetComponent<RagdollLimb>() != null}");
+                Log.Print(() => $"Explosion force added to: {rb.name} {rb.transform.root.name}");
+                Log.Print(() => $"Explosion force added to: {calculatedPower} {rb.GetComponent<LootableWeapon>() != null} {rb.GetComponent<RagdollLimb>() != null}");
                 if (rb.GetComponent<LootableWeapon>())
                 {
                     rb.AddExplosionForce(calculatedPower * 2, transform.position, radius, 3.0F);
-                    Log.Print("Explosion force added: 1");
+                    Log.Print(() => "Explosion force added: 1");
                 }
                 else if (rb.GetComponent<RagdollLimb>())
                 {
@@ -155,22 +155,22 @@ public class Explosion : MonoBehaviour
                         calculatedPower = Mathf.Clamp(calculatedPower, calculatedDamage * 40, 8000);
                         rb.GetComponentInParent<PlayerRagdoll>().hips.GetComponent<Rigidbody>().AddExplosionForce(calculatedPower, transform.position, radius, 3.0F);
                         objectsHit.Add(rb.GetComponentInParent<PlayerRagdoll>().gameObject);
-                        Log.Print("Explosion force added: 2");
+                        Log.Print(() => "Explosion force added: 2");
                     }
                     else
                     {
-                        Log.Print("Explosion force added: 2 - skipped");
+                        Log.Print(() => "Explosion force added: 2 - skipped");
                     }
                 }
                 else if (!rb.transform.root.GetComponent<PlayerRagdoll>() && rb.gameObject != gameObject)
                 {
                     rb.AddExplosionForce(calculatedPower, transform.position, radius, 3.0F);
-                    Log.Print("Explosion force added: 3");
+                    Log.Print(() => "Explosion force added: 3");
                 }
                 else
                 {
                     rb.AddExplosionForce(calculatedPower * 3.3f, transform.position, radius, 4.0F);
-                    Log.Print("Explosion force added: 4");
+                    Log.Print(() => "Explosion force added: 4");
                 }
             }
 

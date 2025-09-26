@@ -72,14 +72,14 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
 
 
             if (!player.isDead && !player.isRespawning)
-                Log.Print($"_preRawInteractableObjects {_preRawInteractableObjects.Count}    rawInteractableObjects {_rawInteractableObjects.Count}");
+                Log.Print(() => $"_preRawInteractableObjects {_preRawInteractableObjects.Count}    rawInteractableObjects {_rawInteractableObjects.Count}");
 
 
 
             if (_preRawInteractableObjects != _rawInteractableObjects)
             {
                 if (!player.isDead && !player.isRespawning)
-                    Log.Print("rawInteractableObjects CHANGE");
+                    Log.Print(() => "rawInteractableObjects CHANGE");
 
 
 
@@ -267,7 +267,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
         if (!player.PV.IsMine || player.hasEnnemyFlag || player.playerInventory.playerOddballActive)
             return;
 
-        Log.Print($"PlayerInteractableObjectHandler OnPlayerLongInteract_Delegate");
+        Log.Print(() => $"PlayerInteractableObjectHandler OnPlayerLongInteract_Delegate");
 
         if (closestInteractableObject  /* && !closestInteractableObjectIsDualWieldableAndPartOfPlayerInventory*/ /*&& !closestInteractableObjectIsDualWieldableAndActiveWeaponIsDualWieldableAlso*/)
         {
@@ -289,11 +289,11 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
                             lwPosition = closestInteractableObject.GetComponent<LootableWeapon>().spawnPointPosition;
 
 
-                            Log.Print($"{player.playerInventory.allWeaponsInInventory[weaponCollidingWithInInventoryIndex].GetComponent<WeaponProperties>().weaponType.ToString()}");
+                            Log.Print(() => $"{player.playerInventory.allWeaponsInInventory[weaponCollidingWithInInventoryIndex].GetComponent<WeaponProperties>().weaponType.ToString()}");
 
                             if (player.playerInventory.allWeaponsInInventory[weaponCollidingWithInInventoryIndex].GetComponent<WeaponProperties>().weaponType == WeaponProperties.WeaponType.Heavy)
                             {
-                                Log.Print("Picking up a heavy weapon");
+                                Log.Print(() => "Picking up a heavy weapon");
 
                                 player.playerController.ResetLongInteractFrameCounter(PlayerController.InteractResetMode.thirdweapon);
                                 PV.RPC("PickupThirdWeapon", RpcTarget.All, closestInteractableObject.GetComponent<LootableWeapon>().spawnPointPosition, false);
@@ -366,7 +366,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
 
     public void TriggerLongInteract()
     {
-        if (closestInteractableObject) Log.Print($"TriggerLongInteract {closestInteractableObjectIsDualWieldableAndActiveWeaponIsDualWieldableAlso}");
+        if (closestInteractableObject) Log.Print(() => $"TriggerLongInteract {closestInteractableObjectIsDualWieldableAndActiveWeaponIsDualWieldableAlso}");
 
         if (!player.PV.IsMine || player.hasEnnemyFlag || player.playerInventory.playerOddballActive) return;
 

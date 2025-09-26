@@ -34,7 +34,7 @@ public class PlayerController : MonoBehaviourPun
 
             player.movement.playerMotionTracker.minimapCamera.GetComponent<MotionTrackerCamera>().ChooseRenderTexture(value);
             rewiredPlayer = ReInput.players.GetPlayer(rid);
-            Log.Print($"PlayerController rid: {_rid}");
+            Log.Print(() => $"PlayerController rid: {_rid}");
         }
     }
 
@@ -147,7 +147,7 @@ public class PlayerController : MonoBehaviourPun
         set
         {
             _preIsHoldingFireWeaponBtn = _isHoldingShootBtn;
-            _isHoldingShootBtn = value; Log.Print($"{player.name} isHoldingShootBtn. {_preIsHoldingFireWeaponBtn} -> {value}");
+            _isHoldingShootBtn = value; Log.Print(() => $"{player.name} isHoldingShootBtn. {_preIsHoldingFireWeaponBtn} -> {value}");
 
 
             if (player.isAlive)
@@ -155,7 +155,7 @@ public class PlayerController : MonoBehaviourPun
                 {
 
                     DisableSprint_RPC();
-                    Log.Print($"{player.name} isHoldingShootBtn. {pInventory.activeWeapon.killFeedOutput} {_swordRecovery}");
+                    Log.Print(() => $"{player.name} isHoldingShootBtn. {pInventory.activeWeapon.killFeedOutput} {_swordRecovery}");
 
                     if ((pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Oddball
                         || pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword
@@ -168,7 +168,7 @@ public class PlayerController : MonoBehaviourPun
                             _swordRecovery = 1f / (pInventory.activeWeapon.fireRate / 60f);
                             Melee(true);
                         }
-                        Log.Print("Do an Odball Melee and STOP");
+                        Log.Print(() => "Do an Odball Melee and STOP");
                         return;
                     }
                 }
@@ -238,7 +238,7 @@ public class PlayerController : MonoBehaviourPun
     {
         set
         {
-            Log.Print($"reload {value}");
+            Log.Print(() => $"reload {value}");
             _currentlyReloadingTimer = value;
         }
     }
@@ -540,7 +540,7 @@ public class PlayerController : MonoBehaviourPun
         {
             if (isSprinting)
             {
-                Log.Print($"{name} is sprinting - DisableSprint");
+                Log.Print(() => $"{name} is sprinting - DisableSprint");
                 DisableSprint();
             }
 
@@ -624,7 +624,7 @@ public class PlayerController : MonoBehaviourPun
 
         //new 
 
-        Log.Print($"EnableSprint_RPC {pInventory.activeWeapon.killFeedOutput} {pInventory.activeWeapon.weaponType}");
+        Log.Print(() => $"EnableSprint_RPC {pInventory.activeWeapon.killFeedOutput} {pInventory.activeWeapon.weaponType}");
 
 
         _playerThirdPersonModelManager.thirdPersonScript.animator.SetBool("sword sprint", pInventory.activeWeapon.killFeedOutput == WeaponProperties.KillFeedOutput.Sword || player.hasEnnemyFlag);
@@ -682,7 +682,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (!isSprinting)
             return;
-        Log.Print("DisableSprint_RPC");
+        Log.Print(() => "DisableSprint_RPC");
         isSprinting = false;
         weaponAnimator.SetBool("Run", false);
 
@@ -966,7 +966,7 @@ public class PlayerController : MonoBehaviourPun
 
     void _StartShoot()
     {
-        Log.Print($"Player {player.name} is about to call _StartShoot_RPC");
+        Log.Print(() => $"Player {player.name} is about to call _StartShoot_RPC");
         if (PV.IsMine)
         {
             try { Debug.Log("_StartShoot"); } catch (System.Exception e) { Debug.LogWarning(e); }
@@ -1074,12 +1074,12 @@ public class PlayerController : MonoBehaviourPun
 
         if (isCaller)
         {
-            Log.Print($"SendIsHoldingFireWeaponBtn CALL {isDualWieldedWeapon} {trackingTargetInstantiationPosition}");
+            Log.Print(() => $"SendIsHoldingFireWeaponBtn CALL {isDualWieldedWeapon} {trackingTargetInstantiationPosition}");
             PV.RPC("SendIsHoldingFireWeaponBtn", RpcTarget.All, false, trackingTargetInstantiationPosition, isDualWieldedWeapon);
         }
         else
         {
-            Log.Print($"SendIsHoldingFireWeaponBtn received {isDualWieldedWeapon} {trackingTargetInstantiationPosition}");
+            Log.Print(() => $"SendIsHoldingFireWeaponBtn received {isDualWieldedWeapon} {trackingTargetInstantiationPosition}");
             if (!isDualWieldedWeapon)
             {
 
@@ -1101,13 +1101,13 @@ public class PlayerController : MonoBehaviourPun
             {
                 if (trackingTargetInstantiationPosition != Vector3.zero)
                 {
-                    Log.Print($"SendIsHoldingFireWeaponBtn TRACKING TARGET {isDualWieldedWeapon} {trackingTargetInstantiationPosition}");
+                    Log.Print(() => $"SendIsHoldingFireWeaponBtn TRACKING TARGET {isDualWieldedWeapon} {trackingTargetInstantiationPosition}");
 
                     player.playerShooting.trackingTarget = GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition];
                 }
                 else
                 {
-                    Log.Print($"SendIsHoldingFireWeaponBtn NO TRACKING {isDualWieldedWeapon} {trackingTargetInstantiationPosition}");
+                    Log.Print(() => $"SendIsHoldingFireWeaponBtn NO TRACKING {isDualWieldedWeapon} {trackingTargetInstantiationPosition}");
                     player.playerShooting.trackingTarget = null;
                 }
                 isHoldingShootDualWieldedWeapon = true;
@@ -1200,7 +1200,7 @@ public class PlayerController : MonoBehaviourPun
                             //mainCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
                             //uiCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
                             camScript.backEndMouseSens = camScript.frontEndMouseSens;
-                            gunCam.enabled = true; Log.Print("Gun Cam Enabled");
+                            gunCam.enabled = true; Log.Print(() => "Gun Cam Enabled");
                             //gunCam.fieldOfView = 60;
 
                             allPlayerScripts.aimingScript.playAimSound();
@@ -1273,7 +1273,7 @@ public class PlayerController : MonoBehaviourPun
             !player.playerInventory.isHoldingHeavy &&
             player.isAlive)
         {
-            Log.Print("Gun Cam Enabled");
+            Log.Print(() => "Gun Cam Enabled");
             gunCam.enabled = true;
         }
     }
@@ -1329,7 +1329,7 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     void MeleeAnimations_RPC()
     {
-        Log.Print("MeleeAnimations_RPC");
+        Log.Print(() => "MeleeAnimations_RPC");
         DisableSprint_RPC();
         isMeleeing = true;
         GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().ResetTrigger("Fire");
@@ -1352,7 +1352,7 @@ public class PlayerController : MonoBehaviourPun
 
         if ((!player.isDead && !player.isRespawning))
         {
-            Log.Print("Melee_RPC");
+            Log.Print(() => "Melee_RPC");
             if (!succ) melee.PlayMissClip();
             else
             {
@@ -1392,7 +1392,7 @@ public class PlayerController : MonoBehaviourPun
         if (PV.IsMine && isCrouching && movement.isGrounded && _crouchForceTime > 0) // when gravity is turned off it makes the crouching force down really slow. So we trie to compensate
         {
             _crouchForceTime -= Time.deltaTime;
-            Log.Print($"Crouch {movement.rb.linearDamping} {movement.rb.useGravity} {movement.OnSlope()}");
+            Log.Print(() => $"Crouch {movement.rb.linearDamping} {movement.rb.useGravity} {movement.OnSlope()}");
             if (movement.rb.useGravity)
                 movement.rb.AddForce(Vector3.down * 0.5f, ForceMode.Impulse);
             else
@@ -1437,7 +1437,7 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     void EnableCrouch_RPC()
     {
-        Log.Print($"EnableCrouch_RPC {movement.isGrounded}");
+        Log.Print(() => $"EnableCrouch_RPC {movement.isGrounded}");
 
         isCrouching = true; // for motion tracker
         movement.playerCapsule.localScale = new Vector3(transform.localScale.x, movement.crouchYScale, transform.localScale.z);
@@ -1519,7 +1519,7 @@ public class PlayerController : MonoBehaviourPun
             && !player.playerInventory.holdingObjective
             && !cameraIsFloating)
         {
-            Log.Print($"Grenade 1");
+            Log.Print(() => $"Grenade 1");
             CancelReloadCoroutine();
             currentlyReloadingTimer = 0;
             player.playerShooting.StopBurstFiring();
@@ -1558,7 +1558,7 @@ public class PlayerController : MonoBehaviourPun
                 if (!isDrawingWeapon && !isThrowingGrenade && !isMeleeing && !isReloading)
                     if (player.playerInventory.activeWeapon.loadedAmmo < player.playerInventory.activeWeapon.ammoCapacity && player.playerInventory.activeWeapon.spareAmmo > 0)
                     {
-                        Log.Print($"reload");
+                        Log.Print(() => $"reload");
                         PV.RPC("Reload_RPC", RpcTarget.All, 0);
                     }
             }
@@ -1581,7 +1581,7 @@ public class PlayerController : MonoBehaviourPun
                 }
                 else
                 {
-                    Log.Print($"Unresolved case for reloading");
+                    Log.Print(() => $"Unresolved case for reloading");
                 }
 
 
@@ -1631,7 +1631,7 @@ public class PlayerController : MonoBehaviourPun
             {
                 if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Magazine)
                 {
-                    Log.Print($"reload");
+                    Log.Print(() => $"reload");
                     weaponAnimator.Play("Reload Ammo Left", 0, 0f);
                 }
                 else if (pInventory.activeWeapon.ammoReloadType == WeaponProperties.AmmoReloadType.Generic)
@@ -2057,7 +2057,7 @@ public class PlayerController : MonoBehaviourPun
 
             if (player.isMine)
             {
-                uiCam.enabled = true; Log.Print("Gun Cam Enabled");
+                uiCam.enabled = true; Log.Print(() => "Gun Cam Enabled");
                 gunCam.enabled = true;
             }
 
@@ -2369,7 +2369,7 @@ public class PlayerController : MonoBehaviourPun
     public void ThrowGrenade3PS_RPC()
     {
         _currentlyThrowingGrenadeTimer = 1f;
-        Log.Print("ThrowGrenade3PS_RPC");
+        Log.Print(() => "ThrowGrenade3PS_RPC");
         weaponAnimator.Play("GrenadeThrow", 0, 0.0f);
         StartCoroutine(ThrowGrenade3PS());
     }
@@ -2381,7 +2381,7 @@ public class PlayerController : MonoBehaviourPun
         //Wait for set amount of time before spawning grenade
         yield return new WaitForSeconds(0.2f);
         //Spawn grenade prefab at spawnpoint
-        Log.Print($"Grenade 2");
+        Log.Print(() => $"Grenade 2");
 
         if (PV.IsMine && !player.isDead)
             PV.RPC("SpawnGrenade_RPC", RpcTarget.AllViaServer, fragGrenadesActive, GrenadePool.GetAvailableGrenadeIndex(fragGrenadesActive, player.playerDataCell.photonRoomIndex), gwProperties.grenadeSpawnPoint.position,
@@ -2475,7 +2475,7 @@ public class PlayerController : MonoBehaviourPun
 
     public void TogglePauseGame()
     {
-        Log.Print($"TogglePauseGame {pauseMenuOpen} {CurrentRoomManager.instance.gameOver} {GetComponent<PlayerUI>().singlePlayerPauseMenu}");
+        Log.Print(() => $"TogglePauseGame {pauseMenuOpen} {CurrentRoomManager.instance.gameOver} {GetComponent<PlayerUI>().singlePlayerPauseMenu}");
         if (!pauseMenuOpen)
         {
             if (!CurrentRoomManager.instance.gameOver)
@@ -2634,14 +2634,14 @@ public class PlayerController : MonoBehaviourPun
 
                 if (_timeMarkSpotHasBeenHeld == 0.33f)
                 {
-                    Log.Print($"MARK SPOT HELD LONG {_timeMarkSpotHasBeenHeld}");
+                    Log.Print(() => $"MARK SPOT HELD LONG {_timeMarkSpotHasBeenHeld}");
 
                     player.playerInteractableObjectHandler.TriggerLongInteract();
                 }
             }
             else if (rewiredPlayer.GetButtonUp("mark"))
             {
-                Log.Print($"MarkSpot held: {_timeMarkSpotHasBeenHeld}");
+                Log.Print(() => $"MarkSpot held: {_timeMarkSpotHasBeenHeld}");
 
 
                 if (_timeMarkSpotHasBeenHeld < 0.2f && _timeMarkSpotHasBeenHeld > -1)
@@ -2706,7 +2706,7 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     void MarkSpot_RPC(Vector3 pointt, int teamm, bool enSpot)
     {
-        Log.Print("MarkSpot_RPC");
+        Log.Print(() => "MarkSpot_RPC");
 
 
         if (enSpot)

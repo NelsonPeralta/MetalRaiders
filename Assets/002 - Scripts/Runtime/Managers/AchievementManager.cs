@@ -144,7 +144,7 @@ public class AchievementManager : MonoBehaviour
     {
         if (GameManager.instance.connection == GameManager.NetworkType.Internet)
         {
-            Log.Print($"UnlockAchievement {an}");
+            Log.Print(() => $"UnlockAchievement {an}");
             Steamworks.SteamUserStats.SetAchievement(an);
             Steamworks.SteamUserStats.StoreStats();
         }

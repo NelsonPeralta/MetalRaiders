@@ -69,13 +69,13 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
     #region
     public void Damage(int damage)
     {
-        Log.Print("ExplosiveBarrel Damage");
+        Log.Print(() => "ExplosiveBarrel Damage");
         hitPoints -= damage;
     }
 
     public void Damage(int damage, bool headshot, int playerWhoShotThisPlayerPhotonId)
     {
-        Log.Print($"ExplosiveBarrel Damage {playerWhoShotThisPlayerPhotonId}");
+        Log.Print(() => $"ExplosiveBarrel Damage {playerWhoShotThisPlayerPhotonId}");
         _lastPID = playerWhoShotThisPlayerPhotonId;
         hitPoints -= damage;
     }
@@ -88,7 +88,7 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
         [CallerLineNumber] int sourceLineNumber = 0)
     {
         _lastPID = playerWhoShotThisPlayerPhotonId;
-        Log.Print($"ExplosiveBarrel Damage {playerWhoShotThisPlayerPhotonId}");
+        Log.Print(() => $"ExplosiveBarrel Damage {playerWhoShotThisPlayerPhotonId}");
         hitPoints -= damage;
     }
     #endregion

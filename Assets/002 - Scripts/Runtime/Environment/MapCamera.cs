@@ -123,7 +123,7 @@ public class MapCamera : MonoBehaviourPunCallbacks
     }
     public void TriggerGameStartBehaviour()
     {
-        Log.Print($"oneobjmode - TriggerGameStartBehaviour");
+        Log.Print(() => $"oneobjmode - TriggerGameStartBehaviour");
 
         _canvas.gameObject.SetActive(false);
         _announcementPLayed = true;

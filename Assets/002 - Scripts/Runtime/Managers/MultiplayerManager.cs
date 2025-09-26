@@ -312,7 +312,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     }
     public void CheckForEndGame()
     {
-        Log.Print($"CheckForEndGame {highestScore} / {scoreToWin}");
+        Log.Print(() => $"CheckForEndGame {highestScore} / {scoreToWin}");
         if (highestScore == scoreToWin)
             FindObjectOfType<NetworkGameManager>().EndGame();
         //EndGame();
@@ -320,7 +320,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     public void EndGame(bool saveXp = true, bool actuallyQuit = false)
     {
         CurrentRoomManager.instance.gameOver = true;
-        Log.Print($"EndGame {highestScore} / {scoreToWin}");
+        Log.Print(() => $"EndGame {highestScore} / {scoreToWin}");
 
         CreateWinningPlayersList();
         SpawnWinnerKillFeeds();
@@ -564,7 +564,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     {
         foreach (Player p in GameManager.GetLocalPlayers())
         {
-            Log.Print("SpawnWinnerKillFeeds");
+            Log.Print(() => "SpawnWinnerKillFeeds");
             if (!isADraw)
             {
                 if (CurrentRoomManager.instance.leftRoomManually)

@@ -127,7 +127,7 @@ public class GeneralWeapProperties : MonoBehaviour
 
     public void MoveBulletSpawnPointsForThirdPerson()
     {
-        Log.Print("MoveBulletSpawnPointsForThirdPerson");
+        Log.Print(() => "MoveBulletSpawnPointsForThirdPerson");
 
         // aimAssistRotationControl should already have the bullet spawn point as child
         // shotgun should not be child cuz shotgun should one the weapons with no aim assist

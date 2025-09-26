@@ -42,7 +42,7 @@ public class CurrentRoomManager : MonoBehaviour
         {
             int _preVal = _expectedNbPlayers;
             _expectedNbPlayers = value;
-            Log.Print($"expected number of players {value}");
+            Log.Print(() => $"expected number of players {value}");
 
             if (PhotonNetwork.IsMasterClient && CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
                 if (_preVal == 0 && expectedNbPlayers == 1)
@@ -98,11 +98,11 @@ public class CurrentRoomManager : MonoBehaviour
 
             if (_preVal < _spawnedMapAddOns)
             {
-                Log.Print($"_spawnedMapAddOns increase to {_spawnedMapAddOns}");
-                Log.Print($"IceChunk: {FindObjectsOfType<IceChunk>().Length}");
-                Log.Print($"ExplosiveBarrelSpawnPoint: {FindObjectsOfType<ExplosiveBarrelSpawnPoint>().Length}");
-                Log.Print($"NetworkWeaponSpawnPoint: {FindObjectsOfType<NetworkWeaponSpawnPoint>().Length}");
-                Log.Print($"NetworkGrenadeSpawnPoint: {FindObjectsOfType<NetworkGrenadeSpawnPoint>().Length}");
+                Log.Print(() => $"_spawnedMapAddOns increase to {_spawnedMapAddOns}");
+                Log.Print(() => $"IceChunk: {FindObjectsOfType<IceChunk>().Length}");
+                Log.Print(() => $"ExplosiveBarrelSpawnPoint: {FindObjectsOfType<ExplosiveBarrelSpawnPoint>().Length}");
+                Log.Print(() => $"NetworkWeaponSpawnPoint: {FindObjectsOfType<NetworkWeaponSpawnPoint>().Length}");
+                Log.Print(() => $"NetworkGrenadeSpawnPoint: {FindObjectsOfType<NetworkGrenadeSpawnPoint>().Length}");
             }
 
             if (_spawnedMapAddOns == expectedMapAddOns)
@@ -168,7 +168,7 @@ public class CurrentRoomManager : MonoBehaviour
         set
         {
             _nbPlayersSet = value;
-            Log.Print($"_nbPlayersSet {_nbPlayersSet}");
+            Log.Print(() => $"_nbPlayersSet {_nbPlayersSet}");
 
             if (_nbPlayersSet == expectedNbPlayers && nbPlayersSpawned == expectedNbPlayers)
                 allPlayersJoined = true;
@@ -208,7 +208,7 @@ public class CurrentRoomManager : MonoBehaviour
 
             if (value && _preVal != value)
             {
-                Log.Print($"CURRENT ROOM MANAGER: GAME IS READY {GameManager.instance.GetAllPhotonPlayers().Count}");
+                Log.Print(() => $"CURRENT ROOM MANAGER: GAME IS READY {GameManager.instance.GetAllPhotonPlayers().Count}");
                 _gameIsReady = true;
 
                 OnGameIsReady?.Invoke(this);
@@ -303,7 +303,7 @@ public class CurrentRoomManager : MonoBehaviour
 
             if (value && _preVal != value)
             {
-                Log.Print("Game Over bool");
+                Log.Print(() => "Game Over bool");
                 _gameOver = true;
             }
         }
@@ -343,8 +343,8 @@ public class CurrentRoomManager : MonoBehaviour
     {
         get
         {
-            Log.Print($"halfOfPlayersAreRandos : {GameManager.instance.GetAllPhotonPlayers().Where(item => !item.isMine).Count()} / {instance.expectedNbPlayers / 2f} " +
-                $"{GameManager.instance.GetAllPhotonPlayers().Where(item => !item.isMine).Count() >= (CurrentRoomManager.instance.expectedNbPlayers / 2f)}");
+            //Log.Print($"halfOfPlayersAreRandos : {GameManager.instance.GetAllPhotonPlayers().Where(item => !item.isMine).Count()} / {instance.expectedNbPlayers / 2f} " +
+            //    $"{GameManager.instance.GetAllPhotonPlayers().Where(item => !item.isMine).Count() >= (CurrentRoomManager.instance.expectedNbPlayers / 2f)}");
             if (GameManager.instance.GetAllPhotonPlayers().Where(item => !item.isMine).Count() >= (CurrentRoomManager.instance.expectedNbPlayers / 2f))
                 return true;
             else
@@ -623,7 +623,7 @@ public class CurrentRoomManager : MonoBehaviour
         foreach (Player p in GameManager.instance.GetAllPhotonPlayers())
             if (p.isMine)
             {
-                Log.Print($"nbPlayersJoined {p.name}");
+                Log.Print(() => $"nbPlayersJoined {p.name}");
                 p.TriggerAllPlayersJoinedBehaviour();
             }
     }
@@ -871,7 +871,7 @@ public class CurrentRoomManager : MonoBehaviour
             if (instance._playerDataCells[0].playerExtendedPublicData.highest_points > 999999
                 || Steamworks.SteamUserStats.GetAchievement("OMA", out _achievementUnlocked))
             {
-                Log.Print("unlocking armor: zenkai shoulders");
+                Log.Print(() => "unlocking armor: zenkai shoulders");
                 if (!CurrentRoomManager.instance.playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("zenkai_lsa"))
                     WebManager.webManagerInstance.StartCoroutine(WebManager.UnlockArmorPiece_Coroutine(CurrentRoomManager.instance.playerDataCells[0], "-zenkai_lsa-"));
 
@@ -996,7 +996,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     public void CreateCarnageReportData()
     {
-        Log.Print($"CreateCarnageReportData {instance._playerDataCells.Where(item => item.occupied).Count()}");
+        Log.Print(() => $"CreateCarnageReportData {instance._playerDataCells.Where(item => item.occupied).Count()}");
         for (int i = 0; i < instance._playerDataCells.Count; i++)
         {
             if (instance._playerDataCells[i].occupied)
@@ -1075,9 +1075,9 @@ public class CurrentRoomManager : MonoBehaviour
     }
     public static ScriptObjPlayerData GetDataCellWithSteamIdAndRewiredId(long playerId, int rewiredId)
     {
-        Debug.Log($"GetPlayerDataWithId {playerId} {rewiredId}");
-        Log.Print($"GetDataCellWithSteamIdAndRewiredId " +
-            $"{CurrentRoomManager.instance.playerDataCells.FirstOrDefault(item => item.steamId == playerId && item.rewiredId == rewiredId) != null}");
+        //Debug.Log($"GetPlayerDataWithId {playerId} {rewiredId}");
+        //Log.Print($"GetDataCellWithSteamIdAndRewiredId " +
+        //    $"{CurrentRoomManager.instance.playerDataCells.FirstOrDefault(item => item.steamId == playerId && item.rewiredId == rewiredId) != null}");
 
         return CurrentRoomManager.instance.playerDataCells.FirstOrDefault(item => item.steamId == playerId && item.rewiredId == rewiredId);
     }

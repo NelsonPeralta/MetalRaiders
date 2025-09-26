@@ -8,7 +8,7 @@ public class KickPlayerBtnParent : MonoBehaviour
 {
     private void Awake()
     {
-        Log.Print("KickPlayerBtn PARENT Awake");
+        Log.Print(() => "KickPlayerBtn PARENT Awake");
         if (GameManager.instance.connection == GameManager.NetworkType.Local ||
            (GameManager.instance.connection == GameManager.NetworkType.Internet && !PhotonNetwork.IsMasterClient))
         {

@@ -27,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
             _previousMovementDirEnum = _playerMovementDirection;
             _playerMovementDirection = value;
 
-            if (_previousMovementDirEnum != _playerMovementDirection) Log.Print($"movementDirection changed: {value}");
+            if (_previousMovementDirEnum != _playerMovementDirection) Log.Print(() => $"movementDirection changed: {value}");
 
             if ((_previousMovementDirEnum == PlayerMovementDirection.Left && _playerMovementDirection == PlayerMovementDirection.Right) ||
                 (_previousMovementDirEnum == PlayerMovementDirection.Right && _playerMovementDirection == PlayerMovementDirection.Left) ||
@@ -1183,7 +1183,7 @@ public class PlayerMovement : MonoBehaviour
 
     void OnPlayerRespawnEarly(Player p)
     {
-        Log.Print($"OnPlayerRespawnEarly {_fpsJumpingAnimator.transform.localPosition.y}");
+        Log.Print(() => $"OnPlayerRespawnEarly {_fpsJumpingAnimator.transform.localPosition.y}");
         _rb.linearVelocity = Vector3.zero; _rb.angularVelocity = Vector3.zero;
         blockedMovementType = BlockedMovementType.None;
         blockPlayerMoveInput = 0;

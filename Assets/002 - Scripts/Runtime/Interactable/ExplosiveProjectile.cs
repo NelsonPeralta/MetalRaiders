@@ -129,7 +129,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
             if (_ttl <= 0)
             {
-                Log.Print($"{name} disabled due to ttl");
+                Log.Print(() => $"{name} disabled due to ttl");
                 gameObject.SetActive(false);
                 transform.SetParent(GrenadePool.instance.transform);
             }
@@ -204,7 +204,7 @@ public class ExplosiveProjectile : MonoBehaviour
                 if (collision.gameObject.transform.root.GetComponent<Player>())
                 {
 
-                    Log.Print("Stuck 1");
+                    Log.Print(() => "Stuck 1");
 
                     GetComponent<Rigidbody>().linearVelocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
                     if (player.isMine)
@@ -214,7 +214,7 @@ public class ExplosiveProjectile : MonoBehaviour
                 }
                 else if (collision.gameObject.GetComponent<Rigidbody>())
                 {
-                    Log.Print("Stuck 2");
+                    Log.Print(() => "Stuck 2");
                     transform.parent = collision.transform;
 
 
@@ -258,7 +258,7 @@ public class ExplosiveProjectile : MonoBehaviour
                     //_fakeParent = collision.transform;
 
 
-                    Log.Print("Stuck 3");
+                    Log.Print(() => "Stuck 3");
 
 
                     //transform.parent = collision.transform;

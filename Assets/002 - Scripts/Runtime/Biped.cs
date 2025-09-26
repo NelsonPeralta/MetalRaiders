@@ -25,7 +25,7 @@ public class Biped : MonoBehaviour
 
             if (_splinterShardCount == 12)
             {
-                Log.Print("ULTRA MERGE!");
+                Log.Print(() => "ULTRA MERGE!");
                 SpawnUltraBindExplosion();
             }
 

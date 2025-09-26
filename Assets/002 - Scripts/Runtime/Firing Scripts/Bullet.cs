@@ -93,7 +93,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         originalPos = transform.position;
         timeToDespawn = CalculateTimeToDespawn();
 
-        Log.Print($"Bullet OnEnable {damage} {speed} {trackingTarget != null}");
+        Log.Print(() => $"Bullet OnEnable {damage} {speed} {trackingTarget != null}");
     }
 
     float CalculateTimeToDespawn()
@@ -178,7 +178,7 @@ public class Bullet : MonoBehaviourPunCallbacks
             for (int i = _hitList.Count; i-- > 0;)
             {
                 _tempRh = _hitList[i];
-                Log.Print("bullet hit: " + _tempRh.collider.name + " " + _tempRh.point);
+                Log.Print(() => "bullet hit: " + _tempRh.collider.name + " " + _tempRh.point);
                 if (_tempRh.collider.transform.root == weaponProperties.player.transform)
                 {
                     _hitList.RemoveAt(i);
@@ -214,7 +214,7 @@ public class Bullet : MonoBehaviourPunCallbacks
         if (objectsHit.Count > 0 && !damageDealt)
         {
             if (damage > 0) CheckForFinalHit();
-            Log.Print("bullet time test. Despawned at: " + Time.time);
+            Log.Print(() => "bullet time test. Despawned at: " + Time.time);
         }
     }
 
@@ -247,7 +247,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     //            for (int i = _hitList.Count; i-- > 0;)
     //            {
     //                _tempRh = _hitList[i];
-    //                Log.Print($"bullet hit: {_hitList[i].collider.name} {_hitList[i].point}");
+    //                Log.Print(() => $"bullet hit: {_hitList[i].collider.name} {_hitList[i].point}");
     //                if (_tempRh.collider.transform.root == weaponProperties.player.transform) _hitList.RemoveAt(i);
     //            }
 
@@ -273,7 +273,7 @@ public class Bullet : MonoBehaviourPunCallbacks
     //            if (objectsHit.Count > 0 && !damageDealt)
     //            {
     //                if (damage > 0) CheckForFinalHit();
-    //                Log.Print($"bullet time test. Despawned at: {Time.time}");
+    //                Log.Print(() => $"bullet time test. Despawned at: {Time.time}");
     //            }
     //        }
     //    }
@@ -421,7 +421,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
                         if (player.hasArmor)
                         {
-                            Log.Print($"Bullet Overcharged damage : {player.shieldPoints}");
+                            Log.Print(() => $"Bullet Overcharged damage : {player.shieldPoints}");
                             if (player.shieldPoints > 0 && overcharged) damage = (int)player.shieldPoints;
                         }
 

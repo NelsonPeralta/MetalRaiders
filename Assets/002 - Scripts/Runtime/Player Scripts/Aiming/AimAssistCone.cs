@@ -63,7 +63,7 @@ public class AimAssistCone : MonoBehaviour
             {
                 if (value != _reticuleFriction)
                 {
-                    Log.Print($"{_reticuleFriction} -> {value}");
+                    Log.Print(() => $"{_reticuleFriction} -> {value}");
                 }
             }
 

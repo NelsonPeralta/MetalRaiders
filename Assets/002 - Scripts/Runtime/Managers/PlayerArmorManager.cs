@@ -21,9 +21,9 @@ public class PlayerArmorManager : MonoBehaviour
         set
         {
             Debug.Log($"set playerDataCell {value != null}");
-            Log.Print($"{value.name}");
-            Log.Print($"{value.steamId}");
-            Log.Print($"{value.playerExtendedPublicData != null}");
+            Log.Print(() => $"{value.name}");
+            Log.Print(() => $"{value.steamId}");
+            Log.Print(() => $"{value.playerExtendedPublicData != null}");
             _playerDataCell = value;
 
             if (SceneManager.GetActiveScene().buildIndex == 0)

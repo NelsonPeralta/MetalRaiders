@@ -9,7 +9,7 @@ public class PlayerHitboxes : Hitboxes
     {
 
         _hitboxes = GetComponentsInChildren<Hitbox>().ToList();
-        Log.Print($"PlayerHitboxes OnModelAssigned {transform.name} {_hitboxes.Count}");
+        Log.Print(() => $"PlayerHitboxes OnModelAssigned {transform.name} {_hitboxes.Count}");
 
         foreach (PlayerHitbox playerHitbox in _hitboxes)
         {

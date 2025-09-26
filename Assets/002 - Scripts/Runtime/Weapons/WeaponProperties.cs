@@ -158,7 +158,7 @@ public class WeaponProperties : MonoBehaviour
                 }
             }
 
-            Log.Print($"{name} loaded ammo {_currentAmmo} -> {value}");
+            Log.Print(() => $"{name} loaded ammo {_currentAmmo} -> {value}");
             _currentAmmo = Mathf.Clamp(value, 0, ammoCapacity);
 
             if ((!player.playerInventory.leftWeapon) || (player.playerInventory.leftWeapon && player.playerInventory.leftWeapon != this))
@@ -176,7 +176,7 @@ public class WeaponProperties : MonoBehaviour
             if (((_currentAmmo == 0 || _currentAmmo == ammoCapacity)
                 || ammoReloadType == AmmoReloadType.Shell))
             {
-                Log.Print($"player {player.name} {player.isMine} about to send UPDATEAMMO RPC");
+                Log.Print(() => $"player {player.name} {player.isMine} about to send UPDATEAMMO RPC");
                 if (player.isMine) NetworkGameManager.instance.UpdateAmmo(player.photonId, index, _currentAmmo,
                     isThirdWeapon: player.playerInventory.thirdWeapon && this == player.playerInventory.thirdWeapon, sender: true);
             }
@@ -252,7 +252,7 @@ public class WeaponProperties : MonoBehaviour
         set
         {
             _currentOverheat = value;
-            Log.Print($"Overheat {_currentOverheat} -> {value}");
+            Log.Print(() => $"Overheat {_currentOverheat} -> {value}");
 
             if (_currentOverheat >= 100 && overheatCooldown <= 0 && player.isMine)
                 StartCoroutine(TriggerOverheat_Coroutine(this)); // Allow time for networking purposes
@@ -368,7 +368,7 @@ public class WeaponProperties : MonoBehaviour
     {
         if (firingMode == FiringMode.Burst && _recoilCount > 0)
         {
-            Log.Print("Recoil");
+            Log.Print(() => "Recoil");
         }
         else
         {
@@ -452,7 +452,7 @@ public class WeaponProperties : MonoBehaviour
 
     IEnumerator TriggerOverheat_Coroutine(WeaponProperties wp)
     {
-        if (player.playerInventory.thirdWeapon) Log.Print($"TriggerOverheat_Coroutine {wp == player.playerInventory.thirdWeapon} {wp.name} VS {player.playerInventory.thirdWeapon.name}");
+        if (player.playerInventory.thirdWeapon) Log.Print(() => $"TriggerOverheat_Coroutine {wp == player.playerInventory.thirdWeapon} {wp.name} VS {player.playerInventory.thirdWeapon.name}");
         yield return new WaitForSeconds(0.2f);
 
         NetworkGameManager.instance.TriggerPlayerOverheatWeapon(player.photonId, (int)wp.killFeedOutput,
@@ -501,7 +501,7 @@ public class WeaponProperties : MonoBehaviour
     {
         if (!player.isDead && !player.isRespawning && overheatCooldown <= 0)
         {
-            Log.Print("TriggerOverheat");
+            Log.Print(() => "TriggerOverheat");
             overheatCooldown = 1.7f;
             overheatSteamHolder.SetActive(true);
             tpsEquippedOverheatSteamHolder.SetActive(true);
