@@ -84,8 +84,8 @@ public class FragGrenade : MonoBehaviour
         if (collision.gameObject.layer != 22 && !hasHitObject && !ignore.Contains(collision.transform)) // Non-Interactable Layer
         {
             hasHitObject = true;
-            Debug.Log($"Grenade Collided with: {collision.gameObject.name}");
-            Debug.Log(GetComponent<Rigidbody>().linearVelocity.magnitude);
+            Log.Print(() =>$"Grenade Collided with: {collision.gameObject.name}");
+            Log.Print(() =>GetComponent<Rigidbody>().linearVelocity.magnitude);
             StartCoroutine(ExplosionCountdown());
             PlaySound(impactSound);
 
@@ -130,7 +130,7 @@ public class FragGrenade : MonoBehaviour
                     objectsHit.Add(playerHit);
                     float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
                     float calculatedDamage = damage * (1 - (playerDistance / radius));
-                    Debug.Log("Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
+                    Log.Print(() =>"Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
 
                     //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
                     if (this.player.PV.IsMine && calculatedDamage > 0)
@@ -146,7 +146,7 @@ public class FragGrenade : MonoBehaviour
                     AIHitbox hitbox = hit.GetComponent<AIHitbox>();
                     float aiDistance = Vector3.Distance(hit.transform.position, transform.position);
                     float calculatedDamage = damage * (1 - (aiDistance / radius));
-                    Debug.Log($"Frag grenade Damage on AI: {calculatedDamage}");
+                    Log.Print(() =>$"Frag grenade Damage on AI: {calculatedDamage}");
                     if (player.PV.IsMine && calculatedDamage > 0)
                         hitbox.aiAbstractClass.Damage((int)calculatedDamage, player.PV.ViewID, damageSource: "fraggrenade");
                 }

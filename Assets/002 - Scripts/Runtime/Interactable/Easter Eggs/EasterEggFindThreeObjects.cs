@@ -35,7 +35,7 @@ public class EasterEggFindThreeObjects : MonoBehaviour
             //if(objects[i].GetComponent<FindableObject>().isActivated)
             //{
             //    numberOfActiavtedObjects = numberOfActiavtedObjects + 1;
-            //    Debug.Log("Number of Activated objects = " + numberOfActiavtedObjects + " and Total Objects = " + totalObjects);
+            //    Log.Print(() =>"Number of Activated objects = " + numberOfActiavtedObjects + " and Total Objects = " + totalObjects);
             //}
         }
 

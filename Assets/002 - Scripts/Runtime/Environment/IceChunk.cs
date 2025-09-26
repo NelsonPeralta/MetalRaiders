@@ -17,7 +17,7 @@ public class IceChunk : Hazard, IDamageable
         get { return _hitPoints; }
         set
         {
-            Debug.Log($"IceChunk {transform.position} networkHitPoints change to : {value}");
+            Log.Print(() =>$"IceChunk {transform.position} networkHitPoints change to : {value}");
             _hitPoints = value; if (_hitPoints <= 0) OnExploded?.Invoke(this);
         }
     }
@@ -26,7 +26,7 @@ public class IceChunk : Hazard, IDamageable
         get { return networkHitPoints; }
         set
         {
-            Debug.Log($"IceChunk {transform.position} hp change to : {value}");
+            Log.Print(() =>$"IceChunk {transform.position} hp change to : {value}");
             NetworkGameManager.instance.DamageIceChunk(transform.position, value);
         }
     }
@@ -64,7 +64,7 @@ public class IceChunk : Hazard, IDamageable
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
     {
-        Debug.Log("ice chunk " + damage);
+        Log.Print(() =>"ice chunk " + damage);
         hitPoints -= damage;
     }
 

@@ -36,20 +36,20 @@ public class CommonFiringActions : MonoBehaviour
         //}
         //else if (gwProperties.randomMuzzleflash == true)
         //{
-        //    Debug.Log("In Random Muzzle Flash");
+        //    Log.Print(() =>"In Random Muzzle Flash");
         //    //Only emit if random value is 1
         //    if (gwProperties.randomMuzzleflashValue == 1)
         //    {
         //        if (gwProperties.enableSparks == true)
         //        {
-        //            Debug.Log("Emitted Random Spark");
+        //            Log.Print(() =>"Emitted Random Spark");
         //            //Emit random amount of spark particles
         //            gwProperties.sparkParticles.Emit(Random.Range(gwProperties.minSparkEmission, gwProperties.maxSparkEmission));
 
         //        }
         //        if (gwProperties.enableMuzzleflash == true /*&& !silencer*/)
         //        {
-        //            Debug.Log("Coroutine Muzzle Flashlight");
+        //            Log.Print(() =>"Coroutine Muzzle Flashlight");
         //            gwProperties.muzzleParticles.Emit(1);
         //            //Light flash start
         //            StartCoroutine(gwProperties.MuzzleFlashLight());
@@ -72,9 +72,9 @@ public class CommonFiringActions : MonoBehaviour
         if (!absolute)
             if (playerController.isAiming && playerController.pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope)
                 return;
-        //Debug.Log(playerController.isAiming && playerController.pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope);
-        //Debug.Log(playerController.isAiming);
-        //Debug.Log(playerController.pInventory.activeWeapon.aimingMechanic);
+        //Log.Print(() =>playerController.isAiming && playerController.pInventory.activeWeapon.aimingMechanic == WeaponProperties.AimingMechanic.Scope);
+        //Log.Print(() =>playerController.isAiming);
+        //Log.Print(() =>playerController.pInventory.activeWeapon.aimingMechanic);
         StartCoroutine(SpawnMuzzleflash_Coroutine());
     }
 

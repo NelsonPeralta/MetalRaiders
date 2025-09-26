@@ -16,8 +16,8 @@ public class AiRangeTrigger : MonoBehaviour
         //{
         //    if (other.GetComponent<Transform>() == AiAbstractClass.targetPlayer)
         //    {
-        //        //Debug.Log("Arrived to empty target");
-        //        Debug.Log(gameObject);
+        //        //Log.Print(() =>"Arrived to empty target");
+        //        Log.Print(() =>gameObject);
         //        OnRangeTriggerEnter?.Invoke(this, other);
         //    }
         //}

@@ -17,7 +17,7 @@ public class AlphaZeroButton : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha0))
         {
 
-            //Debug.Log(GameManager.GetRootPlayer().playerThirdPersonModel.transform.GetChild(1).name);
+            //Log.Print(() =>GameManager.GetRootPlayer().playerThirdPersonModel.transform.GetChild(1).name);
            // GameManager.SetupMaterialWithBlendMode(GameManager.GetRootPlayer().playerThirdPersonModel.transform.GetChild(1).GetComponent<Renderer>().material, GameManager.MaterialBlendMode.Transparent, true);
            // GameObject ar = GameManager.GetRootPlayer().playerThirdPersonModel.transform.GetChild(1).gameObject;
 

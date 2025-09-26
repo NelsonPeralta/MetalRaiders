@@ -59,7 +59,7 @@ public class Fireball : MonoBehaviour
     //    foreach (Collider hit in colliders)
     //    {
     //        Rigidbody rb = hit.GetComponent<Rigidbody>();
-    //        //Debug.Log($"{name} explosion on {hit.transform.name}");
+    //        //Log.Print(() =>$"{name} explosion on {hit.transform.name}");
     //        float hitDistance = Vector3.Distance(hit.transform.position, transform.position);
     //        float calculatedDamage = damage * (1 - (hitDistance / radius));
 
@@ -76,14 +76,14 @@ public class Fireball : MonoBehaviour
 
     //            if (playerDistance < radius)
     //            {
-    //                //Debug.Log("Damage= " + damage + " playerDistance= " + playerDistance + " radius= " + radius);
+    //                //Log.Print(() =>"Damage= " + damage + " playerDistance= " + playerDistance + " radius= " + radius);
     //                player.GetComponent<Player>().Damage((int)calculatedDamage, false, sourceBiped.GetComponent<PhotonView>().ViewID);
     //                playersHit.Add(player.GetComponent<Player>());
     //            }
     //        }
     //        if (hit.GetComponent<AIHitbox>() != null)
     //        {
-    //            //Debug.Log("Hit AI");
+    //            //Log.Print(() =>"Hit AI");
     //            GameObject ai;
     //            ai = hit.GetComponent<AIHitbox>().aiGO;
     //            float aiDistance = Vector3.Distance(hit.transform.position, transform.position);
@@ -150,7 +150,7 @@ public class Fireball : MonoBehaviour
         RaycastHit fhit;
         if (Physics.Raycast(r.origin, r.direction, out fhit, maxDistance: _dTravalled, finalmask))
         {
-            Debug.Log($"HIT: {fhit.collider.gameObject.name}. LAYER: {fhit.collider.gameObject.layer}");
+            Log.Print(() =>$"HIT: {fhit.collider.gameObject.name}. LAYER: {fhit.collider.gameObject.layer}");
 
 
             GameObject hit = fhit.collider.gameObject;
@@ -191,7 +191,7 @@ public class Fireball : MonoBehaviour
             }
 
             _spawnDir = finalHitPoint - _spawnDir;
-            Debug.Log($"BULLET CheckForFinalHit {finalHitObject.name}");
+            Log.Print(() =>$"BULLET CheckForFinalHit {finalHitObject.name}");
 
 
             //finalHitObject.GetComponent<PropHitbox>().hitPoints.Damage((int)damage, false, sourceBiped.GetComponent<PhotonView>().ViewID);

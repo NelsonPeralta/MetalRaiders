@@ -6,6 +6,6 @@ public class OnCollisionDetection : MonoBehaviour
 {
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log($"OnCollisionDetection {collision.gameObject.name}");
+        Log.Print(() =>$"OnCollisionDetection {collision.gameObject.name}");
     }
 }

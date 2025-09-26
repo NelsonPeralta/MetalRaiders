@@ -135,7 +135,7 @@ public class Player : Biped
 
             if (_previousValue > newValue)
             {
-                Debug.Log($"Player Damaged");
+                Log.Print(() =>$"Player Damaged");
                 _isTakingDamageForIndicator = 0.3f;
                 OnPlayerDamaged?.Invoke(this);
             }
@@ -192,9 +192,9 @@ public class Player : Biped
 
         //        if (_damage > 0)
         //        {
-        //            Debug.Log(_previousValue);
-        //            Debug.Log(value);
-        //            Debug.Log(_damage);
+        //            Log.Print(() =>_previousValue);
+        //            Log.Print(() =>value);
+        //            Log.Print(() =>_damage);
         //        }
 
         //        if (_damage > 0 && (_isInvincible || hitPoints <= 0))
@@ -207,7 +207,7 @@ public class Player : Biped
         //            if (_damage > _originalOsPoints)
         //            {
         //                _damage -= _originalOsPoints;
-        //                Debug.Log(_damage);
+        //                Log.Print(() =>_damage);
         //            }
         //            else
         //                return;
@@ -362,7 +362,7 @@ public class Player : Biped
         {
             bool previousValue = _isDead;
             _isDead = value;
-            Debug.Log("Is Dead: " + _isDead);
+            Log.Print(() =>"Is Dead: " + _isDead);
 
             if (value && !previousValue)
             {
@@ -431,7 +431,7 @@ public class Player : Biped
             try
             {
                 _impactDir = (Vector3)value;
-                Debug.Log(_impactDir);
+                Log.Print(() =>_impactDir);
             }
             catch { }
 
@@ -470,7 +470,7 @@ public class Player : Biped
         //    {
         //        if (_playerId != value)
         //        {
-        //            Debug.Log($"Changing player Id: {_playerId}");
+        //            Log.Print(() =>$"Changing player Id: {_playerId}");
         //            _playerId = value;
         //            //if (rid > 0)
         //            //    _playerId += $" ({rid})";
@@ -748,7 +748,7 @@ public class Player : Biped
         OnPlayerIdAssigned -= OnPlayerIdAssigned_Delegate;
         OnPlayerIdAssigned += OnPlayerIdAssigned_Delegate;
 
-        Debug.Log($"Player Awake {GameManager.instance.GetAllPhotonPlayers().Count()} {PV.Owner.CustomProperties["databaseID"]}");
+        Log.Print(() =>$"Player Awake {GameManager.instance.GetAllPhotonPlayers().Count()} {PV.Owner.CustomProperties["databaseID"]}");
         _playerSteamId = -99999; _playerSteamId = long.Parse(PV.Owner.NickName);
         //_playerId = int.Parse(PV.Owner.CustomProperties["databaseID"]);
         if (GameManager.instance.connection == GameManager.NetworkType.Local)
@@ -895,7 +895,7 @@ public class Player : Biped
 
     //private void OnControllerColliderHit(ControllerColliderHit hit)
     //{
-    //    //Debug.Log("Player OnControllerColliderHit");
+    //    //Log.Print(() =>"Player OnControllerColliderHit");
     //    float movementSpeedRatio = GetComponent<PlayerMovement>().speedRatio;
     //    Rigidbody rb = hit.collider.attachedRigidbody;
     //    if (rb && !rb.isKinematic)
@@ -906,7 +906,7 @@ public class Player : Biped
 
     void OnAllPlayersJoinedRoom_Delegate(CurrentRoomManager gme)
     {
-        Debug.Log("OnAllPlayersJoinedRoom_Delegate");
+        Log.Print(() =>"OnAllPlayersJoinedRoom_Delegate");
         _gameStartDelay = GameManager.GameStartDelay * 0.99f;
     }
 
@@ -932,7 +932,7 @@ public class Player : Biped
 
     public void TriggerGameStartBehaviour()
     {
-        Debug.Log("TriggerGameStartBehaviour");
+        Log.Print(() =>"TriggerGameStartBehaviour");
 
 
         if (rid == 0)
@@ -980,7 +980,7 @@ public class Player : Biped
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = 0)
     {
-        Debug.Log($"Damage; Explosion: {source_pid} ({damage}) {damageSourceCleanName} {(WeaponProperties.KillFeedOutput)kfo} {source_pid}");
+        Log.Print(() =>$"Damage; Explosion: {source_pid} ({damage}) {damageSourceCleanName} {(WeaponProperties.KillFeedOutput)kfo} {source_pid}");
 
 
         if (headshot && GameManager.GetPlayerWithPhotonView(source_pid).playerInventory.activeWeapon.weaponType == WeaponProperties.WeaponType.Sniper)
@@ -1271,7 +1271,7 @@ public class Player : Biped
         var ragdoll = RagdollPool.instance.GetPooledPlayerRagdoll(playerDataCell.photonRoomIndex, isMine, transform);
         //var ragdoll = RagdollPool.instance.GetRa
 
-        Debug.Log($"SPAWNING PLAYER RAGDOLL {ragdoll.name} {deathNature} {impactDir} {impactPos}");
+        Log.Print(() =>$"SPAWNING PLAYER RAGDOLL {ragdoll.name} {deathNature} {impactDir} {impactPos}");
 
 
         ragdoll.GetComponent<PlayerRagdoll>().SetPlayerCamera(playerCamera, mainCamera);
@@ -1286,7 +1286,7 @@ public class Player : Biped
 
 
         //impactDir = Vector3.Normalize((Vector3)impactDir);
-        //Debug.Log($"PLAYER RAGDOLL {ragdoll.name} {deathNature} {impactDir} {impactPos}");
+        //Log.Print(() =>$"PLAYER RAGDOLL {ragdoll.name} {deathNature} {impactDir} {impactPos}");
         //StartCoroutine(GiveRagdollPush_Coroutine_Fram_0((Vector3)impactDir, _ragdollPropulsion, ragdoll.GetComponent<PlayerRagdoll>()));
     }
 
@@ -1442,7 +1442,7 @@ public class Player : Biped
 
     void Respawn()
     {
-        Debug.Log("oneobjmode = Respawn");
+        Log.Print(() =>"oneobjmode = Respawn");
         _playerJustSpawned = 0.1f;
         playerController.playerThirdPersonModelManager.SetupThirdPersonModelLayers();
         //if (GameManager.instance.thirdPersonMode == GameManager.ThirdPersonMode.Off && _diedWithHeavyWeaponInHand)
@@ -1582,7 +1582,7 @@ public class Player : Biped
     //    if (SceneManager.GetActiveScene().buildIndex > 0)
     //    {
     //        GameManager.instance.AddToPreviousScenePayload(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates);
-    //        Debug.Log("LeaveCurrentRoomAndLoadLevelZero: OnLeftRoom");
+    //        Log.Print(() =>"LeaveCurrentRoomAndLoadLevelZero: OnLeftRoom");
     //        PhotonNetwork.LoadLevel(0);
     //    }
     //}
@@ -1614,14 +1614,14 @@ public class Player : Biped
 
     IEnumerator OneSecondBeforeRespawnCoroutine()
     {
-        Debug.Log("MidRespawnAction");
+        Log.Print(() =>"MidRespawnAction");
         yield return new WaitForSeconds(RESPAWN_TIME - 1);
         OnPlayerRespawningInOneSecond.Invoke(this);
         NetworkGameManager.instance.AskMasterToReserveSpawnPoint(photonId, rid);
     }
     IEnumerator LateRespawn_Coroutine()
     {
-        Debug.Log("LateRespawnAction");
+        Log.Print(() =>"LateRespawnAction");
         yield return new WaitForSeconds(RESPAWN_TIME * 0.99f);
         LateRespawn();
     }
@@ -1644,7 +1644,7 @@ public class Player : Biped
 
     IEnumerator Respawn_Coroutine()
     {
-        Debug.Log($"{username} {isMine} Respawn_Coroutine");
+        Log.Print(() =>$"{username} {isMine} Respawn_Coroutine");
         yield return new WaitForSeconds(RESPAWN_TIME);
 
         //if (!CurrentRoomManager.instance.gameOver) Respawn();
@@ -1652,7 +1652,7 @@ public class Player : Biped
 
         if (!CurrentRoomManager.instance.gameOver && PhotonNetwork.IsMasterClient)
         {
-            Debug.Log($"{username} {isMine} Respawn_Coroutine - TellPlayerToRespawn");
+            Log.Print(() =>$"{username} {isMine} Respawn_Coroutine - TellPlayerToRespawn");
 
             if (GameManager.instance.oneObjMode == GameManager.OneObjMode.Off)
                 PV.RPC("TellPlayerToRespawn", RpcTarget.AllViaServer);
@@ -1759,14 +1759,14 @@ public class Player : Biped
 
     void OnPlayerDamaged_Delegate(Player player)
     {
-        Debug.Log($"OnPlayerDamaged_Delegate {needsHealthPack}");
+        Log.Print(() =>$"OnPlayerDamaged_Delegate {needsHealthPack}");
         try { GetComponent<PlayerController>().Descope(); } catch { }
 
         _isHealing = false;
         healingCountdown = _defaultHealingCountdown;
         if (!needsHealthPack)
         {
-            Debug.Log($"OnPlayerDamaged_Delegate {_defaultHealingCountdown}");
+            Log.Print(() =>$"OnPlayerDamaged_Delegate {_defaultHealingCountdown}");
             shieldRechargeCountdown = _defaultHealingCountdown;
             if (hitPoints <= maxHealthPoints)
                 shieldRechargeCountdown = _defaultHealingCountdown + ((maxHealthPoints - hitPoints) / _healthHealingIncrement);
@@ -1830,7 +1830,7 @@ public class Player : Biped
     {
         if (!PV.IsMine)
         {
-            //Debug.Log(nn);
+            //Log.Print(() =>nn);
             //_team = (PlayerMultiplayerMatchStats.Team)Enum.Parse(typeof(PlayerMultiplayerMatchStats.Team), nn);
             //OnPlayerTeamChanged?.Invoke(this);
             //name += $" {_team.ToString()} team";
@@ -1859,7 +1859,7 @@ public class Player : Biped
 
         //        try
         //        {
-        //            Debug.Log($"Simple Damage_RPC");
+        //            Log.Print(() =>$"Simple Damage_RPC");
         //            Player sourcePlayer = GameManager.GetPlayerWithPhotonViewId(lastPID);
         //            string feed = $"{sourcePlayer.nickName} killed {nickName}";
         //            foreach (KillFeedManager kfm in FindObjectsOfType<KillFeedManager>())
@@ -2242,7 +2242,7 @@ public class Player : Biped
     [PunRPC]
     void Teleport_RPC(Vector3 t, Vector3 forr)
     {
-        Debug.Log("Teleport_RPC");
+        Log.Print(() =>"Teleport_RPC");
         _rb.linearVelocity = Vector3.zero;
         _rb.angularVelocity = Vector3.zero;
         _rb.AddForce(forr.normalized * 100, mode: ForceMode.Impulse);
@@ -2263,9 +2263,9 @@ public class Player : Biped
         GameObject wo = Instantiate(playerInventory.allWeaponsInInventory[wi].GetComponent<WeaponProperties>().weaponRessource, spp, Quaternion.identity);
         wo.name = wo.name.Replace("(Clone)", "");
 
-        try { wo.GetComponent<LootableWeapon>().networkAmmo = param["ammo"]; } catch (System.Exception e) { Debug.Log(e); }
-        try { wo.GetComponent<LootableWeapon>().spareAmmo = param["spareammo"]; } catch (System.Exception e) { Debug.Log(e); }
-        try { wo.GetComponent<LootableWeapon>().tts = param["tts"]; } catch (System.Exception e) { Debug.Log(e); }
+        try { wo.GetComponent<LootableWeapon>().networkAmmo = param["ammo"]; } catch (System.Exception e) { Log.Print(() =>e); }
+        try { wo.GetComponent<LootableWeapon>().spareAmmo = param["spareammo"]; } catch (System.Exception e) { Log.Print(() =>e); }
+        try { wo.GetComponent<LootableWeapon>().tts = param["tts"]; } catch (System.Exception e) { Log.Print(() =>e); }
         wo.GetComponent<LootableWeapon>().GetComponent<Rigidbody>().AddForce(fDir * 200);
 
         //StartCoroutine(UpdateWeaponSpawnPosition_Coroutine(wo, spp));
@@ -2290,7 +2290,7 @@ public class Player : Biped
     [PunRPC]
     void AddPlayerKill_RPC(int playerWhoSurvivedPhotonId, int playerWhoDiedPhotonId, int dni, int kfo)
     {
-        Debug.Log("AddPlayerKill_RPC");
+        Log.Print(() =>"AddPlayerKill_RPC");
 
         playerThatKilledMe = GameManager.GetPlayerWithPhotonView(playerWhoSurvivedPhotonId); _killFeedOutput = (WeaponProperties.KillFeedOutput)kfo; deathNature = (DeathNature)dni; lastPID = playerWhoSurvivedPhotonId;
 

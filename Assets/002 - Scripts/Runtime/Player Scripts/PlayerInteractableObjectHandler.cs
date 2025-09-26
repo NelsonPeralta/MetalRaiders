@@ -301,7 +301,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
                             }
                             else if (!player.playerInventory.holsteredWeapon) // Looks for Secondary Weapon
                             {
-                                //Debug.Log("RPC: Picking up second weapon");
+                                //Log.Print(() =>"RPC: Picking up second weapon");
                                 //PickupSecWeap();
                                 PV.RPC("PickupSecondWeapon", RpcTarget.All, lwPosition, weaponCollidingWithInInventoryIndex);
                                 //OnWeaponPickup?.Invoke(this);
@@ -314,7 +314,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
                             {
                                 if (player.GetComponent<PhotonView>().IsMine)
                                 {
-                                    //Debug.Log("OnPlayerLongInteract_Delegate DropWeapon");
+                                    //Log.Print(() =>"OnPlayerLongInteract_Delegate DropWeapon");
                                     //player.DropWeaponOnDeath(pInventory.activeWeapon);
                                     NetworkGameManager.SpawnNetworkWeapon(
                                         player.playerInventory.activeWeapon, player.weaponDropPoint.position, player.weaponDropPoint.forward);
@@ -340,7 +340,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
 
                         if (player.GetComponent<PhotonView>().IsMine)
                         {
-                            //Debug.Log("OnPlayerLongInteract_Delegate DropWeapon");
+                            //Log.Print(() =>"OnPlayerLongInteract_Delegate DropWeapon");
                             //player.DropWeaponOnDeath(pInventory.activeWeapon);
                             NetworkGameManager.SpawnNetworkWeapon(
                                 player.playerInventory.activeWeapon, player.weaponDropPoint.position, player.weaponDropPoint.forward);
@@ -387,7 +387,7 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
     [PunRPC]
     public void DisableCollidingWeapon_RPC(Vector3 collidingWeaponPosition)
     {
-        Debug.Log($"RPC: Disabling lootable weapon: {collidingWeaponPosition}");
+        Log.Print(() =>$"RPC: Disabling lootable weapon: {collidingWeaponPosition}");
         //weaponPool.DisablePooledWeapon(collidingWeaponPosition);
 
         foreach (LootableWeapon lw in WeaponPool.instance.weaponPool)
@@ -396,6 +396,6 @@ public class PlayerInteractableObjectHandler : MonoBehaviour
                 lw.HideWeapon();
                 return;
             }
-        Debug.Log($"RPC: FOUND NO WEAPON TO DISABLE");
+        Log.Print(() =>$"RPC: FOUND NO WEAPON TO DISABLE");
     }
 }

@@ -119,7 +119,7 @@ public class Melee : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        //Debug.Log($"Melee OnTriggerExit {other.name}");
+        //Log.Print(() =>$"Melee OnTriggerExit {other.name}");
 
         if (GameManager.instance.gameMode == GameManager.GameMode.Coop)
             if (other.GetComponent<ActorHitbox>())
@@ -343,7 +343,7 @@ public class Melee : MonoBehaviour
 
     void OnHitPointsDeath_Delegate(HitPoints hp)
     {
-        Debug.Log($"OnHitPointsDeath_Delegate {hp.name}");
+        Log.Print(() =>$"OnHitPointsDeath_Delegate {hp.name}");
         try
         {
             hitPointsInMeleeZone.Remove(hp);
@@ -353,7 +353,7 @@ public class Melee : MonoBehaviour
 
     void OnPlayerDeath_Delegate(Player player)
     {
-        Debug.Log($"OnPlayerDeadth_Delegate {player.name}");
+        Log.Print(() =>$"OnPlayerDeadth_Delegate {player.name}");
         hitPointsInMeleeZone.Clear();
     }
 

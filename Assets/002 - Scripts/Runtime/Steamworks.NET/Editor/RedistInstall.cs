@@ -25,14 +25,14 @@ public class RedistInstall {
 	//		return;
 	//	}
 
-	//	Debug.Log("[Steamworks.NET] 'steam_appid.txt' is not present in the project root. Writing...");
+	//	Log.Print(() =>"[Steamworks.NET] 'steam_appid.txt' is not present in the project root. Writing...");
 
 	//	try {
 	//		StreamWriter appIdFile = File.CreateText(strSteamAppIdPath);
 	//		appIdFile.Write("480");
 	//		appIdFile.Close();
 
-	//		Debug.Log("[Steamworks.NET] Successfully copied 'steam_appid.txt' into the project root.");
+	//		Log.Print(() =>"[Steamworks.NET] Successfully copied 'steam_appid.txt' into the project root.");
 	//	}
 	//	catch (System.Exception e) {
 	//		Debug.LogWarning("[Steamworks.NET] Could not copy 'steam_appid.txt' into the project root. Please place 'steam_appid.txt' into the project root manually.");

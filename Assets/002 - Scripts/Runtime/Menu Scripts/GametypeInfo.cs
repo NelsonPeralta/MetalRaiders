@@ -9,7 +9,7 @@ public class GametypeInfo : MonoBehaviour
     
     public void chooseGametype()
     {
-            Debug.Log("Clicke on \n GamteTypeInfo");
+            Log.Print(() =>"Clicke on \n GamteTypeInfo");
             if (gametype == "Slayer")
                 gameSettings.toggleSlayer();
             else if (gametype == "Team Slayer")

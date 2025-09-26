@@ -51,7 +51,7 @@ public class MenuManager : MonoBehaviour
     public void OpenMenu(string menuName, bool closeOthers = true) // Open a menu GO using the name from its Menu script
     {
 
-        Debug.Log($"OPEN MENU: {menuName} {closeOthers} {PhotonNetwork.InRoom} {PhotonNetwork.IsMasterClient}");
+        Log.Print(() =>$"OPEN MENU: {menuName} {closeOthers} {PhotonNetwork.InRoom} {PhotonNetwork.IsMasterClient}");
 
         if (GameManager.instance.previousScenePayloads.Contains(GameManager.PreviousScenePayload.OpenCarnageReportAndCredits))
         {
@@ -63,12 +63,12 @@ public class MenuManager : MonoBehaviour
         {
             if (menus[i].menuName == menuName)
             {
-                Debug.Log($"Open {menus[i].menuName}");
+                Log.Print(() =>$"Open {menus[i].menuName}");
                 menus[i].Open();
             }
             else if (menus[i].open && closeOthers)
             {
-                Debug.Log($"Closing {menus[i].menuName}");
+                Log.Print(() =>$"Closing {menus[i].menuName}");
                 CloseMenu(menus[i]);
             }
         }
@@ -90,7 +90,7 @@ public class MenuManager : MonoBehaviour
                 {
                     if (menus[i].open)
                     {
-                        Debug.Log($"Closing {menus[i].menuName}");
+                        Log.Print(() =>$"Closing {menus[i].menuName}");
                         CloseMenu(menus[i]);
                     }
                 }
@@ -104,7 +104,7 @@ public class MenuManager : MonoBehaviour
             {
                 if (menus[i].open)
                 {
-                    Debug.Log($"Closing {menus[i].menuName}");
+                    Log.Print(() =>$"Closing {menus[i].menuName}");
                     CloseMenu(menus[i]);
                 }
             }
@@ -142,7 +142,7 @@ public class MenuManager : MonoBehaviour
         {
             if (menus[i].menuName == menuName)
             {
-                Debug.Log($"Open {menus[i].menuName}");
+                Log.Print(() =>$"Open {menus[i].menuName}");
                 menus[i].Open();
             }
         }
@@ -156,7 +156,7 @@ public class MenuManager : MonoBehaviour
             if (menus[i].menuName.Equals("error"))
             {
                 Launcher.instance.errorMenuText.text = mess;
-                Debug.Log($"OpenErrorMenu {menus[i].menuName}");
+                Log.Print(() =>$"OpenErrorMenu {menus[i].menuName}");
                 menus[i].Open();
             }
         }
@@ -164,7 +164,7 @@ public class MenuManager : MonoBehaviour
 
     public void CloseMenu(Menu menu)
     {
-        Debug.Log($"Closing {menu.menuName}");
+        Log.Print(() =>$"Closing {menu.menuName}");
 
 
         if (GameManager.instance.previousScenePayloads.Contains(PreviousScenePayload.LoadTimeOutOpenErrorMenu)) { GameManager.instance.RemoveFromPreviousScenePayload(PreviousScenePayload.LoadTimeOutOpenErrorMenu); }
@@ -204,7 +204,7 @@ public class MenuManager : MonoBehaviour
         //    menuname += "offline ";
         //menuname += "title";
         menuname = "online title";
-        Debug.Log($"MenuManager OpenMainMenu");
+        Log.Print(() =>$"MenuManager OpenMainMenu");
         for (int i = 0; i < menus.Length; i++)
         {
             if (menus[i].menuName == menuname)

@@ -49,7 +49,7 @@ public class PlayerReload : MonoBehaviour
         {
             if (PV.IsMine && rewiredPlayer.GetButtonDown("Reload") && !playerController.isReloading && !playerController.isDualWielding)
             {
-                Debug.Log("Maual Reload");
+                Log.Print(() =>"Maual Reload");
                 //PV.RPC("CheckRealodButton_RPC", RpcTarget.All);
             }
         }

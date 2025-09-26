@@ -33,7 +33,7 @@ public class Knight : AiAbstractClass
             if (_knightAction != value)
             {
                 _knightAction = value;
-                //Debug.Log($"{name} action change: {_knightAction}");
+                //Log.Print(() =>$"{name} action change: {_knightAction}");
                 InvokeOnActionChanged();
             }
         }
@@ -221,7 +221,7 @@ public class Knight : AiAbstractClass
             knightAction = KnightActions.Seek;
         else
         {
-            Debug.Log($"Target in line of sight. Player range: {playerRange}");
+            Log.Print(() =>$"Target in line of sight. Player range: {playerRange}");
             if (playerRange == PlayerRange.Medium)
                 knightAction = KnightActions.Fireball;
             else if (playerRange == PlayerRange.Long)

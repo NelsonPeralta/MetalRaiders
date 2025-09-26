@@ -28,13 +28,13 @@ public class PlayerDatabaseAdaptor
     public void SetPlayerBasicPvPStats(PlayerBasicPvPStats playerData)
     {
         this._playerBasicPvPStats = playerData;
-        Debug.Log($"Player basic pvp stats are set. Kills: {this._playerBasicPvPStats.kills}. Deaths: {this._playerBasicPvPStats.deaths}. Headshots: {this._playerBasicPvPStats.headshots}. Melee Kills: {this._playerBasicPvPStats.melee_kills}. Grenade Kills: {this._playerBasicPvPStats.grenade_kills}");
+        Log.Print(() =>$"Player basic pvp stats are set. Kills: {this._playerBasicPvPStats.kills}. Deaths: {this._playerBasicPvPStats.deaths}. Headshots: {this._playerBasicPvPStats.headshots}. Melee Kills: {this._playerBasicPvPStats.melee_kills}. Grenade Kills: {this._playerBasicPvPStats.grenade_kills}");
     }
 
     public void SetPlayerBasicPvEStats(PlayerBasicPvEStats playerData)
     {
         this._playerBasicPvEStats = playerData;
-        Debug.Log($"Player basic pve stats are set. Kills: {this._playerBasicPvEStats.pve_kills}. Deaths: {this._playerBasicPvEStats.pve_deaths}. Headshots: {this._playerBasicPvEStats.pve_headshots}");
+        Log.Print(() =>$"Player basic pve stats are set. Kills: {this._playerBasicPvEStats.pve_kills}. Deaths: {this._playerBasicPvEStats.pve_deaths}. Headshots: {this._playerBasicPvEStats.pve_headshots}");
     }
 
     //public int id
@@ -144,7 +144,7 @@ public class PlayerDatabaseAdaptor
         get { return _playerCommonData; }
         set
         {
-            Debug.Log("PlayerCommonData");
+            Log.Print(() =>"PlayerCommonData");
             _playerCommonData = value;
 
             //if (playerListItem)
@@ -164,14 +164,14 @@ public class PlayerDatabaseAdaptor
             //    PlayerProgressionManager.Rank rank = PlayerProgressionManager.GetClosestRank(playerBasicOnlineStats.level, playerBasicOnlineStats.honor);
 
 
-            //    Debug.Log(playerBasicOnlineStats.honor);
+            //    Log.Print(() =>playerBasicOnlineStats.honor);
             //    if (GameManager.colorDict.ContainsKey(rank.color))
             //    {
-            //        Debug.Log($"{rank.spriteName}");
-            //        Debug.Log(playerBasicOnlineStats.honor);
+            //        Log.Print(() =>$"{rank.spriteName}");
+            //        Log.Print(() =>playerBasicOnlineStats.honor);
             //        playerListItem.rankIm.enabled = true;
 
-            //        Debug.Log(PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank.spriteName).SingleOrDefault().name);
+            //        Log.Print(() =>PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank.spriteName).SingleOrDefault().name);
 
             //        playerListItem.rankIm.sprite = PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank.spriteName).SingleOrDefault();
 

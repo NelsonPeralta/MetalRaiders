@@ -51,7 +51,7 @@ public class PlayerGrenadeExplosion : MonoBehaviour
                         objectsHit.Add(playerHit);
                         float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
                         float calculatedDamage = damage * (1 - (playerDistance / radius));
-                        Debug.Log("Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
+                        Log.Print(() =>"Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
                         //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
                         if (playerWhoThrewGrenade.PV.IsMine && calculatedDamage > 0)
                             playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, playerWhoThrewGrenade.PV.ViewID);
@@ -63,11 +63,11 @@ public class PlayerGrenadeExplosion : MonoBehaviour
                     if (!objectsHit.Contains(aiHit))
                     {
                         objectsHit.Add(aiHit);
-                        Debug.Log("Hit AI");
+                        Log.Print(() =>"Hit AI");
                         AIHitbox hitbox = hit.GetComponent<AIHitbox>();
                         float aiDistance = Vector3.Distance(hit.transform.position, transform.position);
                         float calculatedDamage = damage * (1 - (aiDistance / radius));
-                        Debug.Log($"Rocket Damage on AI: {calculatedDamage}");
+                        Log.Print(() =>$"Rocket Damage on AI: {calculatedDamage}");
                         if (playerWhoThrewGrenade.PV.IsMine && calculatedDamage > 0)
                             hitbox.aiAbstractClass.Damage((int)calculatedDamage, playerWhoThrewGrenade.PV.ViewID);
                     }

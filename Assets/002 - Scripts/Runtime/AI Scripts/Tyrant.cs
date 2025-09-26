@@ -72,7 +72,7 @@ public class Tyrant : Actor
         }
         else
         {
-            Debug.Log("Punch Player RPC");
+            Log.Print(() =>"Punch Player RPC");
 
             GetComponent<AudioSource>().clip = _attackClip;
             GetComponent<AudioSource>().Play();
@@ -89,14 +89,14 @@ public class Tyrant : Actor
         Vector3? _dir = dir;
         if (caller)
         {
-            Debug.Log("CALLER FlameTyrantFireBall");
+            Log.Print(() =>"CALLER FlameTyrantFireBall");
             _dir = targetTransform.position - new Vector3(0, 1.5f, 0) - transform.position;
             GetComponent<PhotonView>().RPC("FlameTyrantFireBall", RpcTarget.AllViaServer, false, _dir);
             //target.GetComponent<Player>().Damage(4, false, pid);
         }
         else
         {
-            Debug.Log("FlameTyrantFireBall");
+            Log.Print(() =>"FlameTyrantFireBall");
 
             _animator.SetBool("Run", false);
             nma.enabled = false;
@@ -124,7 +124,7 @@ public class Tyrant : Actor
         }
         else
         {
-            //Debug.Log("Punch Player RPC");
+            //Log.Print(() =>"Punch Player RPC");
 
             _animator.SetBool("Run", false);
             nma.enabled = false;
@@ -145,7 +145,7 @@ public class Tyrant : Actor
         }
         else
         {
-            //Debug.Log("UndeadIdle RPC");
+            //Log.Print(() =>"UndeadIdle RPC");
 
             nma.enabled = false;
             _animator.SetBool("Run", false);
@@ -161,7 +161,7 @@ public class Tyrant : Actor
         }
         else
         {
-            Debug.Log("FlameTyrantRun RPC");
+            Log.Print(() =>"FlameTyrantRun RPC");
             _animator.SetBool("Run", true);
         }
     }

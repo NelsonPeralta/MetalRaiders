@@ -184,7 +184,7 @@ public class NetworkWeaponSpawnPoint : MonoBehaviour
 
     void OnWaveStart(SwarmManager swarmManager)
     {
-        Debug.Log($"NetworkWeaponSpawnPoint OnWaveStart: {swarmManager.currentWave}");
+        Log.Print(() =>$"NetworkWeaponSpawnPoint OnWaveStart: {swarmManager.currentWave}");
     }
 
     // Methods

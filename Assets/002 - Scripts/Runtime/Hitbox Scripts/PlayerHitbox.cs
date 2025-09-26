@@ -20,14 +20,14 @@ public class PlayerHitbox : Hitbox, IDamageable
         if (player.hitPoints <= 0 || player.isDead || player.isRespawning)
             return;
 
-        Debug.Log("SIMPLER PLAYER HITBOX DAMAGE");
+        Log.Print(() =>"SIMPLER PLAYER HITBOX DAMAGE");
         player.BasicDamage(damage);
         //player.PV.RPC("Damage_RPC", RpcTarget.All, damage);
     }
 
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId)
     {
-        Debug.Log($"PlayerHitbox: {healthDamage}");
+        Log.Print(() =>$"PlayerHitbox: {healthDamage}");
         Damage(healthDamage, headshot, playerWhoShotThisPlayerPhotonId, impactPos: null);
     }
 
@@ -45,18 +45,18 @@ public class PlayerHitbox : Hitbox, IDamageable
         //    if (GameManager.instance.pid_player_Dict.ContainsKey(playerWhoShotThisPlayerPhotonId) && GameManager.GetPlayerWithPhotonViewId(playerWhoShotThisPlayerPhotonId).team == player.team)
         //        return;
 
-        //Debug.Log(healthDamage);
-        //Debug.Log(player.overshieldPoints);
+        //Log.Print(() =>healthDamage);
+        //Log.Print(() =>player.overshieldPoints);
 
         //if (player.isInvincible)
         //    healthDamage = 0;
         //if (player.overshieldPoints > 0)
         //    healthDamage -= (int)player.overshieldPoints;
 
-        //Debug.Log("PLAYER HITBOX DAMAGE");
-        //Debug.Log("member name: " + memberName);
-        //Debug.Log("source file path: " + sourceFilePath);
-        //Debug.Log("source line number: " + sourceLineNumber);
+        //Log.Print(() =>"PLAYER HITBOX DAMAGE");
+        //Log.Print(() =>"member name: " + memberName);
+        //Log.Print(() =>"source file path: " + sourceFilePath);
+        //Log.Print(() =>"source line number: " + sourceLineNumber);
 
         //try
         //{ // Hit Marker Handling
@@ -73,7 +73,7 @@ public class PlayerHitbox : Hitbox, IDamageable
         //        p.GetComponent<PlayerUI>().SpawnHitMarker();
         //}
         //catch { }
-        Debug.Log(damage);
+        Log.Print(() =>damage);
 
         player.Damage((int)damage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin, weaponIndx: weaponIndx, kfo: kfo); ;
         //player.PV.RPC("Damage_RPC", RpcTarget.All, damage, headshot, playerWhoShotThisPlayerPhotonId, impactPos, impactDir, damageSource, isGroin);

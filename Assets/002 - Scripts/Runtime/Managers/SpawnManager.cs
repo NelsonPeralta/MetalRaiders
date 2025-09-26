@@ -132,7 +132,7 @@ public class SpawnManager : MonoBehaviour
                         if (level == 0) continue;
 
                         int id = (i + 1) + ((j + 1) * 1000);
-                        //Debug.Log($"GetBlockingLevel {spawnPoints[i].name} {Mathf.Abs(spawnPos.y - playerPos.y)}");
+                        //Log.Print(() =>$"GetBlockingLevel {spawnPoints[i].name} {Mathf.Abs(spawnPos.y - playerPos.y)}");
                         spawnPoints[i].AddBlockingLevelEntry(id, level, 0.5f);
                     }
                 }
@@ -150,7 +150,7 @@ public class SpawnManager : MonoBehaviour
 
         float yDiff = Mathf.Abs(spawnPos.y - playerPos.y);
         int verticalFact = yDiff < 2f ? 0 : Mathf.Clamp((int)Mathf.Floor(yDiff) - 2, 0, 99);
-        //Debug.Log($"GetBlockingLevel {verticalFact}");
+        //Log.Print(() =>$"GetBlockingLevel {verticalFact}");
 
         if (dot > 0.866f) return Mathf.Clamp(front - verticalFact, 0, 99);   // Front ±30°
         else if (dot > 0f) return Mathf.Clamp(side - verticalFact, 0, 99);   // Sides
@@ -165,7 +165,7 @@ public class SpawnManager : MonoBehaviour
 
         float yDiff = Mathf.Abs(spawnPos.y - playerPos.y);
         int verticalFact = yDiff < 2f ? 0 : Mathf.Clamp((int)Mathf.Floor(yDiff) - 2, 0, 99);
-        //Debug.Log($"GetBlockingLevel {verticalFact}");
+        //Log.Print(() =>$"GetBlockingLevel {verticalFact}");
 
         if (dot > 0.866f) return Mathf.Clamp(front - verticalFact, 0, 99);   // Front ±30°
         else if (dot > 0f) return Mathf.Clamp(side - verticalFact, 0, 99);   // Sides
@@ -447,7 +447,7 @@ public class SpawnManager : MonoBehaviour
             {
                 if (hitCollider.gameObject.GetComponent<SpawnPoint>())
                 {
-                    Debug.Log($"SpawnManager virtual contestion {hitCollider.name}");
+                    Log.Print(() =>$"SpawnManager virtual contestion {hitCollider.name}");
 
                     float sqrDist = (finalRes.Item1.position - hitCollider.transform.position).sqrMagnitude;
                     int level;

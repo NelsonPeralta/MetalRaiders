@@ -241,7 +241,7 @@ public class Skeleton : MonoBehaviour
                         audioSource.clip = attackClips[randomSound];
                         audioSource.Play();
 
-                        Debug.Log("Skeleton Melee Attack");
+                        Log.Print(() =>"Skeleton Melee Attack");
                     }
                 }
 
@@ -284,7 +284,7 @@ public class Skeleton : MonoBehaviour
 
     IEnumerator Die()
     {
-        Debug.Log("Die");
+        Log.Print(() =>"Die");
         Aura.SetActive(false);
         nma.enabled = false;
         anim.Play("Die");

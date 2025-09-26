@@ -77,7 +77,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             {
                 _previousPlayerRange = playerRange;
                 _playerRange = value;
-                //Debug.Log($"Player range change: {playerRange}");
+                //Log.Print(() =>$"Player range change: {playerRange}");
                 OnPlayerRangeChange?.Invoke(this);
             }
         }
@@ -96,8 +96,8 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         get { return _destination; }
         set
         {
-            Debug.Log(System.Environment.StackTrace);
-            Debug.Log($"New AI Target: {value}");
+            Log.Print(() =>System.Environment.StackTrace);
+            Log.Print(() =>$"New AI Target: {value}");
             if (value)
             {
                 if (value.GetComponent<Player>() && (value.GetComponent<Player>().isDead || value.GetComponent<Player>().isRespawning))
@@ -117,7 +117,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             }
             else
             {
-                Debug.Log($"New AI Target is NULL");
+                Log.Print(() =>$"New AI Target is NULL");
                 _destination = null;
                 seek = false;
                 playerRange = PlayerRange.Out;
@@ -130,7 +130,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
                 }
                 catch (Exception e)
                 {
-                    Debug.Log($"ERROR while trying to get new target for AI");
+                    Log.Print(() =>$"ERROR while trying to get new target for AI");
                     //Debug.LogWarning(e);
                     //_target = null;
                 }
@@ -170,7 +170,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         {
             if (!_isDead && value)
             {
-                Debug.Log($"{name} OnDeathInvoke");
+                Log.Print(() =>$"{name} OnDeathInvoke");
                 _isDead = true;
                 OnDeath?.Invoke(this);
             }
@@ -226,7 +226,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             if (value != _targetInLineOfSight)
             {
                 _targetInLineOfSight = value;
-                //Debug.Log($"Target in line of sight change: {_targetInLineOfSight}");
+                //Log.Print(() =>$"Target in line of sight change: {_targetInLineOfSight}");
                 OnTargeInLineOfSightChange?.Invoke(this);
             }
         }
@@ -237,17 +237,17 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         get { return _targetOutOfSight; }
         set
         {
-            //Debug.Log($"_targetOutOfSight {value}, {targetOutOfSight}, {targetOutOfSightCountdown}");
+            //Log.Print(() =>$"_targetOutOfSight {value}, {targetOutOfSight}, {targetOutOfSightCountdown}");
 
             if (value && !_targetOutOfSight)
             {
-                //Debug.Log("Target is out of sight");
+                //Log.Print(() =>"Target is out of sight");
                 _targetOutOfSight = true;
                 targetOutOfSightCountdown = targetOutOfSightDefaultCountdown;
             }
             else if (!value && _targetOutOfSight)
             {
-                //Debug.Log("Target found");
+                //Log.Print(() =>"Target found");
                 targetOutOfSightCountdown = 999;
                 _targetOutOfSight = false;
             }
@@ -288,7 +288,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
             arc.AiAbstractClass = this;
             arc.OnRangeTriggerEnter += OnRangeTriggerEnter_Delegate;
             arc.OnRangeTriggerExit += OnRangeTriggerExit_Delegate;
-            Debug.Log(arc.AiAbstractClass.name);
+            Log.Print(() =>arc.AiAbstractClass.name);
         }
 
         OnPrepareEnd?.Invoke(this);
@@ -336,7 +336,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         targetPlayer = null;
         foreach (AIHitbox h in GetComponentsInChildren<AIHitbox>())
             h.gameObject.layer = 3;
-        Debug.Log($"AI on death delegate. Is dead: {isDead}");
+        Log.Print(() =>$"AI on death delegate. Is dead: {isDead}");
         //SwarmManager.instance.DropRandomLoot(transform.position, transform.rotation);
         try
         {
@@ -350,7 +350,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     IEnumerator Die_Coroutine()
     {
-        Debug.Log("Die_Coroutine");
+        Log.Print(() =>"Die_Coroutine");
         targetPlayer = null;
         GetComponent<NavMeshAgent>().speed = 0;
         GetComponent<Animator>().Play("Die");
@@ -426,7 +426,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     {
         if (targetOutOfSightCountdown > 0 && targetOutOfSight)
             targetOutOfSightCountdown -= Time.deltaTime;
-        //Debug.Log($"Target ouf of sight countdown: {targetOutOfSightCountdown}");
+        //Log.Print(() =>$"Target ouf of sight countdown: {targetOutOfSightCountdown}");
         if (targetOutOfSightCountdown <= 0 && targetInLineOfSight)
             targetInLineOfSight = false;
     }
@@ -575,7 +575,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(1);
 
 
-        Debug.Log("GetRandomPlayerTransformSlow_Coroutine");
+        Log.Print(() =>"GetRandomPlayerTransformSlow_Coroutine");
         try
         {
             targetPlayer = GameManager.GetPlayerWithPhotonView(FindObjectOfType<NetworkSwarmManager>().GetRandomAlivePlayerPhotonId()).transform;
@@ -693,7 +693,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
             if (wp.weaponType == WeaponProperties.WeaponType.LMG || wp.weaponType == WeaponProperties.WeaponType.Launcher || wp.weaponType == WeaponProperties.WeaponType.Shotgun || wp.weaponType == WeaponProperties.WeaponType.Sniper)
                 return;
-            Debug.Log($"DropRandomWeapon: {wp.cleanName}");
+            Log.Print(() =>$"DropRandomWeapon: {wp.cleanName}");
 
 
 
@@ -723,7 +723,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
     [PunRPC]
     void UpdateTarget_RPC(int pid)
     {
-        Debug.Log($"UpdateTarget_RPC: {pid}");
+        Log.Print(() =>$"UpdateTarget_RPC: {pid}");
         targetPlayer = PhotonView.Find(pid).transform;
     }
 
@@ -735,7 +735,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
 
     private Vector3 GetRandomDestinationPosition(float walkRadius = 100)
     {
-        Debug.Log($"Walk radius: {walkRadius}");
+        Log.Print(() =>$"Walk radius: {walkRadius}");
         Vector3 randomDirection = UnityEngine.Random.insideUnitSphere * walkRadius;
         randomDirection += transform.position;
         NavMeshHit hit;
@@ -754,7 +754,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         d.GetComponent<BoxCollider>().isTrigger = true;
         d.AddComponent<Rigidbody>();
         d.GetComponent<Rigidbody>().useGravity = false;
-        Debug.Log("GetRandomDestinationTransform: " + d.name);
+        Log.Print(() =>"GetRandomDestinationTransform: " + d.name);
         return d.transform;
     }
 
@@ -769,7 +769,7 @@ abstract public class AiAbstractClass : MonoBehaviourPunCallbacks
         Vector3 finalPosition = hit.position;
 
         GetComponent<NavMeshAgent>().destination = finalPosition;
-        Debug.Log($"AI goint to random point: {finalPosition}");
+        Log.Print(() =>$"AI goint to random point: {finalPosition}");
     }
 
     protected bool DestinationReached()

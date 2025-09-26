@@ -9,7 +9,7 @@ public class RoomMenu : MonoBehaviour
 {
     private void OnEnable()
     {
-        Debug.Log("ONENABLE RoomMenu SCRIPT");
+        Log.Print(() =>"ONENABLE RoomMenu SCRIPT");
         if (GameManager.instance.gameMode == GameMode.Coop)
         {
             FindObjectOfType<Launcher>().multiplayerMcComponentsHolder.SetActive(false);

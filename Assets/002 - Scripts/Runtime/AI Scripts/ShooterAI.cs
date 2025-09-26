@@ -157,7 +157,7 @@ public class ShooterAI : AiAbstractClass
 
     public override void DoAction()
     {
-        Debug.Log($"{this.GetType()} DoAction");
+        Log.Print(() =>$"{this.GetType()} DoAction");
 
         ShooterAIActions previousHellhoundAction = shooterAiAction;
         if (!isDead && targetPlayer)
@@ -185,7 +185,7 @@ public class ShooterAI : AiAbstractClass
             //else
             //    seek = true;
 
-            //Debug.Log($"Hellhound do action: {hellhoundAction}");
+            //Log.Print(() =>$"Hellhound do action: {hellhoundAction}");
         }
         else if (!isDead && !targetPlayer)
         {
@@ -207,7 +207,7 @@ public class ShooterAI : AiAbstractClass
         {
             if (!targetPlayer.GetComponent<Player>())
             {
-                Debug.Log("Got to empty target");
+                Log.Print(() =>"Got to empty target");
                 //GetNewTarget(emptyTarget: true);
             }
         }
@@ -230,7 +230,7 @@ public class ShooterAI : AiAbstractClass
 
     public override void OnPrepareEnd_Delegate(AiAbstractClass aiAbstractClass)
     {
-        Debug.Log("OnPrepareEnd_Delegate");
+        Log.Print(() =>"OnPrepareEnd_Delegate");
         AIHitbox[] playerHitboxes = GetComponentsInChildren<AIHitbox>();
 
         foreach (AIHitbox playerHitbox in playerHitboxes)
@@ -273,13 +273,13 @@ public class ShooterAI : AiAbstractClass
     {
         if (triggerObj.GetComponent<Player>())
         {
-            Debug.Log("Here 2: " + triggerObj.name);
+            Log.Print(() =>"Here 2: " + triggerObj.name);
             if (aiRangeCollider.range == PlayerRange.Medium)
             {
-                Debug.Log("Here 2: " + triggerObj.name);
+                Log.Print(() =>"Here 2: " + triggerObj.name);
                 if (!playerTarget)
                 {
-                    Debug.Log("Here 3: " + triggerObj.name);
+                    Log.Print(() =>"Here 3: " + triggerObj.name);
                     // Strafe
                     {
                         foreach (AiRangeTrigger rt in rangeColliders)
@@ -327,14 +327,14 @@ public class ShooterAI : AiAbstractClass
 
 
         {
-            //Debug.Log("Here 1: " + triggerObj.name);
+            //Log.Print(() =>"Here 1: " + triggerObj.name);
             //if (triggerObj.GetComponent<Player>() && !target.GetComponent<Player>())
             //{
-            //    Debug.Log("Here 2");
+            //    Log.Print(() =>"Here 2");
 
             //    if (aiRangeCollider.range == PlayerRange.Medium)
             //    {
-            //        Debug.Log("Here 3 ");
+            //        Log.Print(() =>"Here 3 ");
             //        GetComponent<NavMeshAgent>().angularSpeed = 0;
 
             //        //shooterAiAction = ShooterAIActions.Idle;
@@ -349,11 +349,11 @@ public class ShooterAI : AiAbstractClass
 
             //if (!triggerObj.GetComponent<Player>() && !target.GetComponent<Player>())
             //{
-            //    Debug.Log("Here 4 ");
+            //    Log.Print(() =>"Here 4 ");
 
             //    if (!playerTarget)
             //    {
-            //        Debug.Log("Here 5");
+            //        Log.Print(() =>"Here 5");
             //        GetNewTarget(emptyTarget: true);
             //    }
             //}
@@ -367,7 +367,7 @@ public class ShooterAI : AiAbstractClass
     {
         //if (aiRangeCollider.range == PlayerRange.Long && triggerObj.GetComponent<Player>())
         //{
-        //    Debug.Log("OnRangeTriggerExit_Delegate Player in Range: " + seek);
+        //    Log.Print(() =>"OnRangeTriggerExit_Delegate Player in Range: " + seek);
 
         //    shooterAiAction = ShooterAIActions.Roam;
         //    seek = true;
@@ -395,7 +395,7 @@ public class ShooterAI : AiAbstractClass
         //    seek = true;
         //}
 
-        Debug.Log("OnRangeTriggerExit_Delegate Player in Range: " + seek);
+        Log.Print(() =>"OnRangeTriggerExit_Delegate Player in Range: " + seek);
         //if (!target.GetComponent<Player>())
         //    GetNewTarget(emptyTarget: true);
         //else

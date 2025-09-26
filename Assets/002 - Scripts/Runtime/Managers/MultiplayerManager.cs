@@ -23,8 +23,8 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
             if (GameManager.instance.gameType == GameManager.GameType.GunGame)
             {
                 {
-                    Debug.Log("scoreToWin");
-                    Debug.Log(GameManager.GetRootPlayer().playerInventory.playerGunGameManager.gunIndex.Count);
+                    Log.Print(() =>"scoreToWin");
+                    Log.Print(() =>GameManager.GetRootPlayer().playerInventory.playerGunGameManager.gunIndex.Count);
                 }
                 return GameManager.GetRootPlayer().playerInventory.playerGunGameManager.gunIndex.Count;
             }
@@ -160,7 +160,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
     void OnSceneLoaded()
     {
         Scene currentScene = SceneManager.GetActiveScene();
-        Debug.Log("Multiplayer Manager OnSceneLoaded");
+        Log.Print(() =>"Multiplayer Manager OnSceneLoaded");
 
         redTeamScore = 0;
         blueTeamScore = 0;
@@ -244,7 +244,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
                         winningPlayerMS.player.playerInventory.playerGunGameManager.index++;
                     }
 
-                    Debug.Log(struc.cleanDamageSource);
+                    Log.Print(() =>struc.cleanDamageSource);
                     if (struc.cleanDamageSource == WeaponProperties.KillFeedOutput.Plasma_Pistol)
                     {
                         winningPlayerMS.score++;
@@ -636,7 +636,7 @@ public class MultiplayerManager : MonoBehaviourPunCallbacks
         LootableWeapon lw = lootableWeaponsDict[v];
         int t = GameManager.GetNextTiming((int)lw.tts);
 
-        Debug.Log(t);
+        Log.Print(() =>t);
 
         StartCoroutine(LootableWeaponSpawn_Coroutine(lw, t));
     }

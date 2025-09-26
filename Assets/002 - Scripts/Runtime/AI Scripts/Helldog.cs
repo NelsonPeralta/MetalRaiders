@@ -68,7 +68,7 @@ public class Helldog : Actor
         }
         else
         {
-            //Debug.Log("UndeadIdle RPC");
+            //Log.Print(() =>"UndeadIdle RPC");
 
             nma.enabled = false;
             _animator.SetBool("Run", false);

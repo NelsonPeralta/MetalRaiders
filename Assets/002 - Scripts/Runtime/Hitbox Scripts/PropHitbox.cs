@@ -7,7 +7,7 @@ public class PropHitbox : Hitbox, IDamageable
 {
     public void Damage(int d)
     {
-        Debug.Log("PropHitbox Damage");
+        Log.Print(() =>"PropHitbox Damage");
         //hitPoints.hitPoints -= d;
     }
 

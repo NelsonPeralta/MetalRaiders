@@ -44,7 +44,7 @@ public class MapCamera : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
-        Debug.Log("MapCamera");
+        Log.Print(() =>"MapCamera");
         AudioListener.volume = 0f;
 
 
@@ -109,7 +109,7 @@ public class MapCamera : MonoBehaviourPunCallbacks
             {
                 try
                 {
-                    Debug.Log("MapCamera TimeOut");
+                    Log.Print(() =>"MapCamera TimeOut");
 
                     //GameManager.SendErrorEmailReport(_text.text);
                     GameManager.instance.previousScenePayloads.Add(GameManager.PreviousScenePayload.LoadTimeOutOpenErrorMenu);
@@ -166,7 +166,7 @@ public class MapCamera : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom() // Is also called when quitting a game while connected to the internet. Does not trigger when offline
     {
-        //Debug.Log("MAP CAMERA: OnLeftRoom");
+        //Log.Print(() =>"MAP CAMERA: OnLeftRoom");
         //PhotonNetwork.LoadLevel(0); // This is handled in the GameManager Script. If you enable this, you will be calling it TWICE!
     }
 

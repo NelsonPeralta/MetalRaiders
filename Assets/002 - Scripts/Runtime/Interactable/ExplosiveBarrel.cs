@@ -97,7 +97,7 @@ public class ExplosiveBarrel : MonoBehaviour, IDamageable
     #region
     void OnExplode_Delegate(ExplosiveBarrel explosiveBarrel)
     {
-        Debug.Log("EXPLOSIVE BARREL OnExplode_Delegate");
+        Log.Print(() =>"EXPLOSIVE BARREL OnExplode_Delegate");
 
         transform.parent.GetComponent<ExplosiveBarrelSpawnPoint>().TriggerExplosionCoroutine();
 

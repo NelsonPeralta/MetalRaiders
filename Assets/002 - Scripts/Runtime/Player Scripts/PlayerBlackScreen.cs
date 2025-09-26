@@ -28,7 +28,7 @@ public class PlayerBlackScreen : MonoBehaviour
     IEnumerator FadeOut(Image image)
     {
         image.gameObject.SetActive(true);
-        Debug.Log("Fading Blackscreen");
+        Log.Print(() =>"Fading Blackscreen");
         float elapsedTime = 0.0f;
         Color c = image.color;
         while (elapsedTime < fadeTime)

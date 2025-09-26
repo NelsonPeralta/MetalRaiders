@@ -34,7 +34,7 @@ public class DualWieldingReload : MonoBehaviour
 
     //                    if (reloadRightCountdownMags <= 1f)
     //                    {
-    //                        Debug.Log("Reloaded Right");
+    //                        Log.Print(() =>"Reloaded Right");
     //                        pController.TransferAmmoDW(true, false);
     //                        reloadingRightMagInProgress = false;
     //                        reloadRightCountdownMags = 0;
@@ -58,7 +58,7 @@ public class DualWieldingReload : MonoBehaviour
 
     //                        if (reloadLeftCountdownMags <= 1f)
     //                        {
-    //                            Debug.Log("Reloaded Left");
+    //                            Log.Print(() =>"Reloaded Left");
     //                            pController.TransferAmmoDW(false, true);
     //                            reloadingLeftMagInProgress = false;
     //                            reloadLeftCountdownMags = 0;
@@ -85,7 +85,7 @@ public class DualWieldingReload : MonoBehaviour
     //            if (pController.pInventory.rightWeaponCurrentAmmo < pController.pInventory.rightWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon)
     //            {
     //                ReloadAnimation(rightIsOutOfAmmo, leftIsOutOfAmmo);
-    //                Debug.Log("Tracker 1");
+    //                Log.Print(() =>"Tracker 1");
     //            }
     //        }
     //    }
@@ -97,7 +97,7 @@ public class DualWieldingReload : MonoBehaviour
     //            if (pController.pInventory.leftWeaponCurrentAmmo < pController.pInventory.leftWeapon.GetComponent<WeaponProperties>().maxAmmoInWeapon)
     //            {
     //                ReloadAnimation(rightIsOutOfAmmo, leftIsOutOfAmmo);
-    //                Debug.Log("Tracker 2");
+    //                Log.Print(() =>"Tracker 2");
     //            }
     //        }
     //    }

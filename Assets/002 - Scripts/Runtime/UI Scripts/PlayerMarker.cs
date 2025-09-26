@@ -32,7 +32,7 @@ public class PlayerMarker : MonoBehaviour
     {
         if (GameManager.instance.teamMode.ToString().Contains("Classic"))
         {
-            Debug.Log("Player Marker");
+            Log.Print(() =>"Player Marker");
             if (!player.isMine)
             {
                 if (color == Color.Green)
@@ -54,7 +54,7 @@ public class PlayerMarker : MonoBehaviour
     }
     public void OnPLayerDeath_Delegate(Player player)
     {
-        Debug.Log("OnPLayerDeath_Delegate");
+        Log.Print(() =>"OnPLayerDeath_Delegate");
         GetComponent<MeshRenderer>().enabled = false;
     }
 

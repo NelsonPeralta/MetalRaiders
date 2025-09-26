@@ -24,7 +24,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
         else
         {
-            Debug.Log($"NetworkGameManager Awake");
+            Log.Print(() =>$"NetworkGameManager Awake");
             _pv = GetComponent<PhotonView>();
             _instance = this;
             DontDestroyOnLoad(gameObject);
@@ -32,7 +32,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     }
     private void Start()
     {
-        Debug.Log($"NetworkGameManager Start");
+        Log.Print(() =>$"NetworkGameManager Start");
         //if(instance != null)
         //    Destroy(gameObject);
 
@@ -48,12 +48,12 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     private void OnDestroy()
     {
-        Debug.Log($"NetworkGameManager OnDestroy");
+        Log.Print(() =>$"NetworkGameManager OnDestroy");
     }
 
     public override void OnLeftRoom()
     {
-        Debug.Log($"NetworkGameManager OnLeftRoom");
+        Log.Print(() =>$"NetworkGameManager OnLeftRoom");
         //base.OnLeftRoom();
 
         //Destroy(gameObject);
@@ -102,15 +102,15 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             Log.Print(() => "SendGameParams CLIENT");
             if (!PhotonNetwork.IsMasterClient)
             {
-                try { GameManager.instance.gameMode = (GameManager.GameMode)System.Enum.Parse(typeof(GameManager.GameMode), p["gamemode"]); } catch (System.Exception e) { Debug.Log(e); }
-                try { GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), p["gametype"]); } catch (System.Exception e) { Debug.Log(e); }
-                try { Launcher.instance.levelToLoadIndex = (System.Int16.Parse(p["leveltoloadindex"])); } catch (System.Exception e) { Debug.Log(e); }
-                try { GameManager.instance.teamMode = (GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), p["teammode"]); } catch (System.Exception e) { Debug.Log(e); }
-                try { GameManager.instance.sprintMode = (GameManager.SprintMode)System.Enum.Parse(typeof(GameManager.SprintMode), p["sprintmode"]); } catch (System.Exception e) { Debug.Log(e); }
-                try { GameManager.instance.hitMarkersMode = (GameManager.HitMarkersMode)System.Enum.Parse(typeof(GameManager.HitMarkersMode), p["hmmode"]); } catch (System.Exception e) { Debug.Log(e); }
-                try { GameManager.instance.thirdPersonMode = (GameManager.ThirdPersonMode)System.Enum.Parse(typeof(GameManager.ThirdPersonMode), p["tpmode"]); } catch (System.Exception e) { Debug.Log(e); }
-                try { GameManager.instance.oneObjMode = (GameManager.OneObjMode)System.Enum.Parse(typeof(GameManager.OneObjMode), p["oobjmode"]); } catch (System.Exception e) { Debug.Log(e); }
-                try { GameManager.instance.flyingCameraMode = (GameManager.FlyingCamera)System.Enum.Parse(typeof(GameManager.FlyingCamera), p["flymode"]); } catch (System.Exception e) { Debug.Log(e); }
+                try { GameManager.instance.gameMode = (GameManager.GameMode)System.Enum.Parse(typeof(GameManager.GameMode), p["gamemode"]); } catch (System.Exception e) { Log.Print(() =>e); }
+                try { GameManager.instance.gameType = (GameManager.GameType)System.Enum.Parse(typeof(GameManager.GameType), p["gametype"]); } catch (System.Exception e) { Log.Print(() =>e); }
+                try { Launcher.instance.levelToLoadIndex = (System.Int16.Parse(p["leveltoloadindex"])); } catch (System.Exception e) { Log.Print(() =>e); }
+                try { GameManager.instance.teamMode = (GameManager.TeamMode)System.Enum.Parse(typeof(GameManager.TeamMode), p["teammode"]); } catch (System.Exception e) { Log.Print(() =>e); }
+                try { GameManager.instance.sprintMode = (GameManager.SprintMode)System.Enum.Parse(typeof(GameManager.SprintMode), p["sprintmode"]); } catch (System.Exception e) { Log.Print(() =>e); }
+                try { GameManager.instance.hitMarkersMode = (GameManager.HitMarkersMode)System.Enum.Parse(typeof(GameManager.HitMarkersMode), p["hmmode"]); } catch (System.Exception e) { Log.Print(() =>e); }
+                try { GameManager.instance.thirdPersonMode = (GameManager.ThirdPersonMode)System.Enum.Parse(typeof(GameManager.ThirdPersonMode), p["tpmode"]); } catch (System.Exception e) { Log.Print(() =>e); }
+                try { GameManager.instance.oneObjMode = (GameManager.OneObjMode)System.Enum.Parse(typeof(GameManager.OneObjMode), p["oobjmode"]); } catch (System.Exception e) { Log.Print(() =>e); }
+                try { GameManager.instance.flyingCameraMode = (GameManager.FlyingCamera)System.Enum.Parse(typeof(GameManager.FlyingCamera), p["flymode"]); } catch (System.Exception e) { Log.Print(() =>e); }
             }
 
             if (p.ContainsKey("reevaluateteams"))
@@ -135,7 +135,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         {
             foreach (KeyValuePair<int, int> kvp in d)
             {
-                Debug.Log($"Player {kvp.Key} wants to change team: {(GameManager.Team)kvp.Value}");
+                Log.Print(() =>$"Player {kvp.Key} wants to change team: {(GameManager.Team)kvp.Value}");
 
 
 
@@ -172,7 +172,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         if (caller)
         {
-            Debug.Log("NetworkGameManager EndGame");
+            Log.Print(() =>"NetworkGameManager EndGame");
             _pv.RPC("EndGame", RpcTarget.AllViaServer, false);
         }
         else if (!caller)
@@ -256,7 +256,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     public static void StickGrenadeOnPlayer(int nadeIndex, int playerPhotonId, Vector3 gPos)
     {
-        Debug.Log($"NETWORK GAME MANAGER StickGrenadeOnPLayer. of player {playerPhotonId}");
+        Log.Print(() =>$"NETWORK GAME MANAGER StickGrenadeOnPLayer. of player {playerPhotonId}");
         instance._pv.RPC("StickGrenadeOnPlayer_RPC", RpcTarget.All, nadeIndex, playerPhotonId, gPos);
     }
 
@@ -268,7 +268,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         yield return new WaitForEndOfFrame();
 
-        Debug.Log($"UpdateAmmo Is Not Mine");
+        Log.Print(() =>$"UpdateAmmo Is Not Mine");
 
 
         if (isThirdWeapon)
@@ -297,7 +297,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     #region
     public void EnableLootableWeapon(Vector3 position)
     {
-        Debug.Log("EnableLootableWeapon");
+        Log.Print(() =>"EnableLootableWeapon");
         _pv.RPC("EnableLootableWeapon_RPC", RpcTarget.All, position);
     }
     public void DisableLootableWeapon(Vector3 position)
@@ -342,7 +342,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         int firstWeapCurrAmmo = firstWeapon.loadedAmmo; int secondWeapCurrAmmo = secondWeapon.loadedAmmo;
         int firstWeapSpareAmmo = firstWeapon.spareAmmo; int secondWeapSpareAmmo = secondWeapon.spareAmmo;
 
-        Debug.Log(firstWeapIndex); Debug.Log(secondtWeapIndex);
+        Log.Print(() =>firstWeapIndex); Log.Print(() =>secondtWeapIndex);
 
         FindObjectOfType<NetworkGameManager>()._pv.RPC("SpawnNetworkWeaponOnPlayerDeath_RPC",
             RpcTarget.All, firstWeapIndex, secondtWeapIndex, firstWeapCurrAmmo, firstWeapSpareAmmo,
@@ -377,7 +377,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     public void DamageIceChunk(Vector3 position, int val)
     {
-        Debug.Log(val);
+        Log.Print(() =>val);
         _pv.RPC("DamageIceChunk_RPC", RpcTarget.AllViaServer, position, val);
     }
 
@@ -544,8 +544,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             _firstWeapon.name = _firstWeapon.name.Replace("(Clone)", "");
             _firstWeapon.transform.position = spp;
 
-            try { _firstWeapon.localAmmo = firstWeapCurrAmmo; } catch (System.Exception e) { Debug.Log(e); }
-            try { _firstWeapon.spareAmmo = firstWeapSpareAmmo; } catch (System.Exception e) { Debug.Log(e); }
+            try { _firstWeapon.localAmmo = firstWeapCurrAmmo; } catch (System.Exception e) { Log.Print(() =>e); }
+            try { _firstWeapon.spareAmmo = firstWeapSpareAmmo; } catch (System.Exception e) { Log.Print(() =>e); }
 
 
             _firstWeapon.ttl = _firstWeapon.defaultTtl;
@@ -560,24 +560,24 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     void SpawnNetworkWeaponOnPlayerDeath_RPC(int firstWeapIndex, int secondtWeapIndex, int firstWeapCurrAmmo, int firstWeapSpareAmmo,
        int secondWeapCurrAmmo, int secondWeapSpareAmmo, Vector3 firstWeapSpp, Vector3 firstWeapSdir, Vector3 secondWeapSpp)
     {
-        Debug.Log($"SpawnNetworkWeaponOnPlayerDeath_RPC {firstWeapSdir} {secondtWeapIndex}");
+        Log.Print(() =>$"SpawnNetworkWeaponOnPlayerDeath_RPC {firstWeapSdir} {secondtWeapIndex}");
         GameObject[] weapInv = GameManager.GetRootPlayer().playerInventory.allWeaponsInInventory;
 
         if (firstWeapCurrAmmo + firstWeapSpareAmmo > 0)
         {
             LootableWeapon _firstWeapon = WeaponPool.instance.GetLootableWeapon(weapInv[firstWeapIndex].GetComponent<WeaponProperties>().codeName);
-            Debug.Log($"First Weapon: {_firstWeapon.name}");
-            try { _firstWeapon.name = _firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
-            //try { _firstWeapon.transform.parent = null; } catch (System.Exception e) { Debug.Log(e); }
-            try { _firstWeapon.transform.position = firstWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
-            //try { _firstWeapon.spawnPointPosition = firstWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
-            //try { _firstWeapon.GetComponent<Rigidbody>().velocity = Vector3.zero; } catch (System.Exception e) { Debug.Log(e); }
-            try { _firstWeapon.localAmmo = firstWeapCurrAmmo; } catch (System.Exception e) { Debug.Log(e); }
-            try { _firstWeapon.spareAmmo = firstWeapSpareAmmo; } catch (System.Exception e) { Debug.Log(e); }
+            Log.Print(() =>$"First Weapon: {_firstWeapon.name}");
+            try { _firstWeapon.name = _firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Log.Print(() =>e); }
+            //try { _firstWeapon.transform.parent = null; } catch (System.Exception e) { Log.Print(() =>e); }
+            try { _firstWeapon.transform.position = firstWeapSpp; } catch (System.Exception e) { Log.Print(() =>e); }
+            //try { _firstWeapon.spawnPointPosition = firstWeapSpp; } catch (System.Exception e) { Log.Print(() =>e); }
+            //try { _firstWeapon.GetComponent<Rigidbody>().velocity = Vector3.zero; } catch (System.Exception e) { Log.Print(() =>e); }
+            try { _firstWeapon.localAmmo = firstWeapCurrAmmo; } catch (System.Exception e) { Log.Print(() =>e); }
+            try { _firstWeapon.spareAmmo = firstWeapSpareAmmo; } catch (System.Exception e) { Log.Print(() =>e); }
 
 
-            try { _firstWeapon.ttl = _firstWeapon.defaultTtl; } catch (System.Exception e) { Debug.Log(e); }
-            try { _firstWeapon.gameObject.SetActive(true); } catch (System.Exception e) { Debug.Log(e); }
+            try { _firstWeapon.ttl = _firstWeapon.defaultTtl; } catch (System.Exception e) { Log.Print(() =>e); }
+            try { _firstWeapon.gameObject.SetActive(true); } catch (System.Exception e) { Log.Print(() =>e); }
             try { _firstWeapon.GetComponent<Rigidbody>().AddForce(firstWeapSdir * 200); } catch (System.Exception e) { Debug.LogWarning(e); }
 
 
@@ -586,28 +586,28 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             //LootableWeapon firstWeapon = Instantiate(weapInv[firstWeapIndex].GetComponent<WeaponProperties>().weaponRessource,
             // firstWeapSpp, Quaternion.identity).GetComponent<LootableWeapon>();
 
-            //try { firstWeapon.name = firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
-            //try { firstWeapon.transform.position = firstWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
-            //try { firstWeapon.spawnPointPosition = firstWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
-            //try { firstWeapon.GetComponent<Rigidbody>().AddForce(firstWeapSdir * 200); } catch (System.Exception e) { Debug.Log(e); }
-            //try { firstWeapon.localAmmo = firstWeapCurrAmmo; } catch (System.Exception e) { Debug.Log(e); }
-            //try { firstWeapon.spareAmmo = firstWeapSpareAmmo; } catch (System.Exception e) { Debug.Log(e); }
+            //try { firstWeapon.name = firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Log.Print(() =>e); }
+            //try { firstWeapon.transform.position = firstWeapSpp; } catch (System.Exception e) { Log.Print(() =>e); }
+            //try { firstWeapon.spawnPointPosition = firstWeapSpp; } catch (System.Exception e) { Log.Print(() =>e); }
+            //try { firstWeapon.GetComponent<Rigidbody>().AddForce(firstWeapSdir * 200); } catch (System.Exception e) { Log.Print(() =>e); }
+            //try { firstWeapon.localAmmo = firstWeapCurrAmmo; } catch (System.Exception e) { Log.Print(() =>e); }
+            //try { firstWeapon.spareAmmo = firstWeapSpareAmmo; } catch (System.Exception e) { Log.Print(() =>e); }
         }
 
 
         if (secondWeapCurrAmmo + secondWeapSpareAmmo > 0)
         {
             LootableWeapon _firstWeapon = WeaponPool.instance.GetLootableWeapon(weapInv[secondtWeapIndex].GetComponent<WeaponProperties>().codeName);
-            Debug.Log($"Second Weapon: {_firstWeapon.name}");
-            try { _firstWeapon.name = _firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
-            try { _firstWeapon.transform.position = secondWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
-            //try { _firstWeapon.spawnPointPosition = secondWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
-            //try { _firstWeapon.GetComponent<Rigidbody>().velocity = Vector3.zero; } catch (System.Exception e) { Debug.Log(e); }
-            try { _firstWeapon.localAmmo = secondWeapCurrAmmo; } catch (System.Exception e) { Debug.Log(e); }
-            try { _firstWeapon.spareAmmo = secondWeapSpareAmmo; } catch (System.Exception e) { Debug.Log(e); }
+            Log.Print(() =>$"Second Weapon: {_firstWeapon.name}");
+            try { _firstWeapon.name = _firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Log.Print(() =>e); }
+            try { _firstWeapon.transform.position = secondWeapSpp; } catch (System.Exception e) { Log.Print(() =>e); }
+            //try { _firstWeapon.spawnPointPosition = secondWeapSpp; } catch (System.Exception e) { Log.Print(() =>e); }
+            //try { _firstWeapon.GetComponent<Rigidbody>().velocity = Vector3.zero; } catch (System.Exception e) { Log.Print(() =>e); }
+            try { _firstWeapon.localAmmo = secondWeapCurrAmmo; } catch (System.Exception e) { Log.Print(() =>e); }
+            try { _firstWeapon.spareAmmo = secondWeapSpareAmmo; } catch (System.Exception e) { Log.Print(() =>e); }
 
-            try { _firstWeapon.ttl = _firstWeapon.defaultTtl; } catch (System.Exception e) { Debug.Log(e); }
-            try { _firstWeapon.gameObject.SetActive(true); } catch (System.Exception e) { Debug.Log(e); }
+            try { _firstWeapon.ttl = _firstWeapon.defaultTtl; } catch (System.Exception e) { Log.Print(() =>e); }
+            try { _firstWeapon.gameObject.SetActive(true); } catch (System.Exception e) { Log.Print(() =>e); }
             try { _firstWeapon.GetComponent<Rigidbody>().AddForce(firstWeapSdir * 200); } catch (System.Exception e) { Debug.LogWarning(e); }
 
 
@@ -619,12 +619,12 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             //LootableWeapon secondWeapon = Instantiate(weapInv[secondtWeapIndex].GetComponent<WeaponProperties>().weaponRessource,
             // firstWeapSpp, Quaternion.identity).GetComponent<LootableWeapon>();
 
-            //try { secondWeapon.name = secondWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
-            //try { secondWeapon.transform.position = secondWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
-            //try { secondWeapon.spawnPointPosition = secondWeapSpp; } catch (System.Exception e) { Debug.Log(e); }
-            //try { secondWeapon.GetComponent<Rigidbody>().AddForce(firstWeapSdir * 200); } catch (System.Exception e) { Debug.Log(e); }
-            //try { secondWeapon.localAmmo = secondWeapCurrAmmo; } catch (System.Exception e) { Debug.Log(e); }
-            //try { secondWeapon.spareAmmo = secondWeapSpareAmmo; } catch (System.Exception e) { Debug.Log(e); }
+            //try { secondWeapon.name = secondWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Log.Print(() =>e); }
+            //try { secondWeapon.transform.position = secondWeapSpp; } catch (System.Exception e) { Log.Print(() =>e); }
+            //try { secondWeapon.spawnPointPosition = secondWeapSpp; } catch (System.Exception e) { Log.Print(() =>e); }
+            //try { secondWeapon.GetComponent<Rigidbody>().AddForce(firstWeapSdir * 200); } catch (System.Exception e) { Log.Print(() =>e); }
+            //try { secondWeapon.localAmmo = secondWeapCurrAmmo; } catch (System.Exception e) { Log.Print(() =>e); }
+            //try { secondWeapon.spareAmmo = secondWeapSpareAmmo; } catch (System.Exception e) { Log.Print(() =>e); }
         }
     }
     #endregion
@@ -677,7 +677,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         //    ic.transform.rotation = ic.spawnPointRotation;
         //    ic.gameObject.SetActive(true);
         //}
-        Debug.Log("All Barrels Reset");
+        Log.Print(() =>"All Barrels Reset");
     }
 
 
@@ -757,7 +757,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void UpdatePlayerTeam_RPC(string t, string pn)
     {
-        Debug.Log("UpdatePlayerTeam_RPC");
+        Log.Print(() =>"UpdatePlayerTeam_RPC");
         //foreach (PlayerMultiplayerMatchStats pms in FindObjectsOfType<PlayerMultiplayerMatchStats>().ToList())
         //    if (pms.username == pn)
         //        pms.networkTeam = (GameManager.Team)System.Enum.Parse(typeof(GameManager.Team), t);
@@ -785,8 +785,8 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void StartOverShieldRespawn_RPC(int t)
     {
-        Debug.Log("sdfaeqwer");
-        Debug.Log($"Spawning overshield in {t} seconds");
+        Log.Print(() =>"sdfaeqwer");
+        Log.Print(() =>$"Spawning overshield in {t} seconds");
 
         StartCoroutine(StartOverShieldRespawn_Coroutine(t));
     }
@@ -794,7 +794,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void StartLootableWeaponRespawn_RPC(Vector3 v)
     {
-        Debug.Log("sdfaeqwer");
+        Log.Print(() =>"sdfaeqwer");
         MultiplayerManager.instance.StartLootableWeaponRespawn(v);
     }
 
@@ -804,7 +804,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void AddPlayerPoint_RPC(int pid, int whichFlagNeedsToBeReset)
     {
-        Debug.Log("AddPlayerPoint_RPC");
+        Log.Print(() =>"AddPlayerPoint_RPC");
 
 
         if (whichFlagNeedsToBeReset > -1 && GameManager.instance.gameType == GameManager.GameType.CTF)
@@ -848,7 +848,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     void NextHillLocation_RPC()
     {
-        Debug.Log("NextHillLocation_RPC");
+        Log.Print(() =>"NextHillLocation_RPC");
         FindObjectOfType<HillManager>().NextLocation();
     }
 
@@ -880,7 +880,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             {
                 int timeToNextSpawn = overshield.tts - (GameTime.instance.timeElapsed % overshield.tts);
                 Log.Print(() => $"LootOvershield {overshield.tts} {GameTime.instance.timeElapsed} {GameTime.instance.timeElapsed % overshield.tts} {timeToNextSpawn}");
-                Debug.Log($"Spawning overshield in {timeToNextSpawn} seconds");
+                Log.Print(() =>$"Spawning overshield in {timeToNextSpawn} seconds");
 
                 StartCoroutine(StartOverShieldRespawn_Coroutine(timeToNextSpawn));
             }
@@ -895,7 +895,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             //    timeLeft = t - _time;
             //else
             //    timeLeft = t - (_time % t);
-            //Debug.Log(timeLeft);
+            //Log.Print(() =>timeLeft);
 
             //StartCoroutine(StartOverShieldRespawn_Coroutine(timeLeft));
             //overshield.gameObject.SetActive(false);
@@ -908,12 +908,12 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     {
         if (PhotonNetwork.IsMasterClient && caller)
         {
-            //Debug.Log($"UpdateRoomCountdowns: {vetoC} and {roomGameStartC}");
+            //Log.Print(() =>$"UpdateRoomCountdowns: {vetoC} and {roomGameStartC}");
             _pv.RPC("UpdateRoomCountdowns", RpcTarget.All, vetoC, roomGameStartC, false);
         }
         else if (!PhotonNetwork.IsMasterClient && !caller)
         {
-            //Debug.Log($"UpdateRoomCountdowns: {vetoC} and {roomGameStartC}");
+            //Log.Print(() =>$"UpdateRoomCountdowns: {vetoC} and {roomGameStartC}");
             CurrentRoomManager.instance.UpdateCountdowns(vetoC, roomGameStartC);
         }
     }
@@ -928,7 +928,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
         }
         else if (PhotonNetwork.IsMasterClient)
         {
-            Debug.Log($"Received: {nbVetos} vetoes");
+            Log.Print(() =>$"Received: {nbVetos} vetoes");
             CurrentRoomManager.instance.vetos += nbVetos;
 
             SendVetoToClients();
@@ -966,7 +966,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
     IEnumerator StartOverShieldRespawn_Coroutine(int t)
     {
-        Debug.Log($"Spawning overshield in {t} seconds");
+        Log.Print(() =>$"Spawning overshield in {t} seconds");
         yield return new WaitForSeconds(t);
         if (SceneManager.GetActiveScene().buildIndex > 0)
             overshield.gameObject.SetActive(true);
@@ -976,7 +976,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
     [PunRPC]
     public void StickGrenadeOnPlayer_RPC(int nadeIndex, int playerPhotonId, Vector3 gPos)
     {
-        Debug.Log($"NETWORK GAME MANAGER StickGrenadeOnPLayer. of player {playerPhotonId}");
+        Log.Print(() =>$"NETWORK GAME MANAGER StickGrenadeOnPLayer. of player {playerPhotonId}");
 
         GrenadePool.instance.stickyGrenadePool[nadeIndex].GetComponent<ExplosiveProjectile>().TriggerStuckBehaviour(playerPhotonId, gPos);
     }

@@ -64,7 +64,7 @@ public class AIStickyGrenade : MonoBehaviour
                         GetComponent<Rigidbody>().isKinematic = true;
 
                         stuckPlayerID = collision.gameObject.GetComponent<PlayerHitbox>().player.GetComponent<Player>().controllerId;
-                        Debug.Log("Stuck Player");
+                        Log.Print(() =>"Stuck Player");
 
                         playerStuck = true; // Without this line player stuck is always 0 so player 0 always die even when not stuck
                         hasHitObject = true;
@@ -75,7 +75,7 @@ public class AIStickyGrenade : MonoBehaviour
                 }
                 else if (collision.gameObject.GetComponent<AIHitbox>())
                 {
-                    Debug.Log("Here!!!!");
+                    Log.Print(() =>"Here!!!!");
                     gameObject.transform.parent = collision.gameObject.transform;
 
                     GetComponent<Rigidbody>().useGravity = false;
@@ -92,7 +92,7 @@ public class AIStickyGrenade : MonoBehaviour
                 if (collision.gameObject.transform.root.GetComponent<PlayerController>() == null
                     && collision.gameObject.layer != 22)
                 {
-                    Debug.Log("Collision = " + collision.gameObject.name + " GO Layer: " + collision.gameObject.layer
+                    Log.Print(() =>"Collision = " + collision.gameObject.name + " GO Layer: " + collision.gameObject.layer
                         + " Root GO : " + collision.gameObject.transform.root.gameObject.name);
                     gameObject.transform.parent = collision.gameObject.transform;
 
@@ -232,9 +232,9 @@ public class AIStickyGrenade : MonoBehaviour
                     if (hit.GetComponent<AIHitbox>().aiHealth > 0)
                     {
                         float calculatedDamage = damage * (1 - (aiDistance / radius));
-                        Debug.Log(hit.GetComponent<AIHitbox>().aiGO.name);
-                        Debug.Log(calculatedDamage);
-                        Debug.Log(aiDistance);
+                        Log.Print(() =>hit.GetComponent<AIHitbox>().aiGO.name);
+                        Log.Print(() =>calculatedDamage);
+                        Log.Print(() =>aiDistance);
                         hit.GetComponent<AIHitbox>().DamageAI(false, calculatedDamage, playerWhoThrewGrenade);
                     }
                 }

@@ -65,7 +65,7 @@ public class PlayerProgressionManager : MonoBehaviour
         Rank[] r = new Rank[2];
         for (int i = 0; i < instance._ranks.Count; i++)
         {
-            //Debug.Log($"Rank search: {xp} {h} \n {rank.lvlRequired} {rank.honorRequired}");
+            //Log.Print(() =>$"Rank search: {xp} {h} \n {rank.lvlRequired} {rank.honorRequired}");
             if (h >= instance._ranks[i].honorRequired)
             {
                 r[0] = instance._ranks[i];

@@ -257,11 +257,11 @@ public class GrenadePool : MonoBehaviour
     {
         foreach (Explosion obj in instance._explosions)
         {
-            Debug.Log($"SpawnExplosion. KFO: {obj.gameObject.activeInHierarchy} {obj.gameObject.activeSelf}");
+            Log.Print(() =>$"SpawnExplosion. KFO: {obj.gameObject.activeInHierarchy} {obj.gameObject.activeSelf}");
 
             if (!obj.gameObject.activeInHierarchy)
             {
-                Debug.Log($"SpawnExplosion. KFO: {(WeaponProperties.KillFeedOutput)kfo} damage: {damage} stuck: {stuck}");
+                Log.Print(() =>$"SpawnExplosion. KFO: {(WeaponProperties.KillFeedOutput)kfo} damage: {damage} stuck: {stuck}");
                 obj.GetComponent<AudioSource>().clip = ac;
                 obj.player = source;
                 obj.killFeedOutput = kfo;

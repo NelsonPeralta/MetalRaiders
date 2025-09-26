@@ -71,7 +71,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
         {
             if (ColorUtility.TryParseHtmlString(hex, out _orangeColor))
                 _orangeColorParsed = true;
-            Debug.Log("_orangeColorParsed parsed");
+            Log.Print(() =>"_orangeColorParsed parsed");
         }
     }
 

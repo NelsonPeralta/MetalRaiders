@@ -37,25 +37,25 @@ public class ThirdPersonLookAt : MonoBehaviour
 
     //public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     //{
-    //    //Debug.Log("In OPSV");
+    //    //Log.Print(() =>"In OPSV");
     //    anim = GetComponent<Animator>();
     //    chest = anim.GetBoneTransform(HumanBodyBones.Chest);
     //    if (stream.IsWriting) // If I am the owner
     //    {
-    //        //Debug.Log("Writing: " + lookAtGO.position);
+    //        //Log.Print(() =>"Writing: " + lookAtGO.position);
     //        stream.SendNext(lookAtGO.position);
     //    }
     //    else if (stream.IsReading) // If I am a client
     //    {
-    //        //Debug.Log("In Reading: " + stream.ReceiveNext());
+    //        //Log.Print(() =>"In Reading: " + stream.ReceiveNext());
     //        //if (chest)
     //        //{
-    //        //    Debug.Log("There is a chest");
+    //        //    Log.Print(() =>"There is a chest");
     //        //    chest.LookAt((Vector3)stream.ReceiveNext());
     //        //}
     //        //else
     //        //{
-    //        //    Debug.Log("There is no chest");
+    //        //    Log.Print(() =>"There is no chest");
     //        //}
     //    }
     //}

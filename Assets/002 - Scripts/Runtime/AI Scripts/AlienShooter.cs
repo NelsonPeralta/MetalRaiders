@@ -11,9 +11,9 @@ public class AlienShooter : Actor
 
     protected override void ChildOnEnable()
     {
-        Debug.Log("Alien Shooter ChildOnEnable " + hitPoints);
+        Log.Print(() =>"Alien Shooter ChildOnEnable " + hitPoints);
         //_hitPoints += (SwarmManager.instance.currentWave * 16 * FindObjectsOfType<Player>().Length);
-        Debug.Log("Alien Shooter ChildOnEnable " + hitPoints + (SwarmManager.instance.currentWave * 16 * FindObjectsOfType<Player>().Length));
+        Log.Print(() =>"Alien Shooter ChildOnEnable " + hitPoints + (SwarmManager.instance.currentWave * 16 * FindObjectsOfType<Player>().Length));
     }
 
 
@@ -74,7 +74,7 @@ public class AlienShooter : Actor
         }
         else
         {
-            //Debug.Log("UndeadIdle RPC");
+            //Log.Print(() =>"UndeadIdle RPC");
 
             nma.enabled = false;
             _animator.SetBool("Run", false);
@@ -90,7 +90,7 @@ public class AlienShooter : Actor
         }
         else
         {
-            //Debug.Log("UndeadRun RPC");
+            //Log.Print(() =>"UndeadRun RPC");
 
             //_animator.Play("Run");
             _animator.SetBool("Run", true);
@@ -112,7 +112,7 @@ public class AlienShooter : Actor
         }
         else
         {
-            //Debug.Log("Punch Player RPC");
+            //Log.Print(() =>"Punch Player RPC");
 
             GetComponent<AudioSource>().clip = _attackClip;
             GetComponent<AudioSource>().Play();
@@ -139,7 +139,7 @@ public class AlienShooter : Actor
         }
         else
         {
-            //Debug.Log("Punch Player RPC");
+            //Log.Print(() =>"Punch Player RPC");
             _isCurrentlyShootingCooldown = 1;
 
             _animator.SetBool("Run", false);
@@ -168,7 +168,7 @@ public class AlienShooter : Actor
         }
         else
         {
-            //Debug.Log("Punch Player RPC");
+            //Log.Print(() =>"Punch Player RPC");
             SwarmManager.instance.globalActorGrenadeCooldown = 4;
             _isCurrentlyThrowingGrenadeCooldown = 1;
             _animator.SetBool("Run", false);

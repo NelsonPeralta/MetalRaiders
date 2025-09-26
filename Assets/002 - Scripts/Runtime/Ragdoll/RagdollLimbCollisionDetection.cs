@@ -41,7 +41,7 @@ public class RagdollLimbCollisionDetection : MonoBehaviour
                 {
                     if (hits[i].collider.gameObject.layer == 4)
                     {
-                        //Debug.Log($"RagdollLimbCollisionDetection splash check: {GetComponent<Rigidbody>().linearVelocity.magnitude}");
+                        //Log.Print(() =>$"RagdollLimbCollisionDetection splash check: {GetComponent<Rigidbody>().linearVelocity.magnitude}");
                         if (GetComponent<Rigidbody>().mass > 3)
                             if (GetComponent<Rigidbody>().linearVelocity.magnitude > 10)
                             {

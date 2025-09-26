@@ -74,7 +74,7 @@ public class ArmorPieceListing : MonoBehaviour
                 if (playerData.playerExtendedPublicData.credits >= playerArmorPiece.cost &&
                     (playerData.playerExtendedPublicData.level >= playerArmorPiece.minLvl
                     && playerData.playerExtendedPublicData.honor >= playerArmorPiece.minHonor))
-                    Debug.Log("Her4");
+                    Log.Print(() =>"Her4");
             }
 
             if (playerArmorPiece.cost > 0)
@@ -83,11 +83,11 @@ public class ArmorPieceListing : MonoBehaviour
                 {
                     buyButton.gameObject.SetActive(true);
                     buyButton.GetComponentInChildren<Text>().text = $"{playerArmorPiece.cost}cb";
-                    Debug.Log("Her5");
+                    Log.Print(() =>"Her5");
                 }
                 else
                 {
-                    Debug.Log("Her6");
+                    Log.Print(() =>"Her6");
                     buyButton.gameObject.SetActive(false);
                     equipButton.gameObject.SetActive(false);
 
@@ -129,7 +129,7 @@ public class ArmorPieceListing : MonoBehaviour
     void EquipArmorPiece()
     {
         Log.Print(() => "EquipArmorPiece");
-        //Debug.Log($"Previous: {.armorDataString}");
+        //Log.Print(() =>$"Previous: {.armorDataString}");
         GameManager.PlayClickSound();
         string newData = MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.armorDataString;
 
@@ -140,15 +140,15 @@ public class ArmorPieceListing : MonoBehaviour
                 {
                     if (MenuManager.Instance.GetMenu("armory").GetComponent<ArmoryManager>().playerDataCell.playerExtendedPublicData.unlocked_armor_data_string.Contains(armorPieceListing.playerArmorPiece.entity))
                     {
-                        //Debug.Log($"Replacing string");
-                        //Debug.Log(armorPieceListing.playerArmorPiece.entity);
+                        //Log.Print(() =>$"Replacing string");
+                        //Log.Print(() =>armorPieceListing.playerArmorPiece.entity);
 
                         armorPieceListing.model.gameObject.SetActive(false);
                         armorPieceListing.equipButton.gameObject.SetActive(true);
                         armorPieceListing.unequipButton.gameObject.SetActive(false);
 
                         newData = newData.Replace($"{armorPieceListing.playerArmorPiece.entity}", "");
-                        Debug.Log(newData);
+                        Log.Print(() =>newData);
                     }
                 }
 

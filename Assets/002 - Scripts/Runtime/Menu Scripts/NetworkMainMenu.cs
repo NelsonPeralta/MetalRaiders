@@ -20,7 +20,7 @@ public class NetworkMainMenu : MonoBehaviourPunCallbacks
 
     //public override void OnLeftRoom()
     //{
-    //    Debug.Log($"NetworkMainMenu OnLeftRoom");
+    //    Log.Print(() =>$"NetworkMainMenu OnLeftRoom");
     //    //base.OnLeftRoom();
 
     //    //Destroy(gameObject);
@@ -51,7 +51,7 @@ public class NetworkMainMenu : MonoBehaviourPunCallbacks
 
     //    for (int i = 0; i < players.Count(); i++)
     //    {
-    //        Debug.Log(players[i].NickName);
+    //        Log.Print(() =>players[i].NickName);
 
 
 
@@ -83,15 +83,15 @@ public class NetworkMainMenu : MonoBehaviourPunCallbacks
     //            //ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable();
     //            props.Add("leveltoloadindex", index);
     //            PhotonNetwork.CurrentRoom.SetCustomProperties(props);
-    //            Debug.Log($"UpdateSelectedMap: {PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"]}");
+    //            Log.Print(() =>$"UpdateSelectedMap: {PhotonNetwork.CurrentRoom.CustomProperties["leveltoloadindex"]}");
     //        }
     //    }
     //    catch (System.Exception e)
     //    {
-    //        Debug.Log(e);
+    //        Log.Print(() =>e);
     //    }
 
-    //    Debug.Log($"UpdateSelectedMap: {PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString()}");
+    //    Log.Print(() =>$"UpdateSelectedMap: {PhotonNetwork.CurrentRoom.CustomProperties["gamemode"].ToString()}");
 
     //    if (mode == "multiplayer")
     //        Launcher.instance.mapSelectedText.text = $"Map: {Launcher.NameFromIndex(index).Replace("PVP - ", "")}";
@@ -130,12 +130,12 @@ public class NetworkMainMenu : MonoBehaviourPunCallbacks
     //            //ExitGames.Client.Photon.Hashtable props = new ExitGames.Client.Photon.Hashtable();
     //            props.Add("gametype", (int)GameManager.instance.gameType);
     //            PhotonNetwork.CurrentRoom.SetCustomProperties(props);
-    //            Debug.Log($"UpdateSelectedMap: {PhotonNetwork.CurrentRoom.CustomProperties["gametype"]}");
+    //            Log.Print(() =>$"UpdateSelectedMap: {PhotonNetwork.CurrentRoom.CustomProperties["gametype"]}");
     //        }
     //    }
     //    catch (System.Exception e)
     //    {
-    //        Debug.Log(e);
+    //        Log.Print(() =>e);
     //    }
     //}
 }

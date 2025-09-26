@@ -260,7 +260,7 @@ public class MenuGamePadCursor : MonoBehaviour
             //_buttonsFound.Add(result.gameObject);
         }
 
-        Debug.Log(_eventSystemRaycastResults.Count);
+        Log.Print(() =>_eventSystemRaycastResults.Count);
 
         return _eventSystemRaycastResults;
     }

@@ -44,7 +44,7 @@ public class ServiceRecordMenu : MonoBehaviour
             {
                 _rankImage.enabled = true;
 
-                Debug.Log(PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank[0].codename).SingleOrDefault().name);
+                Log.Print(() =>PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank[0].codename).SingleOrDefault().name);
 
                 _rankImage.sprite = PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank[0].codename).SingleOrDefault();
 
@@ -137,7 +137,7 @@ public class ServiceRecordMenu : MonoBehaviour
         {
             _rankImage.enabled = true;
 
-            Debug.Log(PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank[0].codename).SingleOrDefault().name);
+            Log.Print(() =>PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank[0].codename).SingleOrDefault().name);
 
             _rankImage.sprite = PlayerProgressionManager.instance.rankSprites.Where(obj => obj.name == rank[0].codename).SingleOrDefault();
 

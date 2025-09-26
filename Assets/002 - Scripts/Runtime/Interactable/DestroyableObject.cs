@@ -20,7 +20,7 @@ public class DestroyableObject : MonoBehaviour
 
     void OnDeath_Delegate(HitPoints hp)
     {
-        Debug.Log("DestroyableObject");
+        Log.Print(() =>"DestroyableObject");
         gameObject.SetActive(false);
     }
 }

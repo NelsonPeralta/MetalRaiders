@@ -167,7 +167,7 @@ public class AimAssistCapsule : MonoBehaviour
     {
         if (other.gameObject == collidingHitbox)
         {
-            //Debug.Log($"OnTriggerExit from AimAssistCapsule: {other.name}");
+            //Log.Print(() =>$"OnTriggerExit from AimAssistCapsule: {other.name}");
             collidingHitbox = null;
         }
 

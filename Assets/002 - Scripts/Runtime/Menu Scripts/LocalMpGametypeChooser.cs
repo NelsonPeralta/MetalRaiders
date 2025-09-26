@@ -111,7 +111,7 @@ public class LocalMpGametypeChooser : MonoBehaviour
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit))
         {
-            Debug.Log(hit.collider.name);
+            Log.Print(() =>hit.collider.name);
             if (hit.collider.gameObject.GetComponent<Button>() != null)
             {
                 foreach (GameObject button in buttonsPage1)

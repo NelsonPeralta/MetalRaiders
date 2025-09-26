@@ -91,11 +91,11 @@ public class PlayerThirdPersonModelManager : MonoBehaviour
 
     public void SetupThirdPersonModelLayers(bool forceFpsMode = false)
     {
-        Debug.Log($"SetupThirdPersonModelLayers");
-        Debug.Log($"{GameManager.instance != null}");
-        Debug.Log($"{player != null}");
-        Debug.Log($"{player.playerInventory != null}");
-        Debug.Log($"{player.playerInventory.activeWeapon != null}");
+        Log.Print(() =>$"SetupThirdPersonModelLayers");
+        Log.Print(() =>$"{GameManager.instance != null}");
+        Log.Print(() =>$"{player != null}");
+        Log.Print(() =>$"{player.playerInventory != null}");
+        Log.Print(() =>$"{player.playerInventory.activeWeapon != null}");
 
         if (forceFpsMode)
         {

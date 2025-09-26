@@ -8,7 +8,7 @@ public class Portal : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"PORTAL: {other.name}");
+        Log.Print(() =>$"PORTAL: {other.name}");
 
         if (other.GetComponent<PlayerCapsule>() && other.GetComponent<PlayerCapsule>().player.isMine && !other.GetComponent<PlayerCapsule>().player.isDead && !other.GetComponent<PlayerCapsule>().player.isRespawning)
         {

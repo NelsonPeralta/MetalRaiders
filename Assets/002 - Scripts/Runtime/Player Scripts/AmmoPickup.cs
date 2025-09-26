@@ -65,7 +65,7 @@ public class AmmoPickup : MonoBehaviour
         //for (int i = 0; i < playerProperties.weaponPool.allAmmoPackSpawnPoints.Count; i++)
         //    if (playerProperties.weaponPool.allAmmoPackSpawnPoints[i].transform.position == ammoPackPosition)
         //    {
-        //        Debug.Log("Disabling ammo pack");
+        //        Log.Print(() =>"Disabling ammo pack");
         //        playerProperties.weaponPool.allAmmoPackSpawnPoints[i].ammoPack.gameObject.SetActive(false);
         //        playerProperties.weaponPool.allAmmoPackSpawnPoints[i].StartRespawn();
         //    }
@@ -78,7 +78,7 @@ public class AmmoPickup : MonoBehaviour
         {
             foreach (NetworkGrenadeSpawnPoint ap in FindObjectsOfType<NetworkGrenadeSpawnPoint>())
             {
-                Debug.Log("Destroying ammo pack");
+                Log.Print(() =>"Destroying ammo pack");
                 if (ap.transform.position == ammoPackPosition)
                     Destroy(ap.gameObject);
             }

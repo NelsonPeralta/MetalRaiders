@@ -47,7 +47,7 @@ public class Movement : MonoBehaviour, IMoveable
                 else if (value && _canMoveWhileJumpingCooldown <= 0)
                     _canMoveWhileJumping = value;
 
-                Debug.Log($"Can move while jumping: {canMove}");
+                Log.Print(() =>$"Can move while jumping: {canMove}");
             }
         }
     }
@@ -124,7 +124,7 @@ public class Movement : MonoBehaviour, IMoveable
         get { return _blockMovementCooldown; }
         set
         {
-            Debug.Log("Man Cannon Cooldown");
+            Log.Print(() =>"Man Cannon Cooldown");
             _blockMovementCooldown = value;
         }
     }
@@ -321,7 +321,7 @@ public class Movement : MonoBehaviour, IMoveable
         return;
         if (_edgeCheck.touch && !isGrounded)
         {
-            Debug.Log("Edge");
+            Log.Print(() =>"Edge");
             Vector3 _dir = transform.position - _edgeCheck.touch.transform.position;
             _dir.y = 0;
 
@@ -567,8 +567,8 @@ public class Movement : MonoBehaviour, IMoveable
                 return;
 
             float _jumpForce = jumpForce;
-            Debug.Log("Jump");
-            Debug.Log(_groundCheckScript.touch);
+            Log.Print(() =>"Jump");
+            Log.Print(() =>_groundCheckScript.touch);
 
             if (GameManager.instance.gameMode == GameManager.GameMode.Coop) { _jumpForce = jumpForce * 0.7f; }
 
@@ -825,11 +825,11 @@ public class Movement : MonoBehaviour, IMoveable
 
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        //Debug.Log(hit.gameObject.name);
+        //Log.Print(() =>hit.gameObject.name);
 
         if (_edgeCheck.touch && !isGrounded)
         {
-            Debug.Log("Edge OnControllerColliderHit");
+            Log.Print(() =>"Edge OnControllerColliderHit");
             //return;
             Vector3 _dir = transform.position - new Vector3(hit.point.x, transform.position.y, hit.point.z);
             //_dir = hit.normal;
@@ -853,7 +853,7 @@ public class Movement : MonoBehaviour, IMoveable
         // TODO: Redo this, causes lagspikes
         //if (RayGrounded(GetRayAtPos(0, 0)) && GetComponent<CharacterController>().isGrounded)
         //{
-        //    //Debug.Log("OnControllerColliderHit");
+        //    //Log.Print(() =>"OnControllerColliderHit");
         //    Vector3 edgeFallMovement = transform.position - hit.point;
         //    edgeFallMovement.y = 0;
         //    float edgeFallFactor = 10;

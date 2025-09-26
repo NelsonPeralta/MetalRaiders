@@ -55,7 +55,7 @@ public class SpawnPoint : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        //Debug.Log($"Spawnpoint OnTriggerEnter: {other.name}");
+        //Log.Print(() =>$"Spawnpoint OnTriggerEnter: {other.name}");
         if (other.GetComponent<PlayerCapsule>() && other.gameObject.activeInHierarchy)
         {
             Player player = other.transform.root.GetComponent<Player>();
@@ -73,10 +73,10 @@ public class SpawnPoint : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        //Debug.Log($"SpawnPoint OnTriggerExit {other.name}");
+        //Log.Print(() =>$"SpawnPoint OnTriggerExit {other.name}");
         if (other.GetComponent<PlayerCapsule>() && other.gameObject.activeInHierarchy && players.Contains(other.transform.root.GetComponent<Player>()))
         {
-            //Debug.Log($"SpawnPoint OnTriggerExit REMOVING PLAYER");
+            //Log.Print(() =>$"SpawnPoint OnTriggerExit REMOVING PLAYER");
             other.transform.root.GetComponent<Player>().OnPlayerDeath -= OnPLayerDeath;
             players.Remove(other.transform.root.GetComponent<Player>());
 

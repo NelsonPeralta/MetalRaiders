@@ -58,14 +58,14 @@ public class RadarPulse : MonoBehaviour
 
         if (pProperties.controllerId == 0)
         {
-            //Debug.Log("Gave Player 0 good minimap");
+            //Log.Print(() =>"Gave Player 0 good minimap");
             minimapCamera.targetTexture = Resources.Load<RenderTexture>($"MinimapRenderTextures/Minimap Render TexturePlayer0");
             rawImage.texture = Resources.Load<RenderTexture>($"MinimapRenderTextures/Minimap Render TexturePlayer0");
         }
 
         if (pProperties.controllerId == 1)
         {
-            //Debug.Log("Gave Player 1 good minimap");
+            //Log.Print(() =>"Gave Player 1 good minimap");
             minimapCamera.targetTexture = Resources.Load<RenderTexture>($"MinimapRenderTextures/Minimap Render TexturePlayer1");
             rawImage.texture = Resources.Load<RenderTexture>($"MinimapRenderTextures/Minimap Render TexturePlayer1");
         }

@@ -153,7 +153,7 @@ public class SkeletonBackup : MonoBehaviour
         //    {
         //        if (!meleeTrigger.pProperties.isDead)
         //        {
-        //            Debug.Log("Skeleton Attack");
+        //            Log.Print(() =>"Skeleton Attack");
         //            meleeTrigger.pProperties.BleedthroughDamage(damage, false, 99);
         //            anim.Play("Attack");
 

@@ -48,7 +48,7 @@ public class PlayerImpactReceiver : MonoBehaviour
         if (!_player.isMine)
             return;
 
-        Debug.Log("AddImpact_RPC");
+        Log.Print(() =>"AddImpact_RPC");
         Impact(dir, force);
     }
 

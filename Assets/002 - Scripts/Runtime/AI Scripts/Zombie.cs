@@ -27,7 +27,7 @@ public class Zombie : AiAbstractClass
             if (_zombieAction != value)
             {
                 _zombieAction = value;
-                Debug.Log($"ZOMBIE New Action: {_zombieAction}");
+                Log.Print(() =>$"ZOMBIE New Action: {_zombieAction}");
                 InvokeOnActionChanged();
             }
         }
@@ -92,7 +92,7 @@ public class Zombie : AiAbstractClass
             else
                 seek = true;
 
-            //Debug.Log($"Hellhound do action: {hellhoundAction}");
+            //Log.Print(() =>$"Hellhound do action: {hellhoundAction}");
         }
         else if (!isDead && !targetPlayer)
         {
@@ -164,12 +164,12 @@ public class Zombie : AiAbstractClass
     {
         if (!targetInLineOfSight)
         {
-            Debug.Log($"OnTargetInLineOfSightChanged_Delegate TARGET NOT IN LOF");
+            Log.Print(() =>$"OnTargetInLineOfSightChanged_Delegate TARGET NOT IN LOF");
             zombieAction = ZombieActions.Seek;
         }
         else
         {
-            Debug.Log($"Target in line of sight. Player range: {playerRange}");
+            Log.Print(() =>$"Target in line of sight. Player range: {playerRange}");
             if (playerRange == PlayerRange.Close)
                 zombieAction = ZombieActions.Melee;
         }

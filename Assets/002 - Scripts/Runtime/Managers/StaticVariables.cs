@@ -82,7 +82,7 @@ public class StaticVariables : MonoBehaviour
         else
             loadPitchfork = false;
 
-        Debug.Log("STATIC VARIABLES: Toggled PITCHFORK: " + loadPitchfork);
+        Log.Print(() =>"STATIC VARIABLES: Toggled PITCHFORK: " + loadPitchfork);
     }
 
     public void startGame()

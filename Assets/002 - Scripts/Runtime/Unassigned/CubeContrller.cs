@@ -18,7 +18,7 @@ public class CubeContrller : MonoBehaviour
     {
         if(player.GetButtonDown("Jump"))
         {
-            Debug.Log("Jumped" + playerID);
+            Log.Print(() =>"Jumped" + playerID);
             transform.Translate(transform.up);
         }
     }

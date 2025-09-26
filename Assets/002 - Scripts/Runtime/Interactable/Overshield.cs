@@ -42,7 +42,7 @@ public class Overshield : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"ManCannon {other}");
+        Log.Print(() =>$"ManCannon {other}");
         if (other.gameObject.activeInHierarchy)
         {
             try
@@ -52,7 +52,7 @@ public class Overshield : MonoBehaviour
                         !other.transform.root.GetComponent<Player>().isDead &&
                         !other.transform.root.GetComponent<Player>().isRespawning)
                     {
-                        Debug.Log($"ManCannon LAUNCH!");
+                        Log.Print(() =>$"ManCannon LAUNCH!");
                         if (other.transform.root.GetComponent<Player>().isMine)
                             NetworkGameManager.instance.LootOvershield(other.transform.root.GetComponent<Player>().photonId);
                     }

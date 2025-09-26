@@ -148,7 +148,7 @@ public class PlayerPauseMenu : MonoBehaviour
         ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit))
         {
-            Debug.Log($"PLAYER PAUSE: {hit.collider.name}");
+            Log.Print(() =>$"PLAYER PAUSE: {hit.collider.name}");
             if (hit.collider.gameObject.GetComponent<Button>() != null)
             {
                 if (hit.collider.gameObject != selectedButton)

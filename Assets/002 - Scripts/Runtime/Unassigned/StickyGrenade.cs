@@ -38,7 +38,7 @@ public class StickyGrenade : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        Debug.Log($"Sticky Grenade Collision: {collision.gameObject.name}");
+        Log.Print(() =>$"Sticky Grenade Collision: {collision.gameObject.name}");
         if (!explosionTimerStarted && !hasHitObject)
         {
             if (collision.gameObject.layer == 13)
@@ -51,7 +51,7 @@ public class StickyGrenade : MonoBehaviour
                         GetComponent<Rigidbody>().isKinematic = true;
 
                         stuckPlayerID = collision.gameObject.GetComponent<PlayerHitbox>().player.GetComponent<Player>().controllerId;
-                        Debug.Log("Stuck Player");
+                        Log.Print(() =>"Stuck Player");
 
                         playerStuck = true; // Without this line player stuck is always 0 so player 0 always die even when not stuck
                         hasHitObject = true;
@@ -61,7 +61,7 @@ public class StickyGrenade : MonoBehaviour
                 }
                 else if (collision.gameObject.GetComponent<AIHitbox>())
                 {
-                    Debug.Log("Here!!!!");
+                    Log.Print(() =>"Here!!!!");
                     gameObject.transform.SetParent(collision.gameObject.transform, true);
                     //gameObject.transform.parent = collision.gameObject.transform;
 
@@ -79,7 +79,7 @@ public class StickyGrenade : MonoBehaviour
                 if (collision.gameObject.GetComponent<PlayerController>() == null
                     && collision.gameObject.layer != 22 && collision.transform.root.gameObject != player.gameObject)
                 {
-                    Debug.Log("Collision = " + collision.gameObject.name + " GO Layer: " + collision.gameObject.layer
+                    Log.Print(() =>"Collision = " + collision.gameObject.name + " GO Layer: " + collision.gameObject.layer
                         + " Root GO : " + collision.gameObject.transform.root.gameObject.name);
                     gameObject.transform.SetParent(collision.gameObject.transform, true);
                     //gameObject.transform.parent = collision.gameObject.transform;
@@ -150,7 +150,7 @@ public class StickyGrenade : MonoBehaviour
                     objectsHit.Add(playerHit);
                     float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
                     float calculatedDamage = damage * (1 - (playerDistance / radius));
-                    Debug.Log("Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
+                    Log.Print(() =>"Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
                     //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
                     if (player.PV.IsMine && calculatedDamage > 0)
                         playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, player.PV.ViewID, damageSourceCleanName: "stickygrenade");
@@ -162,11 +162,11 @@ public class StickyGrenade : MonoBehaviour
                 if (!objectsHit.Contains(aiHit))
                 {
                     objectsHit.Add(aiHit);
-                    Debug.Log("Hit AI");
+                    Log.Print(() =>"Hit AI");
                     AIHitbox hitbox = hit.GetComponent<AIHitbox>();
                     float aiDistance = Vector3.Distance(hit.transform.position, transform.position);
                     float calculatedDamage = damage * (1 - (aiDistance / radius));
-                    Debug.Log($"Rocket Damage on AI: {calculatedDamage}");
+                    Log.Print(() =>$"Rocket Damage on AI: {calculatedDamage}");
                     if (player.PV.IsMine && calculatedDamage > 0)
                     {
 

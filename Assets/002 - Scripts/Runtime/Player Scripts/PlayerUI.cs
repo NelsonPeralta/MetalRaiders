@@ -409,7 +409,7 @@ public class PlayerUI : MonoBehaviour
     {
         //swarmAisLeftText.text = $"H: {swarmManager.hellhoundsLeft + swarmManager.hellhoundsAlive} W: {swarmManager.watchersLeft + swarmManager.watchersAlive} K: {swarmManager.knightsLeft + swarmManager.knightsAlive}";
 
-        Debug.Log("Here");
+        Log.Print(() =>"Here");
         swarmAisLeftText.text = $"Aliens: {swarmManager.ribbiansLeft + swarmManager.ribbiansAlive}\nBreathers: {swarmManager.breathersLeft + swarmManager.breathersAlive}\nZombies: {swarmManager.zombiesLeft + swarmManager.zombiesAlive}";
         if (!swarmManager.waveEnded)
         {

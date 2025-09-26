@@ -21,7 +21,7 @@ abstract public class Actor : Biped
         {
             int pv = _hitPoints;
             int nv = Mathf.Clamp(value, 0, _defaultHitpoints * 3);
-            Debug.Log($"LOCAL ACTOR HITPOINTS {pv} -> {nv}");
+            Log.Print(() =>$"LOCAL ACTOR HITPOINTS {pv} -> {nv}");
 
             if (nv > pv)
                 return;
@@ -33,7 +33,7 @@ abstract public class Actor : Biped
 
             if (_hitPoints <= 0 && nv != pv)
             {
-                Debug.Log($"ACTORD DIE CALLING");
+                Log.Print(() =>$"ACTORD DIE CALLING");
                 //target = null; \\DO NOT REMOVE TARGET HERE
                 DropRandomWeapon();
                 ActorDie(playerWhoShotPDI: _lastPlayerPhotonIdWhoDamagedThis);
@@ -109,9 +109,9 @@ abstract public class Actor : Biped
             if (_targetPlayer != value)
             {
                 //if (value)
-                //    Debug.Log($"Target Player set {value.name}");
+                //    Log.Print(() =>$"Target Player set {value.name}");
                 //else
-                //    Debug.Log($"Target Player set to NULL");
+                //    Log.Print(() =>$"Target Player set to NULL");
 
                 HitPoints pre = _targetPlayer;
 
@@ -275,7 +275,7 @@ abstract public class Actor : Biped
 
     void OnPlayerDeath(Player p)
     {
-        //Debug.Log("OnPlayerDeath");
+        //Log.Print(() =>"OnPlayerDeath");
         //target = null;
 
         //p.OnPlayerDeath -= OnPlayerDeath;
@@ -448,7 +448,7 @@ abstract public class Actor : Biped
                     wp.killFeedOutput == WeaponProperties.KillFeedOutput.Sword ||
                     wp.killFeedOutput == WeaponProperties.KillFeedOutput.Minigun)
                     return;
-                Debug.Log($"DropRandomWeapon: {wp.cleanName}");
+                Log.Print(() =>$"DropRandomWeapon: {wp.cleanName}");
 
 
 
@@ -477,7 +477,7 @@ abstract public class Actor : Biped
             {
                 if (!targetTransform && hitPoints > 0)
                 {
-                    Debug.Log("Finding new Target Transform");
+                    Log.Print(() =>"Finding new Target Transform");
 
                     try
                     {
@@ -676,14 +676,14 @@ abstract public class Actor : Biped
                 {
                     if (!isRunning && !isFlinching && !isTaunting && !isBoosting && !isDodging)
                     {
-                        //Debug.Log("Chase Player");
+                        //Log.Print(() =>"Chase Player");
 
                         Run(PhotonNetwork.InRoom);
                     }
 
                     if (isRunning && !isFlinching && !isTaunting && !isBoosting && !isDodging)
                     {
-                        //Debug.Log("Chase Player");
+                        //Log.Print(() =>"Chase Player");
                         nma.enabled = true;
                         nma.SetDestination(targetTransform.position);
                     }
@@ -699,12 +699,12 @@ abstract public class Actor : Biped
                 if (_isInRange)
                     _isInRange = false;
 
-                //Debug.Log($"Out of range {isFlinching} {isTaunting} {isBoosting} {isDodging} {_isDodgingCooldown}");
+                //Log.Print(() =>$"Out of range {isFlinching} {isTaunting} {isBoosting} {isDodging} {_isDodgingCooldown}");
 
 
                 if (!isRunning)
                 {
-                    //Debug.Log("Chase Player");
+                    //Log.Print(() =>"Chase Player");
                     Run(PhotonNetwork.InRoom);
                 }
 
@@ -782,7 +782,7 @@ abstract public class Actor : Biped
             _switchPlayerCooldown = 5;
         }
 
-        Debug.Log($"DAMAGE ACTOR {hitPoints} -> {hitPoints - damage} {damageSource} {weapIndx}");
+        Log.Print(() =>$"DAMAGE ACTOR {hitPoints} -> {hitPoints - damage} {damageSource} {weapIndx}");
         hitPoints -= damage;
 
         if (hitPoints > 0)
@@ -800,18 +800,18 @@ abstract public class Actor : Biped
     [PunRPC]
     public void Flinch(bool callRPC = true)
     {
-        Debug.Log($"Flinch");
+        Log.Print(() =>$"Flinch");
         if (callRPC && PhotonNetwork.IsMasterClient)
         {
             if (!isBoosting && !isDodging)
             {
-                Debug.Log($"ACTORD FLINCH CALL");
+                Log.Print(() =>$"ACTORD FLINCH CALL");
                 GetComponent<PhotonView>().RPC("Flinch", RpcTarget.All, false);
             }
         }
         else if (!callRPC)
         {
-            Debug.Log($"ACTORD FLINCH CALL PROCESSING");
+            Log.Print(() =>$"ACTORD FLINCH CALL PROCESSING");
             _flinchThresholdCount = 0;
             _audioSource.clip = _hurtClip;
             _audioSource.Play();
@@ -840,10 +840,10 @@ abstract public class Actor : Biped
     [PunRPC]
     public void ActorDie(bool caller = true, int playerWhoShotPDI = -1)
     {
-        Debug.Log($"ActorDie");
+        Log.Print(() =>$"ActorDie");
         if (caller && PhotonNetwork.IsMasterClient)
         {
-            Debug.Log($"ACTORD DIE CALL");
+            Log.Print(() =>$"ACTORD DIE CALL");
             GetComponent<PhotonView>().RPC("ActorDie", RpcTarget.All, false, playerWhoShotPDI);
         }
         else if (!caller)
@@ -862,7 +862,7 @@ abstract public class Actor : Biped
 
 
 
-            Debug.Log($"ACTORD DIE PROCESSING");
+            Log.Print(() =>$"ACTORD DIE PROCESSING");
             _animator.Play("Die");
 
             GetComponent<HitPoints>().OnDeath?.Invoke(GetComponent<HitPoints>());

@@ -362,11 +362,11 @@ public class BlackKnight : MonoBehaviour
     {
         if (!isDead)
         {
-            //Debug.Log("In hit void");
+            //Log.Print(() =>"In hit void");
             if (Health <= firstHitHealth && !firstHitAnimationPlayed)
             {
                 anim.Play("Hit 1");
-                //Debug.Log("First Hit animation p[layerd");
+                //Log.Print(() =>"First Hit animation p[layerd");
 
                 int randomSound = Random.Range(0, hitClips.Length - 1);
                 audioSource.clip = hitClips[randomSound];

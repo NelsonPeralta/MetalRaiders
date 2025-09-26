@@ -20,7 +20,7 @@ public class PlayerArmorManager : MonoBehaviour
         get { return _playerDataCell; }
         set
         {
-            Debug.Log($"set playerDataCell {value != null}");
+            Log.Print(() =>$"set playerDataCell {value != null}");
             Log.Print(() => $"{value.name}");
             Log.Print(() => $"{value.steamId}");
             Log.Print(() => $"{value.playerExtendedPublicData != null}");
@@ -84,7 +84,7 @@ public class PlayerArmorManager : MonoBehaviour
 
     private void Awake()
     {
-        Debug.Log("PlayerArmorManager Awake");
+        Log.Print(() =>"PlayerArmorManager Awake");
         marineArmorPieces.Clear();
         marineArmorPieces.AddRange(GetComponentsInChildren<MarineArmorPiece>(true));
 
@@ -134,9 +134,9 @@ public class PlayerArmorManager : MonoBehaviour
             playerArmorPieces = playerArmorPieces.OrderByDescending(x => x.listingPriority).ToList();
         }
 
-        Debug.Log($"EnableAllArmorsInDataString: {playerDataCell}");
-        Debug.Log($"EnableAllArmorsInDataString: {playerDataCell.playerExtendedPublicData != null}");
-        Debug.Log($"EnableAllArmorsInDataString: {playerDataCell.playerExtendedPublicData.armorDataString}");
+        Log.Print(() =>$"EnableAllArmorsInDataString: {playerDataCell}");
+        Log.Print(() =>$"EnableAllArmorsInDataString: {playerDataCell.playerExtendedPublicData != null}");
+        Log.Print(() =>$"EnableAllArmorsInDataString: {playerDataCell.playerExtendedPublicData.armorDataString}");
         {
             foreach (PlayerArmorPiece piece in playerArmorPieces)
             {
@@ -147,7 +147,7 @@ public class PlayerArmorManager : MonoBehaviour
 
     void UpdateColorPalette(string forcedColor = null)
     {
-        Debug.Log("UpdateColorPalette");
+        Log.Print(() =>"UpdateColorPalette");
 
         //Texture _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains($"{colorPalette}")).SingleOrDefault();
         Texture _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains(playerDataCell.playerExtendedPublicData.armorColorPalette)).SingleOrDefault();
@@ -156,7 +156,7 @@ public class PlayerArmorManager : MonoBehaviour
             _tex = GameManager.instance.colorPaletteTextures.Where(obj => obj.name.ToLower().Contains(forcedColor)).SingleOrDefault();
 
 
-        Debug.Log(_tex.name);
+        Log.Print(() =>_tex.name);
 
         if (playerArmorPieces.Count > 0)
             foreach (PlayerArmorPiece playerArmorPiece in playerArmorPieces)
@@ -187,7 +187,7 @@ public class PlayerArmorManager : MonoBehaviour
     {
         // Only for active weapon. All disabled weapon will handle themselves
 
-        Debug.Log("ReloadFpsArmor");
+        Log.Print(() =>"ReloadFpsArmor");
         foreach (PlayerArmorPiece pap in player.playerInventory.activeWeapon.GetComponentsInChildren<PlayerArmorPiece>(true))
             pap.gameObject.SetActive(player.playerArmorManager.playerDataCell.playerExtendedPublicData.armorDataString.Contains(pap.entity));
     }

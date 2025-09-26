@@ -53,7 +53,7 @@ public class ParachuteWeaponDrop : MonoBehaviour
 
     private void OnCollisionEnter(Collision other)
     {
-        Debug.Log($"Parachute collision: {other.gameObject.name}");
+        Log.Print(() =>$"Parachute collision: {other.gameObject.name}");
         if (!fallFinished)
         {
             GetComponent<Rigidbody>().useGravity = false;

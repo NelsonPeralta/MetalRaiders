@@ -8,7 +8,7 @@ public static class SaveSystem
     {
         BinaryFormatter formatter = new BinaryFormatter();
         string path = Application.persistentDataPath + "/player" + player.playerID + "character" + player.characterID + ".nut";
-        Debug.Log(path);
+        Log.Print(() =>path);
         FileStream stream = new FileStream(path, FileMode.Create);
 
         PlayerLocalSaveData data = new PlayerLocalSaveData(player);
@@ -34,7 +34,7 @@ public static class SaveSystem
         {
             Debug.LogError("Save file not found in " + path);
             SavePlayer(player);
-            Debug.Log("Save File Created in " + path);
+            Log.Print(() =>"Save File Created in " + path);
             return null;
         }
     }

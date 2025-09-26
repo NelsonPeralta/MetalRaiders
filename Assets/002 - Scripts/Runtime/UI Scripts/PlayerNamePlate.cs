@@ -11,7 +11,7 @@ public class PlayerNamePlate : MonoBehaviour
         get { return _playerData; }
         set
         {
-            //Debug.Log($"ScriptObjPlayerData {value != null}");
+            //Log.Print(() =>$"ScriptObjPlayerData {value != null}");
             _playerData = value;
 
             playerText.text = _playerData.steamName;
@@ -95,7 +95,7 @@ public class PlayerNamePlate : MonoBehaviour
 
     public void SetUp(Photon.Realtime.Player _player, bool masterClient = false) // MAIN
     {
-        Debug.Log($"SetUp PlayerListItem {_player.NickName}");
+        Log.Print(() =>$"SetUp PlayerListItem {_player.NickName}");
 
 
         playerText.text = _player.CustomProperties["username"].ToString();
@@ -114,7 +114,7 @@ public class PlayerNamePlate : MonoBehaviour
 
     public void SetUp(string s)
     {
-        Debug.Log($"Setup {s}");
+        Log.Print(() =>$"Setup {s}");
         //text.text = s;
     }
 
@@ -127,7 +127,7 @@ public class PlayerNamePlate : MonoBehaviour
 
     public void UpdateColorPalette()
     {
-        //Debug.Log($"UpdateColorPalette of: {_playerData.steamName}. TeamMode: {GameManager.instance.teamMode}");
+        //Log.Print(() =>$"UpdateColorPalette of: {_playerData.steamName}. TeamMode: {GameManager.instance.teamMode}");
 
         if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
         {
@@ -138,7 +138,7 @@ public class PlayerNamePlate : MonoBehaviour
             {
                 ColorUtility.TryParseHtmlString(GameManager.colorDict[spd.team.ToString().ToLower()], out _tCol);
 
-                Debug.Log(_tCol);
+                Log.Print(() =>_tCol);
                 mainBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 1);
                 secBg.color = new Color(_tCol.r, _tCol.g, _tCol.b, 0.4f);
             }
@@ -149,7 +149,7 @@ public class PlayerNamePlate : MonoBehaviour
         {
             try
             {
-                //Debug.Log($"Setup Solo Color: {playerDataCell.playerExtendedPublicData.armorColorPalette}");
+                //Log.Print(() =>$"Setup Solo Color: {playerDataCell.playerExtendedPublicData.armorColorPalette}");
                 ColorUtility.TryParseHtmlString(playerDataCell.playerExtendedPublicData.armorColorPalette, out _tCol);
                 mainBg.color = _tCol;
 

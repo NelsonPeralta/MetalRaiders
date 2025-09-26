@@ -77,7 +77,7 @@ public class WeaponPool : MonoBehaviourPun
         //{
         //    if (weapon.codeName.Equals(n) && !weapon.gameObject.activeInHierarchy)
         //    {
-        //        Debug.Log($"GetLootableWeapon FOUND!");
+        //        Log.Print(() =>$"GetLootableWeapon FOUND!");
         //        //_spawnedWeapons.Remove(weapon);
         //        return weapon;
         //    }

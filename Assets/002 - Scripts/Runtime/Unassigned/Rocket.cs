@@ -42,7 +42,7 @@ public class Rocket : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log("Collision with rocket: " + collision.gameObject.name);
+        Log.Print(() =>"Collision with rocket: " + collision.gameObject.name);
         if (collision.gameObject.layer != 9)
             Explosion();
     }
@@ -86,7 +86,7 @@ public class Rocket : MonoBehaviour
                     objectsHit.Add(playerHit);
                     float playerDistance = Vector3.Distance(hit.transform.position, transform.position);
                     float calculatedDamage = damage * (1 - (playerDistance / radius));
-                    Debug.Log("Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
+                    Log.Print(() =>"Damage= " + calculatedDamage + " playerDistance= " + playerDistance + " radius= " + radius);
                     //player.GetComponent<PlayerProperties>().BleedthroughDamage(calculatedDamage, false, 99);
                     if (player.PV.IsMine && calculatedDamage > 0)
                         playerHit.GetComponent<Player>().Damage((int)calculatedDamage, false, player.PV.ViewID, damageSourceCleanName: "rpg");
@@ -98,17 +98,17 @@ public class Rocket : MonoBehaviour
                 if (!objectsHit.Contains(aiHit))
                 {
                     objectsHit.Add(aiHit);
-                    Debug.Log("Hit AI");
+                    Log.Print(() =>"Hit AI");
                     AIHitbox hitbox = hit.GetComponent<AIHitbox>();
                     float aiDistance = Vector3.Distance(hit.transform.position, transform.position);
                     float calculatedDamage = damage * (1 - (aiDistance / radius));
-                    Debug.Log($"Rocket Damage on AI: {calculatedDamage}");
+                    Log.Print(() =>$"Rocket Damage on AI: {calculatedDamage}");
                     if (player.PV.IsMine && calculatedDamage > 0)
                         hitbox.aiAbstractClass.Damage((int)calculatedDamage, player.PV.ViewID, damageSource: "rpg");
                 }
             }
         }
-        Debug.Log(hitsDebugMessage);
+        Log.Print(() =>hitsDebugMessage);
         //Destroy the grenade object on explosion
         Destroy(gameObject);
     }

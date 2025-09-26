@@ -12,7 +12,7 @@ public class AimAssist : MonoBehaviour
             {
                 _preTargetHitboxRoot = _closestHbToCrosshairCenter;
                 _closestHbToCrosshairCenter = value;
-                //Debug.Log($"targetHitboxRoot {_preTargetHitboxRoot} {_targetHitboxRoot}");
+                //Log.Print(() =>$"targetHitboxRoot {_preTargetHitboxRoot} {_targetHitboxRoot}");
             }
         }
     }

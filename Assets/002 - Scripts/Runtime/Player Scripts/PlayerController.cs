@@ -75,12 +75,12 @@ public class PlayerController : MonoBehaviourPun
             if (value == ControllerType.Joystick)
             {
                 OnControllerTypeChangedToController?.Invoke(this);
-                //Debug.Log("OnControllerTypeChangedToController");
+                //Log.Print(() =>"OnControllerTypeChangedToController");
             }
             else
             {
                 OnControllerTypeChangedToMouseAndKeyboard?.Invoke(this);
-                //Debug.Log("OnControllerTypeChangedToMouseAndKeyboard");
+                //Log.Print(() =>"OnControllerTypeChangedToMouseAndKeyboard");
             }
         }
     }
@@ -969,11 +969,11 @@ public class PlayerController : MonoBehaviourPun
         Log.Print(() => $"Player {player.name} is about to call _StartShoot_RPC");
         if (PV.IsMine)
         {
-            try { Debug.Log("_StartShoot"); } catch (System.Exception e) { Debug.LogWarning(e); }
-            try { Debug.Log(player.aimAssist); } catch (System.Exception e) { Debug.LogWarning(e); }
-            try { Debug.Log(player.aimAssist.closestHbToCrosshairCenter); } catch (System.Exception e) { Debug.LogWarning(e); }
-            try { Debug.Log(player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped); } catch (System.Exception e) { Debug.LogWarning(e); }
-            try { Debug.Log(player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition); } catch (System.Exception e) { Debug.LogWarning(e); }
+            try { Log.Print(() =>"_StartShoot"); } catch (System.Exception e) { Debug.LogWarning(e); }
+            try { Log.Print(() =>player.aimAssist); } catch (System.Exception e) { Debug.LogWarning(e); }
+            try { Log.Print(() =>player.aimAssist.closestHbToCrosshairCenter); } catch (System.Exception e) { Debug.LogWarning(e); }
+            try { Log.Print(() =>player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped); } catch (System.Exception e) { Debug.LogWarning(e); }
+            try { Log.Print(() =>player.aimAssist.closestHbToCrosshairCenter.GetComponent<Hitbox>().biped.originalSpawnPosition); } catch (System.Exception e) { Debug.LogWarning(e); }
 
 
 
@@ -1011,10 +1011,10 @@ public class PlayerController : MonoBehaviourPun
         if (!pInventory.activeWeapon.isOutOfAmmo && !isReloading &&
             !isHoldingShootBtn && !isInspecting && !isMeleeing && !isThrowingGrenade)
         {
-            Debug.Log("_StartShoot_RPC");
+            Log.Print(() =>"_StartShoot_RPC");
             try
             {
-                Debug.Log(GameManager.instance.instantiation_position_Biped_Dict[bipedOrSpp]);
+                Log.Print(() =>GameManager.instance.instantiation_position_Biped_Dict[bipedOrSpp]);
             }
             catch { }
             //player.playerShooting.trackingTarget = null; if (bipedOrSpp != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.instantiation_position_Biped_Dict[bipedOrSpp];
@@ -1023,7 +1023,7 @@ public class PlayerController : MonoBehaviourPun
         {
             //isHoldingShootBtn = false;
         }
-        Debug.Log($"{GetComponent<Player>().username}: _StartShoot_RPC {isHoldingShootBtn}");
+        Log.Print(() =>$"{GetComponent<Player>().username}: _StartShoot_RPC {isHoldingShootBtn}");
     }
 
     [PunRPC]
@@ -1035,7 +1035,7 @@ public class PlayerController : MonoBehaviourPun
             {
                 isHoldingShootBtn = false;
                 OnPlayerFireButtonUp?.Invoke(this);
-                Debug.Log($"{GetComponent<Player>().username}: _StopShoot_RPC {isHoldingShootBtn}");
+                Log.Print(() =>$"{GetComponent<Player>().username}: _StopShoot_RPC {isHoldingShootBtn}");
 
 
             }
@@ -1054,7 +1054,7 @@ public class PlayerController : MonoBehaviourPun
     {
         yield return new WaitForEndOfFrame();
 
-        Debug.Log($"StopShoot_Coroutine {GetComponent<Player>().username}: {isDw}");
+        Log.Print(() =>$"StopShoot_Coroutine {GetComponent<Player>().username}: {isDw}");
         if (!isDw)
         {
             isHoldingShootBtn = false;
@@ -1083,7 +1083,7 @@ public class PlayerController : MonoBehaviourPun
             if (!isDualWieldedWeapon)
             {
 
-                try { Debug.Log(GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition]); } catch { }
+                try { Log.Print(() =>GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition]); } catch { }
                 player.playerShooting.trackingTarget = null; if (trackingTargetInstantiationPosition != Vector3.zero) player.playerShooting.trackingTarget = GameManager.instance.instantiation_position_Biped_Dict[trackingTargetInstantiationPosition];
 
 
@@ -1259,7 +1259,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (!isAiming && player.isAlive) return;
 
-        Debug.Log("Unscope Script");
+        Log.Print(() =>"Unscope Script");
         isAiming = false;
         //mainCam.fieldOfView = GetComponent<Player>().defaultVerticalFov;
         //gunCam.fieldOfView = 60;
@@ -1406,7 +1406,7 @@ public class PlayerController : MonoBehaviourPun
         if (!cameraIsFloating)
         {
             _crouchForceTime = 0.3f;
-            Debug.Log("Crouching");
+            Log.Print(() =>"Crouching");
             OnCrouchDown?.Invoke(this);
             GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Jump", false);
             GetComponent<PlayerThirdPersonModelManager>().thirdPersonScript.GetComponent<Animator>().SetBool("Crouch", true);
@@ -1453,10 +1453,10 @@ public class PlayerController : MonoBehaviourPun
         // Does the ray intersect any objects excluding the player layer
         if (Physics.Raycast((player.mainCamera.transform.position + player.playerCapsule.transform.position) / 2, Vector3.down, out hit, (player.playerCapsule.GetComponent<CapsuleCollider>().height / 2) + 0.5f, GameManager.instance.ragdollHumpLayerMask))
         {
-            //Debug.Log($"EnableCrouch_RPC Did Hit: {hit.collider.name}");
+            //Log.Print(() =>$"EnableCrouch_RPC Did Hit: {hit.collider.name}");
             if (hit.collider.GetComponent<RagdollLimbCollisionDetection>() && hit.collider.GetComponent<Rigidbody>() && hit.collider.GetComponent<Rigidbody>().linearVelocity.magnitude < 20)
             {
-                Debug.Log($"EnableCrouch_RPC Did Hit: {hit.collider.name} {hit.collider.GetComponent<Rigidbody>().linearVelocity.magnitude}");
+                Log.Print(() =>$"EnableCrouch_RPC Did Hit: {hit.collider.name} {hit.collider.GetComponent<Rigidbody>().linearVelocity.magnitude}");
                 hit.collider.GetComponent<Rigidbody>().AddForce(Vector3.up * 250 * hit.collider.GetComponent<Rigidbody>().mass);
             }
         }
@@ -1472,10 +1472,10 @@ public class PlayerController : MonoBehaviourPun
         // Does the ray intersect any objects excluding the player layer
         if (Physics.Raycast((player.mainCamera.transform.position + player.playerCapsule.transform.position) / 2, Vector3.down, out hit, (player.playerCapsule.GetComponent<CapsuleCollider>().height / 2) + 0.5f, GameManager.instance.ragdollHumpLayerMask))
         {
-            //Debug.Log($"DisableCrouch_RPC Did Hit: {hit.collider.name}");
+            //Log.Print(() =>$"DisableCrouch_RPC Did Hit: {hit.collider.name}");
             if (hit.collider.GetComponent<RagdollLimbCollisionDetection>() && hit.collider.GetComponent<Rigidbody>())
             {
-                Debug.Log($"DisableCrouch_RPC Did Hit: {hit.collider.name} {hit.collider.GetComponent<Rigidbody>().linearVelocity.magnitude}");
+                Log.Print(() =>$"DisableCrouch_RPC Did Hit: {hit.collider.name} {hit.collider.GetComponent<Rigidbody>().linearVelocity.magnitude}");
                 hit.collider.GetComponent<Rigidbody>().AddForce(Vector3.up * 150 * hit.collider.GetComponent<Rigidbody>().mass);
             }
         }
@@ -1954,7 +1954,7 @@ public class PlayerController : MonoBehaviourPun
                 {
                     try
                     {
-                        Debug.Log("SwitchWeapons");
+                        Log.Print(() =>"SwitchWeapons");
                         CancelReloadCoroutine();
                         weaponAnimator = pInventory.activeWeapon.GetComponent<Animator>();
                         currentlyReloadingTimer = 0;
@@ -2030,7 +2030,7 @@ public class PlayerController : MonoBehaviourPun
             mainCam.transform.parent = null;
             mainCam.cullingMask = floatinCameraLayerMask;
             _cameraIsFloating = true;
-            Debug.Log("Alpha0");
+            Log.Print(() =>"Alpha0");
             uiCam.enabled = false;
             gunCam.enabled = false;
 
@@ -2053,7 +2053,7 @@ public class PlayerController : MonoBehaviourPun
             //mainCam.transform.localRotation = _lasMainCamLocalQuat;
 
             _cameraIsFloating = false;
-            Debug.Log($"ToggleFloatingCamera_RPC {_posBeforeTogglingFloatingCamera}");
+            Log.Print(() =>$"ToggleFloatingCamera_RPC {_posBeforeTogglingFloatingCamera}");
 
             if (player.isMine)
             {
@@ -2497,7 +2497,7 @@ public class PlayerController : MonoBehaviourPun
 
     public void QuitMatch()
     {
-        Debug.Log("Returning to Main Menu");
+        Log.Print(() =>"Returning to Main Menu");
 
         CurrentRoomManager.instance.leftRoomManually = true;
 
@@ -2530,20 +2530,20 @@ public class PlayerController : MonoBehaviourPun
 
         {
             //LootableWeapon _firstWeapon = WeaponPool.instance.GetLootableWeapon(player.playerInventory.allWeaponsInInventory[3].GetComponent<WeaponProperties>().codeName);
-            //Debug.Log($"First Weapon: {_firstWeapon.name}");
-            //try { _firstWeapon.name = _firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Debug.Log(e); }
-            ////try { _firstWeapon.transform.parent = null; } catch (System.Exception e) { Debug.Log(e); }
-            //try { _firstWeapon.transform.position = player.weaponDropPoint.position; } catch (System.Exception e) { Debug.Log(e); }
-            //try { _firstWeapon.spawnPointPosition = player.weaponDropPoint.position; } catch (System.Exception e) { Debug.Log(e); }
-            ////try { _firstWeapon.GetComponent<Rigidbody>().velocity = Vector3.zero; } catch (System.Exception e) { Debug.Log(e); }
-            //Debug.Log($"First Weapon: {_firstWeapon.GetComponent<Rigidbody>()}");
+            //Log.Print(() =>$"First Weapon: {_firstWeapon.name}");
+            //try { _firstWeapon.name = _firstWeapon.name.Replace("(Clone)", ""); } catch (System.Exception e) { Log.Print(() =>e); }
+            ////try { _firstWeapon.transform.parent = null; } catch (System.Exception e) { Log.Print(() =>e); }
+            //try { _firstWeapon.transform.position = player.weaponDropPoint.position; } catch (System.Exception e) { Log.Print(() =>e); }
+            //try { _firstWeapon.spawnPointPosition = player.weaponDropPoint.position; } catch (System.Exception e) { Log.Print(() =>e); }
+            ////try { _firstWeapon.GetComponent<Rigidbody>().velocity = Vector3.zero; } catch (System.Exception e) { Log.Print(() =>e); }
+            //Log.Print(() =>$"First Weapon: {_firstWeapon.GetComponent<Rigidbody>()}");
             //_firstWeapon.GetComponent<Rigidbody>().AddForce(player.weaponDropPoint.forward * 2000, ForceMode.Impulse);
-            //try { _firstWeapon.localAmmo = 10; } catch (System.Exception e) { Debug.Log(e); }
-            //try { _firstWeapon.spareAmmo = 10; } catch (System.Exception e) { Debug.Log(e); }
+            //try { _firstWeapon.localAmmo = 10; } catch (System.Exception e) { Log.Print(() =>e); }
+            //try { _firstWeapon.spareAmmo = 10; } catch (System.Exception e) { Log.Print(() =>e); }
 
 
-            //try { _firstWeapon.ttl = _firstWeapon.defaultTtl; } catch (System.Exception e) { Debug.Log(e); }
-            //try { _firstWeapon.gameObject.SetActive(true); } catch (System.Exception e) { Debug.Log(e); }
+            //try { _firstWeapon.ttl = _firstWeapon.defaultTtl; } catch (System.Exception e) { Log.Print(() =>e); }
+            //try { _firstWeapon.gameObject.SetActive(true); } catch (System.Exception e) { Log.Print(() =>e); }
             //_firstWeapon.GetComponent<Rigidbody>().AddForce(player.weaponDropPoint.forward * 200, ForceMode.Impulse);
 
         }
@@ -2552,7 +2552,7 @@ public class PlayerController : MonoBehaviourPun
 
         //Transform pr = Instantiate(GameObjectPool.instance.playerRagdoll.gameObject, transform.position + new Vector3(0, 0.5f, 1), transform.rotation).transform;
 
-        //Debug.Log(player.playerArmorManager.colorPalette);
+        //Log.Print(() =>player.playerArmorManager.colorPalette);
         //pr.GetComponent<PlayerArmorManager>().armorDataString = player.playerArmorManager.armorDataString;
         ////pr.GetComponent<PlayerArmorManager>().armorDataString = "";
         //pr.GetComponent<PlayerArmorManager>().colorPalette = player.playerArmorManager.colorPalette;
@@ -2564,7 +2564,7 @@ public class PlayerController : MonoBehaviourPun
     {
         if (!ragdollPart.GetComponent<CharacterJoint>())
         {
-            Debug.Log(ragdollPart.name);
+            Log.Print(() =>ragdollPart.name);
             ragdollPart.localPosition = reference.localPosition;
             ragdollPart.localPosition = reference.localPosition;
         }
@@ -2582,7 +2582,7 @@ public class PlayerController : MonoBehaviourPun
     }
     public void OnDeath_Delegate(Player player)
     {
-        Debug.Log($"bullet time test OnDeath_Delegate {Time.time}");
+        Log.Print(() =>$"bullet time test OnDeath_Delegate {Time.time}");
         _currentlyThrowingGrenadeTimer = 0;
         _currentlyReloadingTimer = _currentlyReloadingTimer_thirdWeapon = 0;
 
@@ -2653,7 +2653,7 @@ public class PlayerController : MonoBehaviourPun
 
                         if (Physics.Raycast(camScript.transform.position, camScript.transform.TransformDirection(Vector3.forward), out hit, 100, GameManager.instance.markLayerMask))
                         {
-                            Debug.Log($"Did Hit {hit.point} {hit.collider.name}");
+                            Log.Print(() =>$"Did Hit {hit.point} {hit.collider.name}");
 
                             if (hit.collider.transform.root.GetComponent<Player>())
                             {
@@ -2756,7 +2756,7 @@ public class PlayerController : MonoBehaviourPun
     [PunRPC]
     void SpawnGrenade_RPC(bool fga, int ind, Vector3 sp, Quaternion sr, Vector3 forw)
     {
-        Debug.Log($"SpawnGrenade_RPC {ind}");
+        Log.Print(() =>$"SpawnGrenade_RPC {ind}");
         DisableSprint_RPC();
         player.PlayThrowingGrenadeClip();
 

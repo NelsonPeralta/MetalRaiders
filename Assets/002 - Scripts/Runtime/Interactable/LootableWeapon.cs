@@ -157,7 +157,7 @@ public class LootableWeapon : InteractableObject //IPunObservable*/
 
                 for (int i = 0; i < hits.Length; i++)
                 {
-                    Debug.Log($"RagdollLimbCollisionDetection splash check: {hits[i].collider.name}");
+                    Log.Print(() =>$"RagdollLimbCollisionDetection splash check: {hits[i].collider.name}");
                     if (hits[i].collider.gameObject.layer == 4)
                     {
                         GameObjectPool.instance.SpawnSmallWaterEffect(hits[i].point);
@@ -246,7 +246,7 @@ public class LootableWeapon : InteractableObject //IPunObservable*/
 
     public void HideWeapon()
     {
-        Debug.Log("DisableWeapon");
+        Log.Print(() =>"DisableWeapon");
         OnLooted?.Invoke(this);
         gameObject.SetActive(false);
 
@@ -254,14 +254,14 @@ public class LootableWeapon : InteractableObject //IPunObservable*/
 
         if (networkWeaponSpawnPoint)
         {
-            Debug.Log("DisableWeapon 1");
+            Log.Print(() =>"DisableWeapon 1");
             //GameManager.SetLayerRecursively(gameObject, 3);
             //gameObject.layer = 3;
             gameObject.SetActive(false);
         }
         else
         {
-            Debug.Log("DisableWeapon 2");
+            Log.Print(() =>"DisableWeapon 2");
             Destroy(gameObject);
         }
     }

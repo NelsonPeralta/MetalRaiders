@@ -31,13 +31,13 @@ public class PlayerSurroundings : MonoBehaviour
 
         if (Physics.Raycast(raySpawn, raySpawnPoint.transform.forward * maxRange, out hit, 10000, layerMask)) // Need a Raycast Range Overload to work with LayerMask
         {
-            //Debug.Log("GO over head = " + hit.transform.gameObject.name);
+            //Log.Print(() =>"GO over head = " + hit.transform.gameObject.name);
             if(hit.transform.GetComponent<MeshCollider>() || hit.transform.GetComponent<BoxCollider>())
             {
                 if (hit.transform.gameObject.layer == 14)
                 {
                     objectOverPlayerHead = true;
-                    //Debug.Log("Object layer OH = " + hit.transform.gameObject.layer);
+                    //Log.Print(() =>"Object layer OH = " + hit.transform.gameObject.layer);
                 }
                 else
                 {

@@ -11,9 +11,9 @@ public class Announcer : MonoBehaviour
         get { return _clips; }
         set
         {
-            Debug.Log(_clips.Count);
+            Log.Print(() =>_clips.Count);
             int preCount = _clips.Count - 1;
-            Debug.Log(preCount);
+            Log.Print(() =>preCount);
             _clips = value;
 
             if (_clips.Count > 0)
@@ -85,7 +85,7 @@ public class Announcer : MonoBehaviour
             GetComponent<AudioSource>().clip = clip;
             GetComponent<AudioSource>().Play();
         }
-        catch (System.Exception ex) { Debug.Log(ex); }
+        catch (System.Exception ex) { Log.Print(() =>ex); }
 
     }
 
@@ -96,7 +96,7 @@ public class Announcer : MonoBehaviour
         {
             clips.Remove(clip);
         }
-        catch (System.Exception ex) { Debug.Log(ex); }
+        catch (System.Exception ex) { Log.Print(() =>ex); }
     }
 
     void OnPlayerRespwan(Player player)

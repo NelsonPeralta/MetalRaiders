@@ -39,7 +39,7 @@ public class HitPoints : MonoBehaviour
             float _previousValue = hitPoints;
             float _damage = _previousValue - value;
 
-            Debug.Log($"Hitpoints damage:{_damage}");
+            Log.Print(() =>$"Hitpoints damage:{_damage}");
 
             if (_damage > 0 && (_isInvincible || hitPoints <= 0))
                 return;
@@ -60,8 +60,8 @@ public class HitPoints : MonoBehaviour
 
             if (overshieldPoints <= 0)
             {
-                Debug.Log(newValue);
-                Debug.Log(Mathf.Clamp(newValue, 0, (maxHealthPoints + maxShieldPoints)));
+                Log.Print(() =>newValue);
+                Log.Print(() =>Mathf.Clamp(newValue, 0, (maxHealthPoints + maxShieldPoints)));
                 _hitPoints = Mathf.Clamp(newValue, 0, (maxHealthPoints + maxShieldPoints));
             }
 
@@ -123,7 +123,7 @@ public class HitPoints : MonoBehaviour
 
             if (value && !previousValue)
             {
-                Debug.Log("OnDeath");
+                Log.Print(() =>"OnDeath");
                 OnDeath?.Invoke(this);
             }
         }

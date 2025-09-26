@@ -193,7 +193,7 @@ public class Tyrant_Old : AiAbstractClass
             tyrantAction = TyrantActions.Seek;
         else
         {
-            Debug.Log($"Target in line of sight. Player range: {playerRange}");
+            Log.Print(() =>$"Target in line of sight. Player range: {playerRange}");
             if (playerRange == PlayerRange.Medium)
                 tyrantAction = TyrantActions.Fireball;
             else if (playerRange == PlayerRange.Long)
@@ -209,7 +209,7 @@ public class Tyrant_Old : AiAbstractClass
 
     IEnumerator SpawnHellhound_Coroutine()
     {
-        Debug.Log(_minionsToSpawn);
+        Log.Print(() =>_minionsToSpawn);
         SwarmManager.instance.SpawnAi(SwarmManager.AiType.Helldog, minionSpawnPoints[_minionsToSpawn - 1]);
         _minionsToSpawn--;
         yield return new WaitForSeconds(0.1f);

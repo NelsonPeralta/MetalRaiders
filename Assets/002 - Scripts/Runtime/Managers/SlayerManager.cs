@@ -30,7 +30,7 @@ public class SlayerManager : MonoBehaviour
     public void UpdatePoints(int playerWhoDied, int playerWhoKilled)
     {
         int secondPlaceKills = 0;
-        Debug.Log("SLAYER MANAGER; Player Who Died ID: " + playerWhoDied + "; Player Who Killed ID: " + playerWhoKilled);
+        Log.Print(() =>"SLAYER MANAGER; Player Who Died ID: " + playerWhoDied + "; Player Who Killed ID: " + playerWhoKilled);
 
         foreach (GameObject player in players)
         {

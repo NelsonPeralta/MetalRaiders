@@ -57,7 +57,7 @@ public class EasterEggTreasure : InteractableObject
 
     public override void Trigger(int? pid)
     {
-        Debug.Log("EasterEggTreasure triggered");
+        Log.Print(() =>"EasterEggTreasure triggered");
         found = true;
     }
 }

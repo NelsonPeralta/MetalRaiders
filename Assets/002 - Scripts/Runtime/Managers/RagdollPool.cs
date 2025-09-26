@@ -48,7 +48,7 @@ public class RagdollPool : MonoBehaviour
 
     void OnGameIsReady_Delegate(CurrentRoomManager gme)
     {
-        Debug.Log("OnGameIsReady_Delegate");
+        Log.Print(() =>"OnGameIsReady_Delegate");
 
 
         int _currentlyCheckingThisPhotonRoomIndex = 1, _counter = 0;

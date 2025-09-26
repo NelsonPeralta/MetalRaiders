@@ -77,7 +77,7 @@ public class ExplosiveBarrelSpawnPoint : Hazard
         if (!CurrentRoomManager.instance.gameOver)
             if (gameTime.timeRemaining % tts == 0 && gameTime.timeRemaining > 0)
             {
-                Debug.Log("ExplosiveBarrelSpawnPoint OnGameTimeChanged");
+                Log.Print(() =>"ExplosiveBarrelSpawnPoint OnGameTimeChanged");
                 ResetBarrel();
             }
     }

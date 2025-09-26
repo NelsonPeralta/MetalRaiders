@@ -61,7 +61,7 @@ public class HillManager : MonoBehaviour
 
     void OnGameIsReady_Delegate(CurrentRoomManager gme)
     {
-        Debug.Log("OnAllPlayersJoinedRoom_Delegate");
+        Log.Print(() =>"OnAllPlayersJoinedRoom_Delegate");
 
         _allPlayersJoined = true;
         _moveTimer = _hillTtl;

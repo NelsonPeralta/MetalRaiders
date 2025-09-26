@@ -147,7 +147,7 @@ public class AIHitbox : Hitbox, IDamageable
 
         //if (hellhound != null) /// Hellhound
         //{
-        //    Debug.Log("In Update AI Health for Hellhound " + damage);
+        //    Log.Print(() =>"In Update AI Health for Hellhound " + damage);
         //    hellhound.Health = hellhound.Health - damage;
         //    UpdateAIHealthOnHitboxes(hellhound.Health);
 
@@ -398,7 +398,7 @@ public class AIHitbox : Hitbox, IDamageable
 
     public void Damage(int healthDamage, bool headshot, int playerWhoShotThisPlayerPhotonId)
     {
-        //Debug.Log("AI HItbox Damage 1");
+        //Log.Print(() =>"AI HItbox Damage 1");
         aiAbstractClass.Damage((int)healthDamage, playerWhoShotThisPlayerPhotonId, isHeadshot: headshot);
     }
 
@@ -407,7 +407,7 @@ public class AIHitbox : Hitbox, IDamageable
         bool isGroin = false, int weaponIndx = -1, WeaponProperties.KillFeedOutput kfo = WeaponProperties.KillFeedOutput.Unassigned,
         [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0)
     {
-        //Debug.Log("AI HItbox Damage 2");
+        //Log.Print(() =>"AI HItbox Damage 2");
         aiAbstractClass.Damage((int)healthDamage, playerWhoShotThisPlayerPhotonId, isHeadshot: headshot);
     }
 }

@@ -30,28 +30,28 @@ public class NetworkSwarmManager : MonoBehaviourPun
     [PunRPC]
     void StartNewWave_RPC()
     {
-        Debug.Log($"StartNewWave_RPC");
+        Log.Print(() =>$"StartNewWave_RPC");
         swarmManager.StartNewWave();
     }
 
     [PunRPC]
     void SpawnAi_RPC(int aiPhotonId, int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation, string aiType, int pdelay = -1)
     {
-        Debug.Log($"SpawnAi_RPC. AI pdi: {aiPhotonId}");
+        Log.Print(() =>$"SpawnAi_RPC. AI pdi: {aiPhotonId}");
         swarmManager.SpawnAi(aiPhotonId, targetPhotonId, spawnPointPosition, spawnPointRotation, aiType, pdelay);
     }
 
     [PunRPC]
     void EndWave_RPC()
     {
-        Debug.Log("EndWave_RPC");
+        Log.Print(() =>"EndWave_RPC");
         swarmManager.EndWave();
     }
 
     [PunRPC]
     void RespawnHealthPacks_RPC()
     {
-        Debug.Log("Respawn Health Packs RPC");
+        Log.Print(() =>"Respawn Health Packs RPC");
         swarmManager.RespawnHealthPacksCheck();
     }
 

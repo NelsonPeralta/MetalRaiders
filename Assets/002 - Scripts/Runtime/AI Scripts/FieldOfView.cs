@@ -118,7 +118,7 @@ public class FieldOfView : MonoBehaviour
                         {
                             // BUG: It may detect layer that should NOT be an obstruction
 
-                            //Debug.Log(obstructionMask == (obstructionMask | (1 << hit.transform.gameObject.layer)));
+                            //Log.Print(() =>obstructionMask == (obstructionMask | (1 << hit.transform.gameObject.layer)));
 
                             // Check if obs layer is part of obs layer mask
 

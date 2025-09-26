@@ -24,7 +24,7 @@ public class NetworkPlayer : MonoBehaviourPunCallbacks
          [CallerFilePath] string sourceFilePath = "",
          [CallerLineNumber] int sourceLineNumber = 0)
     {
-        Debug.Log($"NetworkPlayer Damage");
+        Log.Print(() =>$"NetworkPlayer Damage");
 
         PV.RPC("Damage_RPC", RpcTarget.All, damage, headshot, source_pid,
             impactPos, impactDir, damageSource,
@@ -49,10 +49,10 @@ public class NetworkPlayer : MonoBehaviourPunCallbacks
             if (player.hitPoints <= 0 || player.isRespawning || player.isDead)
                 return;
 
-            Debug.Log($"Damage_RPC: {damage}");
-            Debug.Log(damage);
-            Debug.Log(player.hitPoints);
-            Debug.Log(damageSource);
+            Log.Print(() =>$"Damage_RPC: {damage}");
+            Log.Print(() =>damage);
+            Log.Print(() =>player.hitPoints);
+            Log.Print(() =>damageSource);
 
         }
     }

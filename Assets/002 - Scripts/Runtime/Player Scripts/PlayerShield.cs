@@ -215,7 +215,7 @@ public class PlayerShield : MonoBehaviour
 
     void OnPlayerDeath_Delegate(Player player)
     {
-        Debug.Log("PlayerShield OnPlayerDeath_Delegate");
+        Log.Print(() =>"PlayerShield OnPlayerDeath_Delegate");
         player.GetComponent<PlayerUI>().shieldBar.SetActive(false);
         StopShieldAlarmSound();
         HideThirdPersionShieldElectricityModel();

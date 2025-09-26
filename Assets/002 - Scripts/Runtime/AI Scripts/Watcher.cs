@@ -49,7 +49,7 @@ public class Watcher : AiAbstractClass
     }
     public override void OnPlayerRangeChange_Delegate(AiAbstractClass aiAbstractClass)
     {
-        Debug.Log("OnPlayerRangeChange_Delegate ");
+        Log.Print(() =>"OnPlayerRangeChange_Delegate ");
         PlayerRange newPlayerRange = aiAbstractClass.playerRange;
         PlayerRange previousPlayerRange = aiAbstractClass.previousPlayerRange;
         WatcherActions previousAction = watcherAction;
@@ -57,7 +57,7 @@ public class Watcher : AiAbstractClass
 
         if (targetInLineOfSight)
         {
-            Debug.Log("OnPlayerRangeChange_Delegate targetInLineOfSight");
+            Log.Print(() =>"OnPlayerRangeChange_Delegate targetInLineOfSight");
 
             if (newPlayerRange == PlayerRange.Medium && (previousPlayerRange == PlayerRange.Close || previousPlayerRange == PlayerRange.Long))
             {
@@ -71,7 +71,7 @@ public class Watcher : AiAbstractClass
         }
         else
         {
-            Debug.Log("OnPlayerRangeChange_Delegate ELSE targetInLineOfSight");
+            Log.Print(() =>"OnPlayerRangeChange_Delegate ELSE targetInLineOfSight");
 
             previousAction = WatcherActions.Seek;
         }
@@ -81,7 +81,7 @@ public class Watcher : AiAbstractClass
         else if (newPlayerRange == PlayerRange.Out)
             previousAction = WatcherActions.Seek;
 
-        Debug.Log($"OnPlayerRangeChange_Delegate ELSE {previousAction}");
+        Log.Print(() =>$"OnPlayerRangeChange_Delegate ELSE {previousAction}");
 
 
         ChangeAction(previousAction.ToString());
@@ -213,12 +213,12 @@ public class Watcher : AiAbstractClass
 
     public override void OnTargetInLineOfSightChanged_Delegate(AiAbstractClass aiAbstractClass)
     {
-        Debug.Log($"Target in line of sight. Player range");
+        Log.Print(() =>$"Target in line of sight. Player range");
         if (!targetInLineOfSight)
             watcherAction = WatcherActions.Seek;
         else
         {
-            Debug.Log($"Target in line of sight. Player range: {playerRange}");
+            Log.Print(() =>$"Target in line of sight. Player range: {playerRange}");
             if (playerRange == PlayerRange.Medium)
                 watcherAction = WatcherActions.Fireball;
             else if (playerRange == PlayerRange.Long)

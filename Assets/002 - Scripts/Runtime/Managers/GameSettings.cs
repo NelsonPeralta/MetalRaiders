@@ -51,7 +51,7 @@ public class GameSettings : MonoBehaviour
     {
         if (!Input.GetMouseButtonUp(0))
         {
-            Debug.Log("Clicked UP from GameSettings");
+            Log.Print(() =>"Clicked UP from GameSettings");
 
             if (!loadSlayer)
             {
@@ -59,11 +59,11 @@ public class GameSettings : MonoBehaviour
                 loadSlayer = true;
                 localMpMenu.updateGametypeWitness("Slayer");
                 checkIfReady();
-                Debug.Log("Enalbe Salyer");
+                Log.Print(() =>"Enalbe Salyer");
             }
             else
             {
-                Debug.Log("Disable Salyer");
+                Log.Print(() =>"Disable Salyer");
                 disableAllGamemodes();
             }
         }
@@ -78,7 +78,7 @@ public class GameSettings : MonoBehaviour
                 disableAllGamemodes();
                 loadTeamSlayer = true;
                 checkIfReady();
-                Debug.Log("Enalbe TEAM Slayer");
+                Log.Print(() =>"Enalbe TEAM Slayer");
             }
             else
             {

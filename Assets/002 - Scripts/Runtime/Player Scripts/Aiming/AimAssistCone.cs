@@ -99,7 +99,7 @@ public class AimAssistCone : MonoBehaviour
                 {
                     _angleBetweenCameraCenterAndClosestHitboxToCenter = Vector3.Angle(player.mainCamera.transform.forward, _closestHbToCorsshairCenter.transform.position - player.mainCamera.transform.position);
                 }
-                //Debug.Log($"AimAssistCone {_preCollidingHitbox} {_collidingHitbox}");
+                //Log.Print(() =>$"AimAssistCone {_preCollidingHitbox} {_collidingHitbox}");
 
             }
 

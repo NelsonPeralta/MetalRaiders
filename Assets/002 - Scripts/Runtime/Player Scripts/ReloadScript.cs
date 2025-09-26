@@ -80,7 +80,7 @@ public class ReloadScript : MonoBehaviourPun
 
                     if (reloadOpenCountdown <= 0)
                     {
-                        Debug.Log("Inserting Shell");
+                        Log.Print(() =>"Inserting Shell");
                         pController.weaponAnimator.Play("Insert Shell", 0, 0f);
                         shellsToInsert = shellsToInsert - 1;
                         //pController.TransferAmmo();

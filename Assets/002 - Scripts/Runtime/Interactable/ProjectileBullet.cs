@@ -33,7 +33,7 @@ public class ProjectileBullet : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        Debug.Log(collision.gameObject.name);
+        Log.Print(() =>collision.gameObject.name);
 
         if (collision.gameObject.GetComponent<Rigidbody>())
             collision.gameObject.GetComponent<Rigidbody>().linearVelocity = Vector3.zero;

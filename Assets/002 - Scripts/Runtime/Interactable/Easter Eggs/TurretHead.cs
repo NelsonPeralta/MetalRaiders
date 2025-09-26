@@ -81,7 +81,7 @@ public class TurretHead : MonoBehaviour
         if (PhotonNetwork.InRoom) if (!PhotonNetwork.IsMasterClient) return;
         if (hitPoints) return;
 
-        Debug.Log("Finding new Target Transform");
+        Log.Print(() =>"Finding new Target Transform");
 
         if (NetworkSwarmManager.instance)
         {

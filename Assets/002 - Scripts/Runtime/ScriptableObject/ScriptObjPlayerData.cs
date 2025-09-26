@@ -25,7 +25,7 @@ public class ScriptObjPlayerData : ScriptableObject
 
     public long steamId { get { return _steamId; } set { _steamId = value; } }
     public string steamName { get { return _steamName; } set { _steamName = value; } }
-    public int photonRoomIndex { set { _photonRoomIndex = value; Debug.Log($"photonRoomIndex {value}"); } get { return _photonRoomIndex; } }
+    public int photonRoomIndex { set { _photonRoomIndex = value; Log.Print(() =>$"photonRoomIndex {value}"); } get { return _photonRoomIndex; } }
     public PlayerDatabaseAdaptor.PlayerExtendedPublicData playerExtendedPublicData
     {
         get { return _playerExtendedPublicData; }
@@ -54,7 +54,7 @@ public class ScriptObjPlayerData : ScriptableObject
     public string cardsFound { get { return _cardsFound; } }
     public string toysFound { get { return _toysFound; } }
 
-    public bool occupied { get { return _occupied; } set { Debug.Log($"occupied {value}"); _occupied = value; } }
+    public bool occupied { get { return _occupied; } set { Log.Print(() =>$"occupied {value}"); _occupied = value; } }
     public bool local { get { return _local; } set { _local = value; } }
     public int rewiredId { get { return _rewiredIndex; } set { _rewiredIndex = value; } }
     public int startingSpawnPosInd { get { return _startingSpawnPosInd; } set { _startingSpawnPosInd = value; } }
@@ -167,7 +167,7 @@ public class ScriptObjPlayerData : ScriptableObject
         Steamworks.SteamUserStats.GetAchievement("WAYT", out _achUnl);
         if (_armorPiecesPurchased > 0 && !_achUnl && this == CurrentRoomManager.instance.playerDataCells[0])
         {
-            Debug.Log($"Unlocked Achivement WAYT");
+            Log.Print(() =>$"Unlocked Achivement WAYT");
             AchievementManager.UnlockAchievement("WAYT");
         }
     }

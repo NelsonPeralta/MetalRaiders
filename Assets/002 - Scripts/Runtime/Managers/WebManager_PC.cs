@@ -13,7 +13,7 @@ public partial class WebManager
 {
     IEnumerator Login_Coroutine(string steamid, string username, string password)
     {
-        Debug.Log("LOGIN COROUTINE");
+        Log.Print(() =>"LOGIN COROUTINE");
         WWWForm form = new WWWForm();
         string m = "login";
         if (password.Equals("steam")) m = "loginwithsteam";
@@ -21,7 +21,7 @@ public partial class WebManager
         form.AddField("steamid", steamid);
         form.AddField("username", username);
         form.AddField("password", password);
-        Debug.Log($"Password: {password} {m}");
+        Log.Print(() =>$"Password: {password} {m}");
 
 
         PhotonNetwork.NickName = SteamUser.GetSteamID().m_SteamID.ToString();
@@ -39,14 +39,14 @@ public partial class WebManager
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.Log(www.error);
-                Debug.Log(www.result);
-                Debug.Log(www.downloadHandler.text);
+                Log.Print(() =>www.error);
+                Log.Print(() =>www.result);
+                Log.Print(() =>www.downloadHandler.text);
             }
             else
             {
-                Debug.Log(www.result);
-                Debug.Log(www.downloadHandler.text);
+                Log.Print(() =>www.result);
+                Log.Print(() =>www.downloadHandler.text);
 
                 string jsonarray = www.downloadHandler.text;
 
@@ -73,7 +73,7 @@ public partial class WebManager
 
     IEnumerator GetPlayerExtendedPublicData_Coroutine(long playerid)
     {
-        //Debug.Log($"GET PLAYER EXTENDED PUBLIC DATA {playerNamePlateInstance != null} {playerid}");
+        //Log.Print(() =>$"GET PLAYER EXTENDED PUBLIC DATA {playerNamePlateInstance != null} {playerid}");
         //playerNamePlateInstance.playerDataCell = CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(playerid, 0);
 
 
@@ -94,17 +94,17 @@ public partial class WebManager
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.Log(www.error);
+                Log.Print(() =>www.error);
             }
             else
             {
-                Debug.Log($"GET PLAYER EXTENDED PUBLIC DATA RESULTS {playerid}");
-                Debug.Log(www.result);
-                Debug.Log(www.downloadHandler.text);
+                Log.Print(() =>$"GET PLAYER EXTENDED PUBLIC DATA RESULTS {playerid}");
+                Log.Print(() =>www.result);
+                Log.Print(() =>www.downloadHandler.text);
 
                 string jsonarray = www.downloadHandler.text;
 
-                Debug.Log(jsonarray);
+                Log.Print(() =>jsonarray);
                 PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = PlayerDatabaseAdaptor.PlayerExtendedPublicData.CreateFromJSON(jsonarray);
 
                 CurrentRoomManager.instance.AddExtendedPlayerDataCell(pepd); // ERROR IF NULL, BREAKS GAME
@@ -127,7 +127,7 @@ public partial class WebManager
 
     //IEnumerator GetForeignPlayerExtendedPublicData_Coroutine(string steamid, PlayerNamePlate pli = null)
     //{
-    //    Debug.Log("GetPlayerExtendedPublicData_Coroutine");
+    //    Log.Print(() =>"GetPlayerExtendedPublicData_Coroutine");
     //    // DISCLAIMER
     //    // PlayerDatabaseAdaptor has authority on the data put into the PlayerListItem. Check var pda.playerBasicOnlineStats
 
@@ -144,16 +144,16 @@ public partial class WebManager
 
     //        if (www.result != UnityWebRequest.Result.Success)
     //        {
-    //            Debug.Log(www.error);
+    //            Log.Print(() =>www.error);
     //        }
     //        else
     //        {
-    //            Debug.Log(www.result);
-    //            Debug.Log(www.downloadHandler.text);
+    //            Log.Print(() =>www.result);
+    //            Log.Print(() =>www.downloadHandler.text);
 
     //            string jsonarray = www.downloadHandler.text;
 
-    //            Debug.Log(jsonarray);
+    //            Log.Print(() =>jsonarray);
     //            PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd = PlayerDatabaseAdaptor.PlayerExtendedPublicData.CreateFromJSON(jsonarray);
     //            try
     //            {
@@ -178,7 +178,7 @@ public partial class WebManager
     //                //var d = new Dictionary<string, PlayerDatabaseAdaptor>(GameManager.instance.roomPlayerData);
     //                //if (!d.ContainsKey(pda.username))
     //                //{
-    //                //    //Debug.Log($"Adding key {}")
+    //                //    //Log.Print(() =>$"Adding key {}")
     //                //    d.Add(pda.username, pda);
     //                //}
     //                //else
@@ -242,12 +242,12 @@ public partial class WebManager
 
     //        if (www.result != UnityWebRequest.Result.Success)
     //        {
-    //            Debug.Log(www.error);
+    //            Log.Print(() =>www.error);
     //        }
     //        else
     //        {
-    //            Debug.Log(www.result);
-    //            Debug.Log(www.downloadHandler.text);
+    //            Log.Print(() =>www.result);
+    //            Log.Print(() =>www.downloadHandler.text);
 
     //            if (www.downloadHandler.text.Contains("Could not save swarm stats"))
     //            {
@@ -256,7 +256,7 @@ public partial class WebManager
     //            }
     //            else if (www.downloadHandler.text.Contains("Swarm stats saved"))
     //            {
-    //                Debug.Log("Swarm stats saved successfully");
+    //                Log.Print(() =>"Swarm stats saved successfully");
     //            }
     //        }
     //    }
@@ -331,7 +331,7 @@ public partial class WebManager
 
 
 
-        Debug.Log($"SaveBasicOnlineStats_Coroutine. Xp: {CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.xp} -> " +
+        Log.Print(() =>$"SaveBasicOnlineStats_Coroutine. Xp: {CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.xp} -> " +
             $"{CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.xp + xpAndCreditGain}");
 
         ScriptObjPlayerData playerData = CurrentRoomManager.instance.playerDataCells[0];
@@ -356,7 +356,7 @@ public partial class WebManager
 
         if (newXp >= minXpToLevelUp)
         {
-            Debug.Log("LEVEL UP");
+            Log.Print(() =>"LEVEL UP");
             newLevel = playerData.playerExtendedPublicData.level + 1;
         }
         GameManager.instance.carnageReport =
@@ -388,9 +388,9 @@ public partial class WebManager
             }
             else
             {
-                Debug.Log("SaveBasicOnlineStats_Coroutine");
-                Debug.Log(www.result);
-                Debug.Log(www.downloadHandler.text);
+                Log.Print(() =>"SaveBasicOnlineStats_Coroutine");
+                Log.Print(() =>www.result);
+                Log.Print(() =>www.downloadHandler.text);
 
                 if (www.result.ToString().Contains("uccess"))
                     if (xpAndCreditGain > 0)
@@ -410,7 +410,7 @@ public partial class WebManager
                 }
                 else if (www.downloadHandler.text.Contains("Swarm stats saved"))
                 {
-                    Debug.Log("Swarm stats saved successfully");
+                    Log.Print(() =>"Swarm stats saved successfully");
                 }
             }
         }
@@ -428,7 +428,7 @@ public partial class WebManager
         if (onlinePlayerSwarmScript.GetTotalPoints() > newHighestScore)
             newHighestScore = onlinePlayerSwarmScript.GetTotalPoints();
 
-        Debug.Log("bababooey " + CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.highest_points
+        Log.Print(() =>"bababooey " + CurrentRoomManager.GetLocalPlayerData(0).playerExtendedPublicData.highest_points
             + " " + onlinePlayerSwarmScript.GetTotalPoints() + " " + newHighestScore + "\nXp to Level: ");
 
         //GameManager.instance.GetMyPlayer().GetComponent<PlayerUI>().killFeedManager.EnterNewFeed("Saving");
@@ -448,12 +448,12 @@ public partial class WebManager
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.Log(www.error);
+                Log.Print(() =>www.error);
             }
             else
             {
-                Debug.Log(www.result);
-                Debug.Log(www.downloadHandler.text);
+                Log.Print(() =>www.result);
+                Log.Print(() =>www.downloadHandler.text);
 
                 if (www.downloadHandler.text.Contains("Could not save swarm stats"))
                 {
@@ -462,7 +462,7 @@ public partial class WebManager
                 }
                 else if (www.downloadHandler.text.Contains("Swarm stats saved"))
                 {
-                    Debug.Log("Swarm stats saved successfully");
+                    Log.Print(() =>"Swarm stats saved successfully");
                 }
             }
         }
@@ -494,12 +494,12 @@ public partial class WebManager
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.Log(www.error);
+                Log.Print(() =>www.error);
             }
             else
             {
-                Debug.Log(www.result);
-                Debug.Log(www.downloadHandler.text);
+                Log.Print(() =>www.result);
+                Log.Print(() =>www.downloadHandler.text);
 
                 if (www.downloadHandler.text.Contains("Could not save swarm stats"))
                 {
@@ -508,7 +508,7 @@ public partial class WebManager
                 }
                 else if (www.downloadHandler.text.Contains("Swarm stats saved"))
                 {
-                    Debug.Log("Swarm stats saved successfully");
+                    Log.Print(() =>"Swarm stats saved successfully");
                 }
             }
         }
@@ -529,12 +529,12 @@ public partial class WebManager
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.Log(www.error);
+                Log.Print(() =>www.error);
             }
             else
             {
-                //Debug.Log(www.result);
-                //Debug.Log(www.downloadHandler.text);
+                //Log.Print(() =>www.result);
+                //Log.Print(() =>www.downloadHandler.text);
 
                 if (www.downloadHandler.text.Contains("Duplicate"))
                 {
@@ -552,7 +552,7 @@ public partial class WebManager
 
     IEnumerator Login_Coroutine_Set_Online_Stats(long playerId, PlayerDatabaseAdaptor _pda = null)
     {
-        Debug.Log("Login_Coroutine_Set_Online_Stats");
+        Log.Print(() =>"Login_Coroutine_Set_Online_Stats");
         WWWForm form = new WWWForm();
         form.AddField("service", "getBasicOnlineData");
         form.AddField("playerId", playerId.ToString());
@@ -563,12 +563,12 @@ public partial class WebManager
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.Log(www.error);
+                Log.Print(() =>www.error);
             }
             else
             {
-                Debug.Log(www.result);
-                Debug.Log(www.downloadHandler.text);
+                Log.Print(() =>www.result);
+                Log.Print(() =>www.downloadHandler.text);
 
                 string jsonarray = www.downloadHandler.text;
 
@@ -584,13 +584,13 @@ public partial class WebManager
 
                     if (www.result.ToString().Contains("Success"))
                     {
-                        Debug.Log("Login_Coroutine_Set_Online_Stats SUCCESS");
-                        Debug.Log(pda.playerBasicOnlineStats.armor_color_palette);
+                        Log.Print(() =>"Login_Coroutine_Set_Online_Stats SUCCESS");
+                        Log.Print(() =>pda.playerBasicOnlineStats.armor_color_palette);
                     }
                 }
                 catch (Exception e)
                 {
-                    Debug.Log(e);
+                    Log.Print(() =>e);
                     if (www.downloadHandler.text.Contains("Could not fetch pvp stats"))
                     {
                         Launcher.instance.OnCreateRoomFailed(0, "Could not fetch pvp stats");
@@ -612,12 +612,12 @@ public partial class WebManager
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.Log(www.error);
+                Log.Print(() =>www.error);
             }
             else
             {
-                //Debug.Log(www.result);
-                //Debug.Log(www.downloadHandler.text);
+                //Log.Print(() =>www.result);
+                //Log.Print(() =>www.downloadHandler.text);
 
                 string jsonarray = www.downloadHandler.text;
 
@@ -632,7 +632,7 @@ public partial class WebManager
                 }
                 catch (Exception e)
                 {
-                    Debug.Log(e);
+                    Log.Print(() =>e);
                     if (www.downloadHandler.text.Contains("Could not fetch pvp stats"))
                     {
                         Launcher.instance.OnCreateRoomFailed(0, "Could not fetch pvp stats");
@@ -654,12 +654,12 @@ public partial class WebManager
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.Log(www.error);
+                Log.Print(() =>www.error);
             }
             else
             {
-                Debug.Log(www.result);
-                Debug.Log(www.downloadHandler.text);
+                Log.Print(() =>www.result);
+                Log.Print(() =>www.downloadHandler.text);
 
                 string jsonarray = www.downloadHandler.text;
 
@@ -674,7 +674,7 @@ public partial class WebManager
                 }
                 catch (Exception e)
                 {
-                    Debug.Log(e);
+                    Log.Print(() =>e);
                     if (www.downloadHandler.text.Contains("Could not fetch pve stats"))
                     {
                         Launcher.instance.OnCreateRoomFailed(0, "Could not fetch pve stats");
@@ -714,12 +714,12 @@ public partial class WebManager
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.Log(www.error);
+                Log.Print(() =>www.error);
             }
             else
             {
-                Debug.Log(www.result);
-                Debug.Log(www.downloadHandler.text);
+                Log.Print(() =>www.result);
+                Log.Print(() =>www.downloadHandler.text);
 
                 if (www.downloadHandler.text.Contains("Could not save UnlockedArmorStringData"))
                 {
@@ -728,7 +728,7 @@ public partial class WebManager
                 }
                 else if (www.downloadHandler.text.Contains("UnlockedArmorStringData saved successfully"))
                 {
-                    Debug.Log("UnlockedArmorStringData saved successfully");
+                    Log.Print(() =>"UnlockedArmorStringData saved successfully");
                 }
             }
 
@@ -739,7 +739,7 @@ public partial class WebManager
     [Tooltip("FOR ACHIEVEMENTS ONLY")]
     public static IEnumerator UnlockArmorPiece_Coroutine(ScriptObjPlayerData playerDataCell, string _armorPieceCodename)
     {
-        Debug.Log($"UnlockArmorPiece_Coroutine: {_armorPieceCodename}");
+        Log.Print(() =>$"UnlockArmorPiece_Coroutine: {_armorPieceCodename}");
         playerDataCell.playerExtendedPublicData.unlocked_armor_data_string += $"-{_armorPieceCodename}-";
         //pda.unlockedArmorDataString.Replace("\n\n", "\n");
 
@@ -756,12 +756,12 @@ public partial class WebManager
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.Log(www.error);
+                Log.Print(() =>www.error);
             }
             else
             {
-                Debug.Log(www.result);
-                Debug.Log(www.downloadHandler.text);
+                Log.Print(() =>www.result);
+                Log.Print(() =>www.downloadHandler.text);
 
                 if (www.downloadHandler.text.Contains("Could not save UnlockedArmorStringData"))
                 {
@@ -770,7 +770,7 @@ public partial class WebManager
                 }
                 else if (www.downloadHandler.text.Contains("UnlockedArmorStringData saved successfully"))
                 {
-                    Debug.Log("UnlockedArmorStringData saved successfully");
+                    Log.Print(() =>"UnlockedArmorStringData saved successfully");
                 }
             }
         }
@@ -784,7 +784,7 @@ public partial class WebManager
 
         form.AddField("newEquippedArmorStringData", data);
 
-        Debug.Log(data);
+        Log.Print(() =>data);
 
         using (UnityWebRequest www = UnityWebRequest.Post("https://metalraiders.com/database.php", form))
         {
@@ -792,12 +792,12 @@ public partial class WebManager
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.Log(www.error);
+                Log.Print(() =>www.error);
             }
             else
             {
-                Debug.Log(www.result);
-                Debug.Log(www.downloadHandler.text);
+                Log.Print(() =>www.result);
+                Log.Print(() =>www.downloadHandler.text);
 
                 if (www.downloadHandler.text.Contains("Could not save SaveEquippedArmorDataString"))
                 {
@@ -806,7 +806,7 @@ public partial class WebManager
                 }
                 else if (www.downloadHandler.text.Contains("SaveEquippedArmorDataString saved successfully"))
                 {
-                    Debug.Log("SaveEquippedArmorDataString saved successfully");
+                    Log.Print(() =>"SaveEquippedArmorDataString saved successfully");
                 }
             }
         }
@@ -816,7 +816,7 @@ public partial class WebManager
 
     public IEnumerator SaveArmorColorPalette_Coroutine(int steamid, string colorName)
     {
-        Debug.Log("SaveArmorColorPalette_Coroutine");
+        Log.Print(() =>"SaveArmorColorPalette_Coroutine");
         WWWForm form = new WWWForm();
         form.AddField("service", "SaveArmorColorPalette");
         form.AddField("playerId", steamid);
@@ -830,12 +830,12 @@ public partial class WebManager
 
             if (www.result != UnityWebRequest.Result.Success)
             {
-                Debug.Log(www.error);
+                Log.Print(() =>www.error);
             }
             else
             {
-                Debug.Log(www.result);
-                Debug.Log(www.downloadHandler.text);
+                Log.Print(() =>www.result);
+                Log.Print(() =>www.downloadHandler.text);
 
                 if (www.downloadHandler.text.Contains("Could not save SaveEquippedArmorDataString"))
                 {
@@ -844,7 +844,7 @@ public partial class WebManager
                 }
                 else if (www.downloadHandler.text.Contains("SaveEquippedArmorDataString saved successfully"))
                 {
-                    Debug.Log("SaveEquippedArmorDataString saved successfully");
+                    Log.Print(() =>"SaveEquippedArmorDataString saved successfully");
                 }
             }
         }

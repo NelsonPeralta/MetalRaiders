@@ -26,7 +26,7 @@ public class OnlineWeaponSpawnPoint : MonoBehaviour
         //    StartCoroutine(SpawnNewWeaponFromWeaponPool(0.1f));
         //if (!weaponSpawned)
         //{
-        //    //Debug.Log("Spawning New Weapon");
+        //    //Log.Print(() =>"Spawning New Weapon");
         //    var newWeap = FindObjectOfType<WeaponPool>().GetWeaponFromList(codeName).GetComponent<LootableWeapon>();
         //    newWeap.transform.position = transform.position;
         //    newWeap.transform.rotation = transform.rotation;
@@ -42,7 +42,7 @@ public class OnlineWeaponSpawnPoint : MonoBehaviour
         GameTime ogt = FindObjectOfType<GameTime>();
         int timeWeaponWasGrabbed = ogt.timeRemaining;
         int newSpawnTime = timeToSpawn - (timeWeaponWasGrabbed % timeToSpawn);
-        //Debug.Log($"Time weapon grabbed: {ogt.totalTime}. New Spawn Time: {newSpawnTime}");
+        //Log.Print(() =>$"Time weapon grabbed: {ogt.totalTime}. New Spawn Time: {newSpawnTime}");
         StartCoroutine(SpawnNewWeaponFromWeaponPool(newSpawnTime));
     }
 

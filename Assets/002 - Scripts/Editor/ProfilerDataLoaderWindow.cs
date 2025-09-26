@@ -43,7 +43,7 @@ public class ProfilerDataLoaderWindow : EditorWindow
             if (!match.Success)
             {
                 // not a binary file, add it to the list
-                Debug.Log("Found file: " + thisPath);
+                Log.Print(() =>"Found file: " + thisPath);
                 s_cachedFilePaths.Add(thisPath);
             }
         }

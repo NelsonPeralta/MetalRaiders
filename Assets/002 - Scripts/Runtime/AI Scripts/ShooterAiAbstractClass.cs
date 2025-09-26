@@ -73,7 +73,7 @@ abstract public class ShooterAiAbstractClass : MonoBehaviourPunCallbacks
             {
                 _previousPlayerRange = playerRange;
                 _playerRange = value;
-                //Debug.Log($"Player range change: {playerRange}");
+                //Log.Print(() =>$"Player range change: {playerRange}");
                 OnPlayerRangeChange?.Invoke(this);
             }
         }
@@ -92,7 +92,7 @@ abstract public class ShooterAiAbstractClass : MonoBehaviourPunCallbacks
         get { return _target; }
         set
         {
-            Debug.Log($"New AI Target: {value}");
+            Log.Print(() =>$"New AI Target: {value}");
             if (value)
             {
                 if (value.GetComponent<Player>().isDead || value.GetComponent<Player>().isRespawning)
@@ -107,7 +107,7 @@ abstract public class ShooterAiAbstractClass : MonoBehaviourPunCallbacks
             }
             else
             {
-                Debug.Log($"New AI Target is NULL");
+                Log.Print(() =>$"New AI Target is NULL");
                 _target = null;
                 seek = false;
                 playerRange = AiAbstractClass.PlayerRange.Out;
@@ -119,7 +119,7 @@ abstract public class ShooterAiAbstractClass : MonoBehaviourPunCallbacks
                 //}
                 //catch (Exception e)
                 //{
-                //    Debug.Log($"ERROR while trying to get new target for AI");
+                //    Log.Print(() =>$"ERROR while trying to get new target for AI");
                 //    Debug.LogWarning(e);
                 //    _target = null;
                 //}
@@ -156,7 +156,7 @@ abstract public class ShooterAiAbstractClass : MonoBehaviourPunCallbacks
         {
             if (!_isDead && value)
             {
-                Debug.Log($"{name} OnDeathInvoke");
+                Log.Print(() =>$"{name} OnDeathInvoke");
                 _isDead = true;
                 OnDeath?.Invoke(this);
             }
@@ -211,7 +211,7 @@ abstract public class ShooterAiAbstractClass : MonoBehaviourPunCallbacks
             if (value != _targetInLineOfSight)
             {
                 _targetInLineOfSight = value;
-                //Debug.Log($"Target in line of sight change: {_targetInLineOfSight}");
+                //Log.Print(() =>$"Target in line of sight change: {_targetInLineOfSight}");
                 OnTargeInLineOfSightChange?.Invoke(this);
             }
         }
@@ -222,17 +222,17 @@ abstract public class ShooterAiAbstractClass : MonoBehaviourPunCallbacks
         get { return _targetOutOfSight; }
         set
         {
-            //Debug.Log($"_targetOutOfSight {value}, {targetOutOfSight}, {targetOutOfSightCountdown}");
+            //Log.Print(() =>$"_targetOutOfSight {value}, {targetOutOfSight}, {targetOutOfSightCountdown}");
 
             if (value && !_targetOutOfSight)
             {
-                //Debug.Log("Target is out of sight");
+                //Log.Print(() =>"Target is out of sight");
                 _targetOutOfSight = true;
                 targetOutOfSightCountdown = targetOutOfSightDefaultCountdown;
             }
             else if (!value && _targetOutOfSight)
             {
-                //Debug.Log("Target found");
+                //Log.Print(() =>"Target found");
                 targetOutOfSightCountdown = 999;
                 _targetOutOfSight = false;
             }
@@ -293,7 +293,7 @@ abstract public class ShooterAiAbstractClass : MonoBehaviourPunCallbacks
     }
     void OnDeath_Delegate(ShooterAiAbstractClass aiAbstractClass) // Bug: Event called twice
     {
-        Debug.Log($"AI on death delegate. Is dead: {isDead}");
+        Log.Print(() =>$"AI on death delegate. Is dead: {isDead}");
         SwarmManager.instance.DropRandomLoot(transform.position, transform.rotation);
         _voice.clip = _dieClip;
         _voice.Play();
@@ -370,7 +370,7 @@ abstract public class ShooterAiAbstractClass : MonoBehaviourPunCallbacks
     {
         if (targetOutOfSightCountdown > 0 && targetOutOfSight)
             targetOutOfSightCountdown -= Time.deltaTime;
-        //Debug.Log($"Target ouf of sight countdown: {targetOutOfSightCountdown}");
+        //Log.Print(() =>$"Target ouf of sight countdown: {targetOutOfSightCountdown}");
         if (targetOutOfSightCountdown <= 0 && targetInLineOfSight)
             targetInLineOfSight = false;
     }

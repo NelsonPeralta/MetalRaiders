@@ -43,7 +43,7 @@ public class OnlineAmmoPackSpawnPoint : MonoBehaviour
 
     public void StartRespawn()
     {
-        //Debug.Log($"Time Ammo Pack grabbed: {FindObjectOfType<OnlineGameTime>().totalTime}. New Spawn Time: {newSpawnTime}");
+        //Log.Print(() =>$"Time Ammo Pack grabbed: {FindObjectOfType<OnlineGameTime>().totalTime}. New Spawn Time: {newSpawnTime}");
 
         int timeWeaponWasGrabbed = FindObjectOfType<GameTime>().timeRemaining;
         int newSpawnTime = timeToSpawn - (timeWeaponWasGrabbed % timeToSpawn);

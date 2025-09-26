@@ -44,7 +44,7 @@ public class ArmoryManager : MonoBehaviour
     }
     private void OnEnable()
     {
-        Debug.Log($"OnEnable ArmoryManager {Launcher.instance.playerModel.name}");
+        Log.Print(() =>$"OnEnable ArmoryManager {Launcher.instance.playerModel.name}");
         Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().PreventReloadArmor = true;
         Launcher.instance.playerModel.SetActive(true);
         Launcher.instance.playerModel.GetComponent<PlayerArmorManager>().playerDataCell = CurrentRoomManager.GetLocalPlayerData(0);

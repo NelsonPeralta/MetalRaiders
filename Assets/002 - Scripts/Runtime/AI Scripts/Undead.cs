@@ -24,7 +24,7 @@ public class Undead : Actor
         }
         else
         {
-            //Debug.Log("Punch Player RPC");
+            //Log.Print(() =>"Punch Player RPC");
 
             GetComponent<AudioSource>().clip = _attackClip;
             GetComponent<AudioSource>().Play();
@@ -51,7 +51,7 @@ public class Undead : Actor
         }
         else
         {
-            //Debug.Log("UndeadIdle RPC");
+            //Log.Print(() =>"UndeadIdle RPC");
 
             nma.enabled = false;
             _animator.SetBool("Run", false);
@@ -67,7 +67,7 @@ public class Undead : Actor
         }
         else
         {
-            //Debug.Log("UndeadRun RPC");
+            //Log.Print(() =>"UndeadRun RPC");
 
             //_animator.Play("Run");
             _animator.SetBool("Run", true);

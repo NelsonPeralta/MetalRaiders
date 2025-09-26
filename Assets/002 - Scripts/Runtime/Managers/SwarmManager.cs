@@ -154,7 +154,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         get { return _tyrantsLeft; }
         private set
         {
-            Debug.Log($"Tyrants Left: {value}");
+            Log.Print(() =>$"Tyrants Left: {value}");
             int previousValue = _tyrantsLeft;
             _tyrantsLeft = value;
 
@@ -214,9 +214,9 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         get { return _clips; }
         set
         {
-            Debug.Log(_clips.Count);
+            Log.Print(() =>_clips.Count);
             int preCount = _clips.Count - 1;
-            Debug.Log(preCount);
+            Log.Print(() =>preCount);
             _clips = value;
 
             if (_clips.Count > 0)
@@ -355,7 +355,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         if (currentScene.buildIndex > 0) // We are not in the menu
         {
-            Debug.Log("SWARM MANAGER: OnSceneLoaded");
+            Log.Print(() =>"SWARM MANAGER: OnSceneLoaded");
             if (GameManager.instance.gameMode != GameManager.GameMode.Coop)
                 return;
 
@@ -448,7 +448,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     {
         if (!caller)
         {
-            Debug.Log("Creating AI Pool");
+            Log.Print(() =>"Creating AI Pool");
         }
         else
             networkSwarmManagerPV.RPC("CreateAIPool", RpcTarget.All);
@@ -466,7 +466,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         if (!PhotonNetwork.IsMasterClient)
             return;
-        Debug.Log("SWARM MANAGER: Begin");
+        Log.Print(() =>"SWARM MANAGER: Begin");
 
         if (PhotonNetwork.IsMasterClient) _networkSwarmManager.GetComponent<PhotonView>().RPC("IncreaseWave_RPC", RpcTarget.All);
     }
@@ -475,7 +475,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     {
         currentWave++;
         CalculateNumberOfAIsForNextWave();
-        Debug.Log("Wave Increased");
+        Log.Print(() =>"Wave Increased");
 
 
         OnWaveIncrease?.Invoke(this);
@@ -496,7 +496,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             if (zombiesLeft > _zombiesPool.Count)
                 zombiesLeft = _zombiesPool.Count;
 
-            Debug.Log($"SwarmManager CalculateNumberOfAIsForNextWave");
+            Log.Print(() =>$"SwarmManager CalculateNumberOfAIsForNextWave");
 
 
             breathersLeft = 3 + (int)(currentWave * 1.4f);
@@ -544,7 +544,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void StartNewWave()
     {
-        Debug.Log($"StartNewWave_RPC");
+        Log.Print(() =>$"StartNewWave_RPC");
         if (!CurrentRoomManager.instance.gameOver)
             StartCoroutine(StartNewWave_Coroutine());
     }
@@ -597,7 +597,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         actorsAliveList.Clear();
         if (PhotonNetwork.IsMasterClient)
         {
-            Debug.Log("Spawning Ais");
+            Log.Print(() =>"Spawning Ais");
             _reservedActorPhotonIdsForWave.Clear();
 
             for (int i = 0; i < _actorDropships.Count; i++)
@@ -613,7 +613,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     }
     public void SpawnAi(AiType aiType, Transform transform = null)
     {
-        //Debug.Log($"Spawning type of ai: {aiType}");
+        //Log.Print(() =>$"Spawning type of ai: {aiType}");
         if (!PhotonNetwork.IsMasterClient)
             return;
 
@@ -740,7 +740,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     // https://docs.microsoft.com/en-us/dotnet/api/system.action-1?view=net-6.0
     public void SpawnAi(int aiPhotonId, int targetPhotonId, Vector3 spawnPointPosition, Quaternion spawnPointRotation, string aiType, int pdelay = -1)
     {
-        //Debug.Log($"SpawnAi_RPC. AI pdi: {aiPhotonId}");
+        //Log.Print(() =>$"SpawnAi_RPC. AI pdi: {aiPhotonId}");
         if (!CurrentRoomManager.instance.gameOver)
             StartCoroutine(SpawnAI_Coroutine(aiPhotonId, targetPhotonId, spawnPointPosition, spawnPointRotation, aiType, pdelay));
     }
@@ -752,7 +752,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             yield return new WaitForSeconds(1);
         }
 
-        //Debug.Log($"BEFORE DELAY. SpawnAI_Coroutine. AI pdi: {aiPhotonId}. AI type: {aiType}");
+        //Log.Print(() =>$"BEFORE DELAY. SpawnAI_Coroutine. AI pdi: {aiPhotonId}. AI type: {aiType}");
         AiType aiTypeEnum = (AiType)System.Enum.Parse(typeof(AiType), aiType);
         float delay = 10;
         float waveSpawnDelay = (currentWave / 5);
@@ -788,7 +788,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
         yield return new WaitForSeconds(delay);
 
-        Debug.Log($"AFTER DELAY. SpawnAI_Coroutine. AI pdi: {aiPhotonId}. AI type: {aiType}. {PhotonView.Find(aiPhotonId).name}");
+        Log.Print(() =>$"AFTER DELAY. SpawnAI_Coroutine. AI pdi: {aiPhotonId}. AI type: {aiType}. {PhotonView.Find(aiPhotonId).name}");
         try
         {
             var newAiObj = PhotonView.Find(aiPhotonId).gameObject;
@@ -819,10 +819,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             //{
             //    foreach (Undead w in _zombieList)
             //    {
-            //        Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
+            //        Log.Print(() =>$"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
             //        if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
             //        {
-            //            Debug.Log("Found");
+            //            Log.Print(() =>"Found");
             //            w.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
             //        }
             //    }
@@ -831,10 +831,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             //{
             //    foreach (Watcher w in watcherPool)
             //    {
-            //        Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
+            //        Log.Print(() =>$"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
             //        if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
             //        {
-            //            Debug.Log("Found");
+            //            Log.Print(() =>"Found");
 
             //            w.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
             //        }
@@ -845,10 +845,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             //{
             //    foreach (Breather w in knightPool)
             //    {
-            //        Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
+            //        Log.Print(() =>$"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
             //        if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
             //        {
-            //            Debug.Log("Found");
+            //            Log.Print(() =>"Found");
 
             //            w.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
             //        }
@@ -858,10 +858,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             //{
             //    foreach (Helldog w in hellhoundPool)
             //    {
-            //        Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
+            //        Log.Print(() =>$"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
             //        if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
             //        {
-            //            Debug.Log("Found");
+            //            Log.Print(() =>"Found");
 
             //            w.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
             //        }
@@ -871,10 +871,10 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             //{
             //    foreach (FlameTyrant w in tyrantPool)
             //    {
-            //        Debug.Log($"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
+            //        Log.Print(() =>$"{aiTypeEnum} Pid: {w.GetComponent<PhotonView>().ViewID}");
             //        if (w.GetComponent<PhotonView>().ViewID == aiPhotonId)
             //        {
-            //            Debug.Log("Found");
+            //            Log.Print(() =>"Found");
 
             //            w.GetComponent<AiAbstractClass>().Spawn(targetPhotonId, spawnPointPosition, spawnPointRotation);
             //        }
@@ -922,7 +922,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
     }
     void OnAiDeath_Delegate(SwarmManager swarmManager)
     {
-        Debug.Log("OnAiDeath_Delegate");
+        Log.Print(() =>"OnAiDeath_Delegate");
 
         int __zombiesAlive = 0;
         int __watchersAlive = 0;
@@ -964,27 +964,27 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         if (ribbiansLeft <= 0 && ribbiansAlive <= 0 && breathersLeft <= 0 && breathersAlive <= 0 && hellhoundsLeft <= 0 && hellhoundsAlive <= 0 && tyrantsLeft <= 0 && tyrantsAlive <= 0 && zombiesLeft <= 0 && zombiesAlive <= 0)
             if (PhotonNetwork.IsMasterClient)
             {
-                //Debug.Log("Swarm Manager EndWave");
+                //Log.Print(() =>"Swarm Manager EndWave");
                 //_waveEndCountdown = nextWaveDelay;
                 //_networkSwarmManager.GetComponent<PhotonView>().RPC("EndWave_RPC", RpcTarget.All);
             }
 
         if (ribbiansAlive <= 0 && breathersAlive <= 0)
         {
-            Debug.Log("Swarm Manager EndWave");
+            Log.Print(() =>"Swarm Manager EndWave");
             _waveEndCountdown = nextWaveDelay;
         }
     }
 
     public void InvokeOnAiDeath() // Called multiple times on an ai death. TODO: Find independant solution
     {
-        Debug.Log("Swarm Manager OnAiDeath");
+        Log.Print(() =>"Swarm Manager OnAiDeath");
         OnAiDeath?.Invoke(this);
     }
 
     public void EndWave()
     {
-        Debug.Log("EndWave_RPC");
+        Log.Print(() =>"EndWave_RPC");
         Log.Print(() => $"EndWave_RPC {currentWave} {ranClipInt}");
         if (currentWave % 5 == 0 && currentWave > 1) AddClip(bossMusicOutros[ranClipInt]);
 
@@ -1030,7 +1030,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
             if (!_achievementUnlocked)
             {
-                Debug.Log("Unlocked Achievement ENDURE");
+                Log.Print(() =>"Unlocked Achievement ENDURE");
                 AchievementManager.UnlockAchievement("ENDURE");
             }
             
@@ -1138,7 +1138,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
 
     public void DropRandomLoot(string ammotype, Vector3 position, Quaternion rotation)
     {
-        Debug.Log($"{name} spawned random loot {ammotype}");
+        Log.Print(() =>$"{name} spawned random loot {ammotype}");
         GameObject loot = GameManager.instance.lightAmmoPack.gameObject;
         Quaternion rotFix = new Quaternion(0, 0, 0, 0);
         rotFix.eulerAngles = new Vector3(0, 180, 0);
@@ -1218,7 +1218,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
             _musicAudioSource.Play();
             _musicAudioSource.loop = bossMusicLoops.Contains(clip);
         }
-        catch (System.Exception ex) { Debug.Log(ex); }
+        catch (System.Exception ex) { Log.Print(() =>ex); }
 
     }
 
@@ -1229,7 +1229,7 @@ public class SwarmManager : MonoBehaviourPunCallbacks
         {
             clips.Remove(clip);
         }
-        catch (System.Exception ex) { Debug.Log(ex); }
+        catch (System.Exception ex) { Log.Print(() =>ex); }
     }
 
 

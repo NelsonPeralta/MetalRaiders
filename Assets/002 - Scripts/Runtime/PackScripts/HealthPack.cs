@@ -11,7 +11,7 @@ public class HealthPack : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log($"Health Pack {other.name}");
+        Log.Print(() =>$"Health Pack {other.name}");
         if (other.GetComponent<PlayerCapsule>() && other.GetComponent<PlayerCapsule>().transform.root.GetComponent<Player>().hitPoints <= 0.7f * other.GetComponent<PlayerCapsule>().transform.root.GetComponent<Player>().maxHitPoints)
         {
             Player p = other.GetComponent<PlayerCapsule>().transform.root.GetComponent<Player>();
@@ -27,7 +27,7 @@ public class HealthPack : MonoBehaviour
 
             if (!_achievementUnlocked && p.isMine)
             {
-                Debug.Log($"Unlocked Achivement MEDIC");
+                Log.Print(() =>$"Unlocked Achivement MEDIC");
                 AchievementManager.UnlockAchievement("MEDIC");
             }
         }

@@ -274,7 +274,7 @@ public class WeaponProperties : MonoBehaviour
         if (fireRate <= 0)
             fireRate = 600;
         //delayBetweenBullets = 1f / fireRate;
-        //Debug.Log($"Delay Between Bullets: {delayBetweenBullets}");
+        //Log.Print(() =>$"Delay Between Bullets: {delayBetweenBullets}");
 
         if (headshotMultiplier <= 0)
             headshotMultiplier = 1;

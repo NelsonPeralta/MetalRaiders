@@ -34,7 +34,7 @@ public class PlayerMovement : MonoBehaviour
                 (_previousMovementDirEnum == PlayerMovementDirection.Forward && _playerMovementDirection == PlayerMovementDirection.Backwards) ||
                 (_previousMovementDirEnum == PlayerMovementDirection.Right && _playerMovementDirection == PlayerMovementDirection.Left))
             {
-                Debug.Log("Player changed direction drastically");
+                Log.Print(() =>"Player changed direction drastically");
                 moveSpeed = Mathf.Clamp(moveSpeed, 0, 1);
             }
         }

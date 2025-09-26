@@ -111,7 +111,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
                 for (int i = 0; i < hits.Length; i++)
                 {
-                    //Debug.Log($"ExplosiveProjectile splash check: {hits[i].collider.name}");
+                    //Log.Print(() =>$"ExplosiveProjectile splash check: {hits[i].collider.name}");
                     if (hits[i].collider.gameObject.layer == 4)
                     {
                         GameObjectPool.instance.SpawnSmallWaterEffect(hits[i].point);
@@ -168,7 +168,7 @@ public class ExplosiveProjectile : MonoBehaviour
         if (collision.gameObject.layer != 9)
         {
             if (_killFeedOutput == WeaponProperties.KillFeedOutput.Frag_Grenade && GetComponent<Rigidbody>().mass != 2) GetComponent<Rigidbody>().mass = 2;
-            Debug.Log($"Collided with: {collision.gameObject.name} {collision.gameObject.GetComponent<Collider>()} {collision.gameObject.GetComponent<Player>()}");
+            Log.Print(() =>$"Collided with: {collision.gameObject.name} {collision.gameObject.GetComponent<Collider>()} {collision.gameObject.GetComponent<Player>()}");
 
             try
             {
@@ -198,7 +198,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
             if (_sticky && !_collided)
             {
-                Debug.Log($"STUCK: {collision.gameObject.name} {collision.gameObject.GetComponent<PlayerHitbox>()} {collision.gameObject.GetComponent<ActorHitbox>()}");
+                Log.Print(() =>$"STUCK: {collision.gameObject.name} {collision.gameObject.GetComponent<PlayerHitbox>()} {collision.gameObject.GetComponent<ActorHitbox>()}");
 
 
                 if (collision.gameObject.transform.root.GetComponent<Player>())
@@ -284,7 +284,7 @@ public class ExplosiveProjectile : MonoBehaviour
     //{
     //    if (GetComponent<Collider>().isTrigger)
     //    {
-    //        Debug.Log($"OnTriggerEnter with: {other.gameObject.name} {other.gameObject.layer} at point {other.ClosestPoint(transform.position)}");
+    //        Log.Print(() =>$"OnTriggerEnter with: {other.gameObject.name} {other.gameObject.layer} at point {other.ClosestPoint(transform.position)}");
 
     //        if (GameManager.LayerIsPartOfLayerMask(other.gameObject.layer, _stickyLayerMask))
     //        {
@@ -312,7 +312,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
     //                    if (other.gameObject.GetComponent<PlayerHitbox>())
     //                    {
-    //                        Debug.Log("STUCK!");
+    //                        Log.Print(() =>"STUCK!");
     //                        _stuck = true;
     //                    }
     //                }
@@ -325,15 +325,15 @@ public class ExplosiveProjectile : MonoBehaviour
     {
         if (!_exploded)
         {
-            Debug.Log($"Is under water {IsUnderwater()}");
-            Debug.Log($"Explosion {_stuckPlayerPhotonId} {PhotonNetwork.IsMasterClient == true} {_player.photonId} {_exploded == true}");
+            Log.Print(() =>$"Is under water {IsUnderwater()}");
+            Log.Print(() =>$"Explosion {_stuckPlayerPhotonId} {PhotonNetwork.IsMasterClient == true} {_player.photonId} {_exploded == true}");
         }
 
         if (PhotonNetwork.IsMasterClient && !_exploded)
         {
             if (_stuckPlayerPhotonId > 0)
             {
-                Debug.Log($"Explosion 1");
+                Log.Print(() =>$"Explosion 1");
 
                 //GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).Damage(damage: 999, headshot: false, source_pid: _player.photonId, impactPos: transform.position,
                 //  impactDir: GameManager.GetPlayerWithPhotonView(_stuckPlayerPhotonId).targetTrackingCorrectTarget.position - transform.position, kfo: WeaponProperties.KillFeedOutput.Stuck);
@@ -347,8 +347,8 @@ public class ExplosiveProjectile : MonoBehaviour
             }
             else
             {
-                Debug.Log($"Explosion 2");
-                Debug.Log("Calling DisableAndExplodeProjectile");
+                Log.Print(() =>$"Explosion 2");
+                Log.Print(() =>"Calling DisableAndExplodeProjectile");
                 NetworkGameManager.instance.DisableAndExplodeProjectile((int)_killFeedOutput, GrenadePool.instance.GetIndexOfExplosive(_killFeedOutput, gameObject), transform.position, underWater: IsUnderwater());
             }
         }
@@ -360,7 +360,7 @@ public class ExplosiveProjectile : MonoBehaviour
         yield return new WaitForEndOfFrame();
         if (!_exploded)
             _exploded = true;
-        Debug.Log("Calling DisableAndExplodeProjectile");
+        Log.Print(() =>"Calling DisableAndExplodeProjectile");
         NetworkGameManager.instance.DisableAndExplodeProjectile((int)_killFeedOutput, GrenadePool.instance.GetIndexOfExplosive(_killFeedOutput, gameObject), transform.position, underWater: IsUnderwater());
     }
 
@@ -393,7 +393,7 @@ public class ExplosiveProjectile : MonoBehaviour
 
     public void TriggerStuckBehaviour(int playerPhotonId, Vector3 gPos)
     {
-        Debug.Log($"TriggerStuckBehaviour. of photon id {playerPhotonId}. gPos {gPos}");
+        Log.Print(() =>$"TriggerStuckBehaviour. of photon id {playerPhotonId}. gPos {gPos}");
         GetComponent<Rigidbody>().linearVelocity = Vector3.zero; GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
 
         _explosionDelayOnImpact = _defaultExplosionDelayOnImpact;

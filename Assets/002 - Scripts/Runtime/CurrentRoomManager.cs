@@ -24,7 +24,7 @@ public class CurrentRoomManager : MonoBehaviour
         get { return _roomType; }
         set
         {
-            Debug.Log($"ROOM TYPE {value}");
+            Log.Print(() =>$"ROOM TYPE {value}");
             _roomType = value;
         }
     }
@@ -107,7 +107,7 @@ public class CurrentRoomManager : MonoBehaviour
 
             if (_spawnedMapAddOns == expectedMapAddOns)
             {
-                Debug.Log($"spawnedMapAddOns: {value} ({expectedMapAddOns} needed)");
+                Log.Print(() =>$"spawnedMapAddOns: {value} ({expectedMapAddOns} needed)");
                 mapIsReady = true;
             }
         }
@@ -123,7 +123,7 @@ public class CurrentRoomManager : MonoBehaviour
 
             if (value && _preVal != value)
             {
-                Debug.Log($"mapIsReady");
+                Log.Print(() =>$"mapIsReady");
                 for (int i = 0; i < GameManager.instance.nbLocalPlayersPreset; i++)
                     NetworkGameManager.instance.AddPlayerLoadedScene();
             }
@@ -189,7 +189,7 @@ public class CurrentRoomManager : MonoBehaviour
             _allPlayersJoined = value;
             if (value && _preVal != value)
             {
-                Debug.Log("CurrentRoomManager: OnAllPlayersJoinedRoom");
+                Log.Print(() =>"CurrentRoomManager: OnAllPlayersJoinedRoom");
                 gameIsReady = true;
                 //StartCoroutine(GameIsReadyDelay_Coroutine());
 
@@ -241,7 +241,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     //        if (value && _preVal != value)
     //        {
-    //            Debug.Log("gameStart");
+    //            Log.Print(() =>"gameStart");
     //            OnGameStartedEarly?.Invoke(this);
     //            _gameStartCountdown = GameManager.GameStartDelay;
     //        }
@@ -259,7 +259,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     //        if (value && _preVal != value)
     //        {
-    //            Debug.Log("reachedHalwayGameStartCountdown");
+    //            Log.Print(() =>"reachedHalwayGameStartCountdown");
     //            //MapCamera.instance.TriggerGameStartBehaviour();
 
     //        }
@@ -276,7 +276,7 @@ public class CurrentRoomManager : MonoBehaviour
 
             if (value && _preVal != value)
             {
-                Debug.Log("gameStarted");
+                Log.Print(() =>"gameStarted");
                 _gameStarted = true;
 
                 //StartCoroutine(GameStartDelayMapCamera_Coroutine());
@@ -540,7 +540,7 @@ public class CurrentRoomManager : MonoBehaviour
                 if (CurrentRoomManager.instance.roomType == RoomType.QuickMatch)
                     if (_roomGameStartCountdown <= 0 && PhotonNetwork.IsMasterClient)
                     {
-                        Debug.Log("START GAME!!!!");
+                        Log.Print(() =>"START GAME!!!!");
                         Launcher.instance.StartGame();
                     }
             }
@@ -635,7 +635,7 @@ public class CurrentRoomManager : MonoBehaviour
     {
         if (!PhotonNetwork.IsMasterClient) return;
 
-        Debug.Log("ChooseRandomMatchSettingsForQuickMatch");
+        Log.Print(() =>"ChooseRandomMatchSettingsForQuickMatch");
         _ran = Random.Range(0, 5);
         _ran = 2;
 
@@ -681,7 +681,7 @@ public class CurrentRoomManager : MonoBehaviour
 
         _randomInitiQuickMatchSettingsChosen = true;
 
-        Debug.Log("ChooseRandomMatchSettingsForQuickMatch END");
+        Log.Print(() =>"ChooseRandomMatchSettingsForQuickMatch END");
         FindObjectOfType<NetworkGameManager>().SendGameParams();
     }
 
@@ -738,7 +738,7 @@ public class CurrentRoomManager : MonoBehaviour
 
     void ChooseRandomPvEMap()
     {
-        Debug.Log("ChooseRandomPvEMap");
+        Log.Print(() =>"ChooseRandomPvEMap");
         _ran = Random.Range(0, 7);
 
         if (_ran <= 1)
@@ -765,12 +765,12 @@ public class CurrentRoomManager : MonoBehaviour
 
     public void AddExtendedPlayerDataCell(PlayerDatabaseAdaptor.PlayerExtendedPublicData pepd)
     {
-        Debug.Log($"AddExtendedPlayerData {pepd.steamid} {pepd.username}");
+        Log.Print(() =>$"AddExtendedPlayerData {pepd.steamid} {pepd.username}");
 
 
         if (pepd.steamid == CurrentRoomManager.instance.playerDataCells[0].steamId)
         {
-            Debug.Log($"UPDATING ROOT PLAYER DATA");
+            Log.Print(() =>$"UPDATING ROOT PLAYER DATA");
             instance._playerDataCells[0].playerExtendedPublicData = pepd;
 
 
@@ -788,7 +788,7 @@ public class CurrentRoomManager : MonoBehaviour
 
                 if (!_achievementUnlocked)
                 {
-                    Debug.Log($"Unlocked Achivement {_tempAchievementName}");
+                    Log.Print(() =>$"Unlocked Achivement {_tempAchievementName}");
                     AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
             }
@@ -800,7 +800,7 @@ public class CurrentRoomManager : MonoBehaviour
                 Steamworks.SteamUserStats.GetAchievement(_tempAchievementName, out _achievementUnlocked);
                 if (!_achievementUnlocked)
                 {
-                    Debug.Log($"Unlocked Achivement {_tempAchievementName}");
+                    Log.Print(() =>$"Unlocked Achivement {_tempAchievementName}");
                     AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
                 if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("tacpad-lfa"))
@@ -815,7 +815,7 @@ public class CurrentRoomManager : MonoBehaviour
                 Steamworks.SteamUserStats.GetAchievement(_tempAchievementName, out _achievementUnlocked);
                 if (!_achievementUnlocked)
                 {
-                    Debug.Log($"Unlocked Achivement {_tempAchievementName}");
+                    Log.Print(() =>$"Unlocked Achivement {_tempAchievementName}");
                     AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
 
@@ -832,7 +832,7 @@ public class CurrentRoomManager : MonoBehaviour
                 Steamworks.SteamUserStats.GetAchievement(_tempAchievementName, out _achievementUnlocked);
                 if (!_achievementUnlocked)
                 {
-                    Debug.Log($"Unlocked Achivement {_tempAchievementName}");
+                    Log.Print(() =>$"Unlocked Achivement {_tempAchievementName}");
                     AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
             }
@@ -844,7 +844,7 @@ public class CurrentRoomManager : MonoBehaviour
                 Steamworks.SteamUserStats.GetAchievement(_tempAchievementName, out _achievementUnlocked);
                 if (!_achievementUnlocked)
                 {
-                    Debug.Log($"Unlocked Achivement {_tempAchievementName}");
+                    Log.Print(() =>$"Unlocked Achivement {_tempAchievementName}");
                     AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
 
@@ -860,7 +860,7 @@ public class CurrentRoomManager : MonoBehaviour
                 Steamworks.SteamUserStats.GetAchievement(_tempAchievementName, out _achievementUnlocked);
                 if (!_achievementUnlocked)
                 {
-                    Debug.Log($"Unlocked Achivement {_tempAchievementName}");
+                    Log.Print(() =>$"Unlocked Achivement {_tempAchievementName}");
                     AchievementManager.UnlockAchievement(_tempAchievementName);
                 }
                 if (!instance._playerDataCells[0].playerExtendedPublicData.unlocked_armor_data_string.Contains("haunted_hc"))
@@ -899,10 +899,10 @@ public class CurrentRoomManager : MonoBehaviour
             {
                 for (int i = 0; i < instance._playerDataCells.Count; i++)
                 {
-                    //Debug.Log($"Player Extended Public Data {i}");
-                    //Debug.Log($"Player Extended Public Data {instance._extendedPlayerData[i].occupied}");
+                    //Log.Print(() =>$"Player Extended Public Data {i}");
+                    //Log.Print(() =>$"Player Extended Public Data {instance._extendedPlayerData[i].occupied}");
                     //if (instance._extendedPlayerData[i].occupied)
-                    //    Debug.Log($"Player Extended Public Data {instance._extendedPlayerData[i].playerExtendedPublicData.player_id}");
+                    //    Log.Print(() =>$"Player Extended Public Data {instance._extendedPlayerData[i].playerExtendedPublicData.player_id}");
 
                     if (i > 0 && !instance._playerDataCells[i].occupied)
                     {
@@ -939,10 +939,10 @@ public class CurrentRoomManager : MonoBehaviour
 
         for (int i = 0; i < instance._playerDataCells.Count; i++)
         {
-            //Debug.Log(n == null);
-            //Debug.Log($"PlayerExtendedDataContainsPlayerName {instance._extendedPlayerData[i] == null}");
-            //Debug.Log($"PlayerExtendedDataContainsPlayerName {instance._extendedPlayerData[i].playerExtendedPublicData == null}");
-            Debug.Log($"PlayerExtendedDataContainsPlayerName {instance._playerDataCells[i].playerExtendedPublicData.username == null}");
+            //Log.Print(() =>n == null);
+            //Log.Print(() =>$"PlayerExtendedDataContainsPlayerName {instance._extendedPlayerData[i] == null}");
+            //Log.Print(() =>$"PlayerExtendedDataContainsPlayerName {instance._extendedPlayerData[i].playerExtendedPublicData == null}");
+            Log.Print(() =>$"PlayerExtendedDataContainsPlayerName {instance._playerDataCells[i].playerExtendedPublicData.username == null}");
             if (instance._playerDataCells[i].occupied)
                 if (instance._playerDataCells[i].playerExtendedPublicData.username != null)
                     if (instance._playerDataCells[i].playerExtendedPublicData.username.Equals(n))
@@ -1075,7 +1075,7 @@ public class CurrentRoomManager : MonoBehaviour
     }
     public static ScriptObjPlayerData GetDataCellWithSteamIdAndRewiredId(long playerId, int rewiredId)
     {
-        //Debug.Log($"GetPlayerDataWithId {playerId} {rewiredId}");
+        //Log.Print(() =>$"GetPlayerDataWithId {playerId} {rewiredId}");
         //Log.Print($"GetDataCellWithSteamIdAndRewiredId " +
         //    $"{CurrentRoomManager.instance.playerDataCells.FirstOrDefault(item => item.steamId == playerId && item.rewiredId == rewiredId) != null}");
 

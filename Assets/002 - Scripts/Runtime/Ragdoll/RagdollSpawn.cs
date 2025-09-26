@@ -80,6 +80,6 @@ public class RagdollSpawn : MonoBehaviourPunCallbacks
 
         Object.Destroy(ragdoll, 15);
 
-        Debug.Log("Spawned Ragdoll");
+        Log.Print(() =>"Spawned Ragdoll");
     }
 }

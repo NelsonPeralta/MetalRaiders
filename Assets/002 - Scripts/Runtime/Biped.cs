@@ -29,7 +29,7 @@ public class Biped : MonoBehaviour
                 SpawnUltraBindExplosion();
             }
 
-            else if (_splinterShardCount == 0) Debug.Log($"splinterShardCount RESET");
+            else if (_splinterShardCount == 0) Log.Print(() =>$"splinterShardCount RESET");
 
         }
     }

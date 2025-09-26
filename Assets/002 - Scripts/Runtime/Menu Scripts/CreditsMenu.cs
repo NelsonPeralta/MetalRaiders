@@ -27,7 +27,7 @@ public class CreditsMenu : MonoBehaviour
 
         if (GameManager.instance.carnageReport != null)
         {
-            Debug.Log($"CarnageReportMenu {GameManager.instance.carnageReport.xpGained}");
+            Log.Print(() =>$"CarnageReportMenu {GameManager.instance.carnageReport.xpGained}");
             if (GameManager.instance.carnageReport.xpGained > 0)
             {
                 _thankYouExtraText.text = $"You gained {GameManager.instance.carnageReport.xpGained} Xp and Cuckbucks.";
