@@ -652,7 +652,12 @@ public class PlayerShooting : MonoBehaviourPun
                     if (weaponToShoot.hybridHitscan && player.aimAssist.redReticuleIsOn)
                         bulletComp.speed = 999;
                     if (overcharge)
-                        bulletComp.speed = (int)(weaponToShoot.bulletSpeed * 0.65f);
+                    {
+                        if (GameManager.instance.gameType == GameManager.GameType.GunGame) bulletComp.speed = 40;
+                        else bulletComp.speed = 20;
+
+                        bullet.transform.localScale = Vector3.one * 3;
+                    }
 
                     bullet.SetActive(true);
                     if (weaponToShoot.plasmaColor != WeaponProperties.PlasmaColor.Shard)
@@ -700,7 +705,7 @@ public class PlayerShooting : MonoBehaviourPun
             else
                 weaponToShoot.GetComponent<Animator>().Play("dw fire", 0, 0f);
         }
-        catch (System.Exception e) { Log.PrintError(()=>e); }
+        catch (System.Exception e) { Log.PrintError(() => e); }
 
         weaponToShoot.Recoil();
 
