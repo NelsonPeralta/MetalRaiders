@@ -1146,41 +1146,109 @@ public class GameManager : MonoBehaviourPunCallbacks
         return null;
     }
 
-
     public static List<Player> GetLocalPlayers()
     {
-        return instance._allPlayers.Where(item => item != null && item.isMine).ToList();
+        List<Player> localPlayers = new List<Player>(instance._allPlayers.Count);
+        for (int i = 0; i < instance._allPlayers.Count; i++)
+        {
+            Player p = instance._allPlayers[i];
+            if (p != null && p.isMine)
+                localPlayers.Add(p);
+        }
+        return localPlayers;
     }
 
     public static Player GetRootPlayer()
     {
-        return instance._allPlayers.Where(item => item != null && item.rid == 0 && item.isMine).FirstOrDefault();
+        for (int i = 0; i < instance._allPlayers.Count; i++)
+        {
+            Player p = instance._allPlayers[i];
+            if (p != null && p.rid == 0 && p.isMine)
+                return p;
+        }
+        return null;
     }
 
     public static Player GetPlayerWithPhotonView(int pid)
     {
-        return instance._allPlayers.Where(item => item != null && item.photonId == pid).FirstOrDefault();
+        for (int i = 0; i < instance._allPlayers.Count; i++)
+        {
+            Player p = instance._allPlayers[i];
+            if (p != null && p.photonId == pid)
+                return p;
+        }
+        return null;
     }
-
-
 
     public static Player GetPlayerWithIdAndRewId(int playerPhotonView)
     {
-        return instance._allPlayers.Where(item => item != null && item.photonId == playerPhotonView).FirstOrDefault();
+        for (int i = 0; i < instance._allPlayers.Count; i++)
+        {
+            Player p = instance._allPlayers[i];
+            if (p != null && p.photonId == playerPhotonView)
+                return p;
+        }
+        return null;
     }
 
     public static Player GetPlayerWithSteamIdAndRewId(long steamId, int rewiredId)
     {
-        return instance._allPlayers.Where(item => item != null &&
-        item.playerDataCell.steamId == steamId &&
-        item.controllerId == rewiredId).FirstOrDefault();
+        for (int i = 0; i < instance._allPlayers.Count; i++)
+        {
+            Player p = instance._allPlayers[i];
+            if (p != null && p.playerDataCell.steamId == steamId && p.controllerId == rewiredId)
+                return p;
+        }
+        return null;
     }
 
     public static Player GetPlayerWithPhotonRoomIndex(int roomIndex)
     {
-        return instance._allPlayers.Where(item => item != null &&
-        item.playerDataCell.photonRoomIndex == roomIndex).FirstOrDefault();
+        for (int i = 0; i < instance._allPlayers.Count; i++)
+        {
+            Player p = instance._allPlayers[i];
+            if (p != null && p.playerDataCell.photonRoomIndex == roomIndex)
+                return p;
+        }
+        return null;
     }
+
+
+
+    //public static List<Player> GetLocalPlayers()
+    //{
+    //    return instance._allPlayers.Where(item => item != null && item.isMine).ToList();
+    //}
+
+    //public static Player GetRootPlayer()
+    //{
+    //    return instance._allPlayers.Where(item => item != null && item.rid == 0 && item.isMine).FirstOrDefault();
+    //}
+
+    //public static Player GetPlayerWithPhotonView(int pid)
+    //{
+    //    return instance._allPlayers.Where(item => item != null && item.photonId == pid).FirstOrDefault();
+    //}
+
+
+
+    //public static Player GetPlayerWithIdAndRewId(int playerPhotonView)
+    //{
+    //    return instance._allPlayers.Where(item => item != null && item.photonId == playerPhotonView).FirstOrDefault();
+    //}
+
+    //public static Player GetPlayerWithSteamIdAndRewId(long steamId, int rewiredId)
+    //{
+    //    return instance._allPlayers.Where(item => item != null &&
+    //    item.playerDataCell.steamId == steamId &&
+    //    item.controllerId == rewiredId).FirstOrDefault();
+    //}
+
+    //public static Player GetPlayerWithPhotonRoomIndex(int roomIndex)
+    //{
+    //    return instance._allPlayers.Where(item => item != null &&
+    //    item.playerDataCell.photonRoomIndex == roomIndex).FirstOrDefault();
+    //}
 
 
 

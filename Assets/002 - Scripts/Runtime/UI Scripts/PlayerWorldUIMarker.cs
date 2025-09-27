@@ -129,7 +129,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
                     if (!_deadTag.gameObject.activeSelf)
                         _deadTag.gameObject.SetActive(true);
                 }
-                else if (!_deadTag.gameObject.activeSelf)
+                else /*if (!_deadTag.gameObject.activeSelf)*/
                 {
                     _deadTag.gameObject.SetActive(false);
                 }
