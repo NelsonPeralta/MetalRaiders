@@ -45,7 +45,7 @@ public class Launcher : MonoBehaviourPunCallbacks
             _mapSelectedPreview.sprite = GameManager.instance.mapDataCells.Where(obj => obj.sceneBuildIndex.Equals(value)).SingleOrDefault().image;
             //mapSelectedText.text = $"Map: {Launcher.NameFromIndex(_levelToLoadIndex).Replace("PVP - ", "")}";
 
-            Log.Print(() =>$"levelToLoadIndex {GameManager.instance.mapDataCells.Where(obj => obj.sceneBuildIndex.Equals(value)).SingleOrDefault().mapName}");
+            Log.Print(() => $"levelToLoadIndex {GameManager.instance.mapDataCells.Where(obj => obj.sceneBuildIndex.Equals(value)).SingleOrDefault().mapName}");
         }
     }
 
@@ -189,7 +189,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         if (instance)
         {
-            Log.Print(() =>"There is a MenuManager Instance");
+            Log.Print(() => "There is a MenuManager Instance");
             Destroy(gameObject);
             return;
         }
@@ -203,7 +203,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     void Start()
     {
         //if (Application.platform == RuntimePlatform.WindowsPlayer)
-        Log.Print(() =>$"You are playing on a {Application.platform}");
+        Log.Print(() => $"You are playing on a {Application.platform}");
 
         if (levelToLoadIndex == 0)
             levelToLoadIndex = 1;
@@ -250,7 +250,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ConnectToPhotonMasterServer(bool showMessage = true)
     {
-        Log.Print(() =>$"ConnectToPhotonMasterServer");
+        Log.Print(() => $"ConnectToPhotonMasterServer");
         //GetComponent<MenuManager>().OpenLoadingMenu("Connecting To Server...");
 
         PhotonNetwork.ConnectUsingSettings();
@@ -259,7 +259,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         base.OnDisconnected(cause);
-        Log.Print(() =>$"LAUNCHER Disconnected: {cause}");
+        Log.Print(() => $"LAUNCHER Disconnected: {cause}");
         //ShowPlayerMessage($"Disconnected from Server: {cause}.\nReconnecting...");
         _tries++;
 
@@ -283,7 +283,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
-        Log.Print(() =>"Connected to Master");
+        Log.Print(() => "Connected to Master");
         try { ChangeLevelToLoadWithIndex(levelToLoadIndex); } catch { }
         //ShowPlayerMessage("Conneected To Master Server!");
         if (!PhotonNetwork.OfflineMode)
@@ -329,14 +329,14 @@ public class Launcher : MonoBehaviourPunCallbacks
         //{
         //    MenuManager.Instance.OpenMenu("offline title");
         //}
-        Log.Print(() =>"Joined Lobby");
+        Log.Print(() => "Joined Lobby");
         if (PhotonNetwork.NickName == "")
             PhotonNetwork.NickName = "Player " + Random.Range(0, 1000).ToString("0000");
     }
 
     public void QuickMatch()
     {
-        Log.Print(() =>"Click QuickMatch");
+        Log.Print(() => "Click QuickMatch");
         CurrentRoomManager.instance.roomType = CurrentRoomManager.RoomType.QuickMatch;
         CurrentRoomManager.instance.vetos = 0;
 
@@ -353,7 +353,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinRandomFailed(short returnCode, string message)
     {
-        Log.Print(() =>$"OnJoinRandomFailed: {message}");
+        Log.Print(() => $"OnJoinRandomFailed: {message}");
         //CreateAndJoinRandomRoom();
     }
 
@@ -370,7 +370,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
             if (!RoomBrowserMenu.GAMEPAD_ROOM_NAMES.Contains(roomNameInputField.text) && !RoomBrowserMenu.FORBIDDEN_ROOM_NAMES.Contains(roomNameInputField.text))
             {
-                Log.Print(() =>$"CreateMultiplayerRoom. Client State: {PhotonNetwork.NetworkClientState}");
+                Log.Print(() => $"CreateMultiplayerRoom. Client State: {PhotonNetwork.NetworkClientState}");
 
                 _creatingRoomTimeOut = 3;
 
@@ -444,7 +444,7 @@ public class Launcher : MonoBehaviourPunCallbacks
                     //    //NetworkGameManager.instance.SendGameParams();
                     //}
                 }
-                Log.Print(() =>$"CreateMultiplayerRoom. Client State: {PhotonNetwork.NetworkClientState}");
+                Log.Print(() => $"CreateMultiplayerRoom. Client State: {PhotonNetwork.NetworkClientState}");
             }
             else
             {
@@ -511,7 +511,7 @@ public class Launcher : MonoBehaviourPunCallbacks
                 PhotonNetwork.OfflineMode = true; PhotonNetwork.NickName = "0";
                 CreateRoom(roomNameToUse, options);
             }
-            Log.Print(() =>$"CreateMultiplayerRoom. Client State: {PhotonNetwork.NetworkClientState}");
+            Log.Print(() => $"CreateMultiplayerRoom. Client State: {PhotonNetwork.NetworkClientState}");
         }
         else
         {
@@ -577,7 +577,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnJoinedRoom() // Runs only when My player joined the room
     {
-        Log.Print(() =>$"Joined room {PhotonNetwork.CurrentRoom.Name}");
+        Log.Print(() => $"Joined room {PhotonNetwork.CurrentRoom.Name}");
         _creatingRoomTimeOut = 999;
         CreatePrimitiveDataCellsFromRoomDataWhenJoiningRoom_Online(JoinType.IJoinedARoom);
         TriggerOnJoinedRoomBehaviour();
@@ -626,7 +626,7 @@ public class Launcher : MonoBehaviourPunCallbacks
                 if (PhotonNetwork.IsMasterClient)
                 {
 
-                    Log.Print(() =>"Joined room IsMasterClient");
+                    Log.Print(() => "Joined room IsMasterClient");
 
                     //if (listPlayersDiff[0].NickName.Contains(GameManager.instance.rootPlayerNickname))
                     //    GameManager.instance.gameMode = GameManager.GameMode.Multiplayer;
@@ -655,7 +655,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     public override void OnPlayerEnteredRoom(Photon.Realtime.Player newPlayer)
     {
         Log.Print(() => "Other player joined room");
-        Log.Print(() =>"LAUNCHER OnPlayerEnteredRoom");
+        Log.Print(() => "LAUNCHER OnPlayerEnteredRoom");
 
         CreatePrimitiveDataCellsFromRoomDataWhenJoiningRoom_Online(JoinType.AnotherPlayerJoinedARoom);
         DestroyAndCreateNameplates();
@@ -728,6 +728,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
 
         int c = 0;
+        int blue = 0;// do not move this from here
         foreach (ScriptObjPlayerData s in CurrentRoomManager.instance.playerDataCells.Where(item => item.occupied))
         {
             if (GameManager.instance.teamMode == TeamMode.None)
@@ -738,7 +739,6 @@ public class Launcher : MonoBehaviourPunCallbacks
             }
             else
             {
-                int blue = 0;
                 if (s.team == Team.Red)
                 {
                     Log.Print(() => $"{s.steamId} {s.rewiredId} will get spawn {c} Red Team");
@@ -761,7 +761,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void LeaveRoomButton()
     {
-        Log.Print(() =>"LeaveRoomButton");
+        Log.Print(() => "LeaveRoomButton");
         try { commonRoomTexts.SetActive(false); } catch { }
         try { PhotonNetwork.LeaveRoom(); } catch (System.Exception e) { Debug.LogWarning(e); }
         try { GameManager.instance.gameMode = GameManager.GameMode.Versus; } catch { }
@@ -801,7 +801,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public override void OnLeftRoom() // Is also called when quitting a game while connected to the internet. Does not trigger when offline
     {
-        Log.Print(() =>"LAUNCHER: OnLeftRoom");
+        Log.Print(() => "LAUNCHER: OnLeftRoom");
         CurrentRoomManager.instance.expectedNbPlayers = 0;
         try
         {
@@ -926,7 +926,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     public void ChangeTeamMode(string tm)
     {
-        Log.Print(() =>"ChangeTeamMode Btn");
+        Log.Print(() => "ChangeTeamMode Btn");
 
         if (!CountdownStarted)
         {
@@ -1151,8 +1151,8 @@ public class Launcher : MonoBehaviourPunCallbacks
 
         //WebManager.webManagerInstance.Login("0", loginUsernameText.text, _loginPasswordText.text);
 
-        Log.Print(() =>PhotonNetwork.NetworkClientState);
-        Log.Print(() =>PhotonNetwork.OfflineMode);
+        Log.Print(() => PhotonNetwork.NetworkClientState);
+        Log.Print(() => PhotonNetwork.OfflineMode);
         //if (PhotonNetwork.NetworkClientState == ClientState.Disconnected)
         //    ConnectToPhotonMasterServer();
 
@@ -1164,7 +1164,7 @@ public class Launcher : MonoBehaviourPunCallbacks
     {
         WebManager.webManagerInstance.Login(SteamUser.GetSteamID().m_SteamID.ToString(), SteamFriends.GetPersonaName(), "steam");
 
-        Log.Print(() =>PhotonNetwork.NetworkClientState);
+        Log.Print(() => PhotonNetwork.NetworkClientState);
         //if (PhotonNetwork.NetworkClientState == ClientState.Disconnected)
         //    ConnectToPhotonMasterServer();
 
@@ -1174,7 +1174,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     void OnSceneLoaded()
     {
-        Log.Print(() =>$"PhotonNetwork.NetworkClientState: {PhotonNetwork.NetworkClientState}");
+        Log.Print(() => $"PhotonNetwork.NetworkClientState: {PhotonNetwork.NetworkClientState}");
 
         if (SceneManager.GetActiveScene().buildIndex == 0)
         {
@@ -1192,7 +1192,7 @@ public class Launcher : MonoBehaviourPunCallbacks
 
     IEnumerator InstantiateNetworkGameManager_Coroutine()
     {
-        Log.Print(() =>"InstantiateNetworkGameManager_Coroutine");
+        Log.Print(() => "InstantiateNetworkGameManager_Coroutine");
         yield return new WaitForSeconds(0.1f);
         PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs/Managers", "NetworkGameManager"), Vector3.zero, Quaternion.identity);
         NetworkGameManager.instance.SendGameParams();

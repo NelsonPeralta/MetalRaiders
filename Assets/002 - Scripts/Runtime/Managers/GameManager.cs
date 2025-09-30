@@ -562,7 +562,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
 
 
-    public bool currentLevelHasWater { get { return _currentLevelHasWater; } private set {  _currentLevelHasWater = value; } }
+    public bool currentLevelHasWater { get { return _currentLevelHasWater; } private set { _currentLevelHasWater = value; } }
     public LayerMask bulletLayerMask, markLayerMask, ragdollHumpLayerMask, obstructionMask, reticuleFrictionMask, hitboxlayerMask, playerCapsuleLayerMask, thirdPersonMainCameraLayerMask;
 
 
@@ -578,19 +578,19 @@ public class GameManager : MonoBehaviourPunCallbacks
 
         _checkCooldown = 0.05f;
 
-        Log.Print(() =>$"GameManager Awake {name}");
+        Log.Print(() => $"GameManager Awake {name}");
 
         // https://forum.unity.com/threads/on-scene-change-event-for-dontdestroyonload-object.814299/
         if (instance)
         {
-            Log.Print(() =>$"GameManager Awake {name} Destroyed");
+            Log.Print(() => $"GameManager Awake {name} Destroyed");
             Destroy(gameObject);
             return;
         }
         else
         {
 
-            Log.Print(() =>$"GameManager Awake {name} Kept");
+            Log.Print(() => $"GameManager Awake {name} Kept");
             DontDestroyOnLoad(gameObject);
             instance = this;
             PhotonNetwork.GameVersion = "171";
@@ -636,7 +636,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called first
     void OnEnable()
     {
-        Log.Print(() =>$"GameManager OnEnable {name}");
+        Log.Print(() => $"GameManager OnEnable {name}");
         base.OnEnable(); // need this for OnRoomPropertiesUpdate to work
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
@@ -714,7 +714,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             ActorAddonsPool.instance = null;
             MarkerManager.instance = null;
             GameObjectPool.instance = null;
-            SoundManager.instance = null;   
+            SoundManager.instance = null;
             SpawnManager.spawnManagerInstance = null;
 
             instantiation_position_Biped_Dict.Clear();
@@ -841,7 +841,7 @@ public class GameManager : MonoBehaviourPunCallbacks
 
             try
             {
-                Log.Print(() =>$"Is there a Player Manager: {PlayerManager.playerManagerInstance}");
+                Log.Print(() => $"Is there a Player Manager: {PlayerManager.playerManagerInstance}");
                 //if (!PlayerManager.playerManagerInstance)
                 //    PhotonNetwork.Instantiate(Path.Combine("PhotonPrefabs", "PlayerManager"), Vector3.zero, Quaternion.identity);
                 //if (!GameObjectPool.instance)
@@ -883,7 +883,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     // called third
     private void Start()
     {
-        Log.Print(() =>"GameManager Start. WATCHOUT, LOGGER MAY BE DISABLED");
+        Log.Print(() => "GameManager Start. WATCHOUT, LOGGER MAY BE DISABLED");
         nbLocalPlayersPreset = 1;
         InitialisePlayerPrefs();
         LoadPlayerPrefs();
@@ -1042,7 +1042,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         //if (PhotonNetwork.IsMasterClient)
         //    UpdateRoomSettings();
 
-        Log.Print(() =>$"Player joined room. ({PhotonNetwork.CurrentRoom.PlayerCount})");
+        Log.Print(() => $"Player joined room. ({PhotonNetwork.CurrentRoom.PlayerCount})");
     }
 
     public override void OnJoinedRoom()
@@ -1070,7 +1070,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public IEnumerator SpawnPlayersCheck_Coroutine()
     {
 
-        Log.Print(() =>"SpawnPlayersCheck_Coroutine");
+        Log.Print(() => "SpawnPlayersCheck_Coroutine");
         float o = 1; if (PhotonNetwork.IsMasterClient) o = 0.25f;
         yield return new WaitForSeconds(o);
 
@@ -1108,7 +1108,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     public IEnumerator SpawnPlayers_Coroutine(int indd)
     {
         //Log.Print(() =>$"SpawnPlayers_Coroutine {i} {CurrentRoomManager.instance.playerDataCells[i].photonRoomIndex} {CurrentRoomManager.instance.playerDataCells[i].rewiredId}");
-        Log.Print(() =>$"SpawnPlayers_Coroutine {GameManager.instance.GetAllPhotonPlayers().Count}");
+        Log.Print(() => $"SpawnPlayers_Coroutine {GameManager.instance.GetAllPhotonPlayers().Count}");
 
         Transform spt = SpawnManager.spawnManagerInstance.GetSpawnPointAtIndex(CurrentRoomManager.instance.playerDataCells[indd].startingSpawnPosInd, CurrentRoomManager.instance.playerDataCells[indd].team);
 
@@ -1320,7 +1320,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         client.Credentials = new System.Net.NetworkCredential("nelson@peralta.tech", "br0wn!c375");
 
         client.Send(newMail); // Send the constructed mail
-        Log.Print(() =>"SenErrorEmailReport Sent");
+        Log.Print(() => "SenErrorEmailReport Sent");
     }
 
     public void EnableCameraMaskLayer(Camera camera, string layerName) { Log.Print(() => "PlayerCamera: EnableCameraMaskLayer"); camera.cullingMask |= 1 << LayerMask.NameToLayer($"{layerName}"); }
@@ -1339,7 +1339,7 @@ public class GameManager : MonoBehaviourPunCallbacks
     {
         if (SceneManager.GetActiveScene().buildIndex > 0)
         {
-            Log.Print(() =>"LeaveCurrentRoomAndLoadLevelZero: OnLeftRoom");
+            Log.Print(() => "LeaveCurrentRoomAndLoadLevelZero: OnLeftRoom");
             PhotonNetwork.LoadLevel(0);
         }
     }
@@ -1398,7 +1398,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         public void Add(T value, CustomList<T> customList)
         {
             Add(value);
-            Log.Print(() =>"ser");
+            Log.Print(() => "ser");
             CustomList<T> cl = new CustomList<T>();
             cl = this;
             customList = cl;
@@ -1496,7 +1496,7 @@ public class GameManager : MonoBehaviourPunCallbacks
             timeLeft = tts - _time;
         else
             timeLeft = tts - (_time % tts);
-        Log.Print(() =>timeLeft);
+        Log.Print(() => timeLeft);
 
         return timeLeft;
     }
@@ -1904,7 +1904,7 @@ public class GameManager : MonoBehaviourPunCallbacks
         if (SceneManager.GetActiveScene().buildIndex > 0)
         {
             GameManager.instance.AddToPreviousScenePayload(GameManager.PreviousScenePayload.OpenMultiplayerRoomAndCreateNamePlates);
-            Log.Print(() =>"LeaveCurrentRoomAndLoadLevelZero: OnLeftRoom");
+            Log.Print(() => "LeaveCurrentRoomAndLoadLevelZero: OnLeftRoom");
 
             if (PhotonNetwork.IsMasterClient) PhotonNetwork.Destroy(NetworkGameTime.instance.gameObject);
 
@@ -1973,7 +1973,7 @@ public class GameManager : MonoBehaviourPunCallbacks
                     }
                 }
 
-                Log.Print(() =>$"Player has unlocked {unlockedCount} out of {totalAchievements} achievements.");
+                Log.Print(() => $"Player has unlocked {unlockedCount} out of {totalAchievements} achievements.");
 
                 return (unlockedCount, totalAchievements);
             }

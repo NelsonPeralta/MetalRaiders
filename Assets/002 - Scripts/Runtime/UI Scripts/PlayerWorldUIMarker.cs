@@ -16,13 +16,13 @@ public class PlayerWorldUIMarker : MonoBehaviour
             if (value) _seenCd = 0.2f;
 
             _redMarker.gameObject.SetActive(value && (GameManager.instance.teamMode == GameManager.TeamMode.None || (GameManager.instance.teamMode == GameManager.TeamMode.Classic && _rootPlayer.team != GameManager.GetRootPlayer().team)));
-            _text.gameObject.SetActive(value && (GameManager.instance.teamMode == GameManager.TeamMode.None || (GameManager.instance.teamMode == GameManager.TeamMode.Classic && _rootPlayer.team != GameManager.GetRootPlayer().team)));
+            _playerNameText.gameObject.SetActive(value && (GameManager.instance.teamMode == GameManager.TeamMode.None || (GameManager.instance.teamMode == GameManager.TeamMode.Classic && _rootPlayer.team != GameManager.GetRootPlayer().team)));
         }
     }
 
     public Player lookAtThisPlayer { get { return _lookAtThisPlayer; } }
 
-    public TMP_Text text { get { return _text; } }
+    public TMP_Text playerNameText { get { return _playerNameText; } }
     public GameObject holder { get { return _holder; } }
 
     [SerializeField] Player _rootPlayer;
@@ -31,7 +31,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
 
     [SerializeField] GameObject _holder, _deadTag;
     [SerializeField] PlayerWorldUIMarkerHolder _holderScript;
-    [SerializeField] TMP_Text _text;
+    [SerializeField] TMP_Text _playerNameText;
     [SerializeField] GameObject _redMarker;
     [SerializeField] GameObject _greenMarker;
     [SerializeField] Image _greenMarkerImage;
@@ -58,7 +58,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
 
         _redMarker.gameObject.SetActive(false);
         _greenMarker.gameObject.SetActive(false);
-        _text.gameObject.SetActive(false);
+        _playerNameText.gameObject.SetActive(false);
         _deadTag.gameObject.SetActive(false);
     }
     private void Start()
@@ -71,7 +71,7 @@ public class PlayerWorldUIMarker : MonoBehaviour
         {
             if (ColorUtility.TryParseHtmlString(hex, out _orangeColor))
                 _orangeColorParsed = true;
-            Log.Print(() =>"_orangeColorParsed parsed");
+            Log.Print(() => "_orangeColorParsed parsed");
         }
     }
 
@@ -119,9 +119,9 @@ public class PlayerWorldUIMarker : MonoBehaviour
 
             if (GameManager.instance.teamMode == GameManager.TeamMode.Classic)
             {
-                //if (_rootPlayer.team == _lookAtThisPlayer.team) _text.gameObject.SetActive(true);
-                if (_text != null && !_text.gameObject.activeSelf)
-                    _text.gameObject.SetActive(true);
+                if (_rootPlayer.team == _lookAtThisPlayer.team)
+                    if (_playerNameText != null && !_playerNameText.gameObject.activeSelf)
+                        _playerNameText.gameObject.SetActive(true);
 
 
                 if ((_rootPlayer.isDead || _rootPlayer.isRespawning) && _rootPlayer.team == _lookAtThisPlayer.team)

@@ -836,7 +836,8 @@ public class Player : Biped
 
 
         originalSpawnPosition = transform.position;
-        GameManager.instance.instantiation_position_Biped_Dict.Add(originalSpawnPosition, this); GameManager.instance.instantiation_position_Biped_Dict = GameManager.instance.instantiation_position_Biped_Dict;
+        GameManager.instance.instantiation_position_Biped_Dict.Add(originalSpawnPosition, this); 
+        GameManager.instance.instantiation_position_Biped_Dict = GameManager.instance.instantiation_position_Biped_Dict;
 
 
         defaultVerticalFov = 0; GetComponent<PlayerController>().Descope();
@@ -2190,7 +2191,7 @@ public class Player : Biped
         Log.Print(() => $"OnPlayerIdAssigned_Delegate {rid}");
         playerDataCell = CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(_playerSteamId, rid);
         username = playerDataCell.steamName;
-        foreach (PlayerWorldUIMarker pw in allPlayerScripts.worldUis) pw.text.text = playerDataCell.steamName;
+        foreach (PlayerWorldUIMarker pw in allPlayerScripts.worldUis) pw.playerNameText.text = playerDataCell.steamName;
 
         playerUI.SetScoreWitnesses();
         playerArmorManager.playerDataCell = CurrentRoomManager.GetDataCellWithSteamIdAndRewiredId(playerSteamId, rid);
