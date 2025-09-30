@@ -1335,9 +1335,9 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
             if (p.photonId == playerPhotonId && p.rid == controllerID)
             {
                 p.UpdateReservedSpawnPoint(pos, isRandom);
-                //if (isRandom)
+                if (isRandom)
                 {
-                    p.killFeedManager.EnterNewFeed("Spawned Randomly");
+                    p.killFeedManager.EnterNewFeed("<color=red>Spawning Randomly");
                 }
             }
         }
