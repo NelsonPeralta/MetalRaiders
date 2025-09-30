@@ -115,19 +115,21 @@ public class SpawnManager : MonoBehaviour
 
                         int level;
                         if (sqrDist > 35f * 35f)
-                            level = GetBlockingLevel(player, spawnPos, 13, 11, 13);
+                            level = GetBlockingLevel(player, spawnPos, 9, 5, 9);
                         else if (sqrDist > 30f * 30f)
-                            level = GetBlockingLevel(player, spawnPos, 14, 12, 14);
+                            level = GetBlockingLevel(player, spawnPos, 14, 10, 14);
                         else if (sqrDist > 25f * 25f)
-                            level = GetBlockingLevel(player, spawnPos, 15, 13, 15);
+                            level = GetBlockingLevel(player, spawnPos, 19, 15, 19);
                         else if (sqrDist > 20f * 20f)
-                            level = GetBlockingLevel(player, spawnPos, 16, 14, 16);
+                            level = GetBlockingLevel(player, spawnPos, 24, 20, 24);
                         else if (sqrDist > 15f * 15f)
-                            level = GetBlockingLevel(player, spawnPos, 17, 15, 17);
+                            level = GetBlockingLevel(player, spawnPos, 29, 25, 29);
                         else if (sqrDist > 10f * 10f)
-                            level = GetBlockingLevel(player, spawnPos, 18, 16, 18);
+                            level = GetBlockingLevel(player, spawnPos, 49, 49, 49);
+                        else if (sqrDist > 5f * 5f)
+                            level = GetBlockingLevel(player, spawnPos, 99, 99, 99);
                         else
-                            level = GetBlockingLevel(player, spawnPos, 19, 17, 19);
+                            level = GetBlockingLevel(player, spawnPos, 199, 199, 199);
 
                         if (level == 0) continue;
 
@@ -447,21 +449,24 @@ public class SpawnManager : MonoBehaviour
             {
                 if (hitCollider.gameObject.GetComponent<SpawnPoint>())
                 {
-                    Log.Print(() =>$"SpawnManager virtual contestion {hitCollider.name}");
+                    Log.Print(() => $"SpawnManager virtual contestion {hitCollider.name}");
+                    //Debug.Log($"SpawnManager virtual contestion {hitCollider.name}");
 
                     float sqrDist = (finalRes.Item1.position - hitCollider.transform.position).sqrMagnitude;
                     int level;
-                    if (sqrDist > 8f * 8f)
-                        level = GetBlockingLevel(finalRes.Item1, hitCollider.transform.position, 10, 10, 10);
-                    else if (sqrDist > 5f * 5f)
-                        level = GetBlockingLevel(finalRes.Item1, hitCollider.transform.position, 15, 15, 15);
-                    else
+                    if (sqrDist > 9f * 9f)
                         level = GetBlockingLevel(finalRes.Item1, hitCollider.transform.position, 20, 20, 20);
+                    else if (sqrDist > 5f * 5f)
+                        level = GetBlockingLevel(finalRes.Item1, hitCollider.transform.position, 49, 49, 49);
+                    else
+                        level = GetBlockingLevel(finalRes.Item1, hitCollider.transform.position, 99, 99, 99);
                     if (level == 0) continue;
-                    hitCollider.gameObject.GetComponent<SpawnPoint>().AddBlockingLevelEntry(UnityEngine.Random.Range(-100, -200), level, 2);
+                    hitCollider.gameObject.GetComponent<SpawnPoint>().AddBlockingLevelEntry(-999, level, 2);
                 }
             }
         }
+
+        availableSpawnPoints.Where(x => x.transform == finalRes.Item1).FirstOrDefault().AddBlockingLevelEntry(-999, 99, 2);
 
         return finalRes;
     }

@@ -164,6 +164,11 @@ public class SpawnPoint : MonoBehaviour
     int MAX_BLOCKING_ENTRIES = 5;
     public void AddBlockingLevelEntry(int idd, int levl, float ttll)
     {
+        // 1000+ is for players
+        // -999 is for artificial contestion
+        // -1 to -99 is for disabler ray
+
+
         if (_blockingLevelEntries.Count == 0) _evaluateDangerCooldown = SeenResetTime * 0.3f;
 
         for (int i = 0; i < _blockingLevelEntries.Count; i++)
@@ -179,6 +184,7 @@ public class SpawnPoint : MonoBehaviour
 
         if (_blockingLevelEntries.Count < MAX_BLOCKING_ENTRIES)
         {
+            //Debug.Log($"AddBlockingLevelEntry {idd} {levl} {ttll}");
             _blockingLevelEntries.Add(new BlockingLevelEntry(idd, levl, ttll));
             _blockingLevelEntries.Sort((a, b) => b.blockingLevel.CompareTo(a.blockingLevel));
         }

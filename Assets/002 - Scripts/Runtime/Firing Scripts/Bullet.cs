@@ -317,6 +317,7 @@ public class Bullet : MonoBehaviourPunCallbacks
 
     void CheckForFinalHit()
     {
+        Debug.Log(speed);
         if (objectsHit.Count > 0 && !damageDealt)
         {
             RaycastHit hitInfo = objectsHit[0].raycastHit;

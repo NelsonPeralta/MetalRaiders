@@ -108,75 +108,74 @@ public class SpawnPointDisablerRay : MonoBehaviour
         // Step 6: Reset timer
         _c = SpawnPoint.SeenResetTime * 0.3f;
 
-        return;
 
-        //if (GameManager.instance.connection == GameManager.Connection.Online)
-        if (_c <= 0)
-        {
-            if (player.isAlive)
-            {
-                // THIS RAY DOES NOT WORK IF PLAYER IS INSIDE THE SPHERE. USE THE CONTESTED VAR IN SPAWNPOINT SCRIPT FOR BETTER CONTROL
-                _hits_ = Physics.RaycastAll(transform.position, transform.forward, _range, layerMask: _layerMask, queryTriggerInteraction: QueryTriggerInteraction.Collide).ToList();
+        ////if (GameManager.instance.connection == GameManager.Connection.Online)
+        //if (_c <= 0)
+        //{
+        //    if (player.isAlive)
+        //    {
+        //        // THIS RAY DOES NOT WORK IF PLAYER IS INSIDE THE SPHERE. USE THE CONTESTED VAR IN SPAWNPOINT SCRIPT FOR BETTER CONTROL
+        //        _hits_ = Physics.RaycastAll(transform.position, transform.forward, _range, layerMask: _layerMask, queryTriggerInteraction: QueryTriggerInteraction.Collide).ToList();
 
-                if (_hits_.Count > 0)
-                {
-                    if (_hits_.Count > 1)
-                    {
-                        _hits_ = _hits_.Where(x => x.transform.gameObject.layer == 0 || x.transform.GetComponent<SpawnPointDisablerRayTarget>() != null).ToList();
-                        _hits_.Sort((hit1, hit2) => hit1.distance.CompareTo(hit2.distance));
+        //        if (_hits_.Count > 0)
+        //        {
+        //            if (_hits_.Count > 1)
+        //            {
+        //                _hits_ = _hits_.Where(x => x.transform.gameObject.layer == 0 || x.transform.GetComponent<SpawnPointDisablerRayTarget>() != null).ToList();
+        //                _hits_.Sort((hit1, hit2) => hit1.distance.CompareTo(hit2.distance));
 
 
-                        // closest to farthest
-                        for (int i = 0; i < _hits_.Count; i++)
-                        {
-                            if (_hits_[i].transform.GetComponent<SpawnPointDisablerRayTarget>())
-                            {
-                                _tempBlockLevel = _blockingLevel;
-                                if (_blockingLevel < 0)
-                                {
+        //                // closest to farthest
+        //                for (int i = 0; i < _hits_.Count; i++)
+        //                {
+        //                    if (_hits_[i].transform.GetComponent<SpawnPointDisablerRayTarget>())
+        //                    {
+        //                        _tempBlockLevel = _blockingLevel;
+        //                        if (_blockingLevel < 0)
+        //                        {
 
-                                    float distance = Vector3.Distance(_hits_[i].transform.position, transform.position);
+        //                            float distance = Vector3.Distance(_hits_[i].transform.position, transform.position);
 
-                                    // Calculate how many "blocks of 5 units" fit into distance
-                                    int blocksOfThree = Mathf.FloorToInt(distance / 3f);
+        //                            // Calculate how many "blocks of 5 units" fit into distance
+        //                            int blocksOfThree = Mathf.FloorToInt(distance / 3f);
 
-                                    // Decrement _tempBlockLevel by that amount
-                                    _tempBlockLevel -= blocksOfThree; // since _blockingLevel is negative, adding moves toward 0
+        //                            // Decrement _tempBlockLevel by that amount
+        //                            _tempBlockLevel -= blocksOfThree; // since _blockingLevel is negative, adding moves toward 0
 
-                                }
-                                _hits_[i].transform.GetComponent<SpawnPointDisablerRayTarget>().spawnPoint.AddBlockingLevelEntry(_id, _tempBlockLevel, SpawnPoint.SeenResetTime);
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (_hits_[0].transform.GetComponent<SpawnPointDisablerRayTarget>())
-                        {
-                            _tempBlockLevel = _blockingLevel;
-                            if (_blockingLevel < 0)
-                            {
+        //                        }
+        //                        _hits_[i].transform.GetComponent<SpawnPointDisablerRayTarget>().spawnPoint.AddBlockingLevelEntry(_id, _tempBlockLevel, SpawnPoint.SeenResetTime);
+        //                    }
+        //                    else
+        //                    {
+        //                        break;
+        //                    }
+        //                }
+        //            }
+        //            else
+        //            {
+        //                if (_hits_[0].transform.GetComponent<SpawnPointDisablerRayTarget>())
+        //                {
+        //                    _tempBlockLevel = _blockingLevel;
+        //                    if (_blockingLevel < 0)
+        //                    {
 
-                                float distance = Vector3.Distance(_hits_[0].transform.position, transform.position);
+        //                        float distance = Vector3.Distance(_hits_[0].transform.position, transform.position);
 
-                                // Calculate how many "blocks of 5 units" fit into distance
-                                int blocksOfThree = Mathf.FloorToInt(distance / 3f);
+        //                        // Calculate how many "blocks of 5 units" fit into distance
+        //                        int blocksOfThree = Mathf.FloorToInt(distance / 3f);
 
-                                // Decrement _tempBlockLevel by that amount
-                                _tempBlockLevel -= blocksOfThree; // since _blockingLevel is negative, adding moves toward 0
+        //                        // Decrement _tempBlockLevel by that amount
+        //                        _tempBlockLevel -= blocksOfThree; // since _blockingLevel is negative, adding moves toward 0
 
-                            }
-                            _hits_[0].transform.GetComponent<SpawnPointDisablerRayTarget>().spawnPoint.AddBlockingLevelEntry(_id, _blockingLevel, SpawnPoint.SeenResetTime);
-                        }
-                    }
-                }
-            }
+        //                    }
+        //                    _hits_[0].transform.GetComponent<SpawnPointDisablerRayTarget>().spawnPoint.AddBlockingLevelEntry(_id, _blockingLevel, SpawnPoint.SeenResetTime);
+        //                }
+        //            }
+        //        }
+        //    }
 
-            _c = SpawnPoint.SeenResetTime * 0.6f;
-        }
+        //    _c = SpawnPoint.SeenResetTime * 0.6f;
+        //}
 
 
     }
