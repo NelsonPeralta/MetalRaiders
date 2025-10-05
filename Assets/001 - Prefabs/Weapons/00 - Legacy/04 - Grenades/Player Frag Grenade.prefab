@@ -40153,13 +40153,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6335082541743270866}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0.7071068, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.0342, z: 0}
   m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3233664874924876033}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!33 &2051931011978737732
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -40391,12 +40391,10 @@ MonoBehaviour:
   _player: {fileID: 0}
   _damage: 250
   _radius: 7
-  _throwForce: 300
   _explosionPower: 300
   _stuckPlayerPhotonId: 0
   _sourceCleanName: Frag Grenade
   _killFeedOutput: 15
-  _useConstantForce: 0
   _defaultExplosionDelayOnImpact: 0.8
   explosionPrefab: {fileID: 9198120252748331428, guid: a0031679046e9984387a3d6b9094f878,
     type: 3}
