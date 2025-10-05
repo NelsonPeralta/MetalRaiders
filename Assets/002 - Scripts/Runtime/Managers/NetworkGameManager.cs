@@ -543,6 +543,7 @@ public class NetworkGameManager : MonoBehaviourPunCallbacks
 
             _firstWeapon.name = _firstWeapon.name.Replace("(Clone)", "");
             _firstWeapon.transform.position = spp;
+            _firstWeapon.transform.forward = fDir;
 
             try { _firstWeapon.localAmmo = firstWeapCurrAmmo; } catch (System.Exception e) { Log.Print(() =>e); }
             try { _firstWeapon.spareAmmo = firstWeapSpareAmmo; } catch (System.Exception e) { Log.Print(() =>e); }
